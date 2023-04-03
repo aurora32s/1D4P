@@ -1,5 +1,6 @@
 [versions]
-androidGradlePlugin = '7.3.1'
+androidGradlePlugin = "7.4.2"
+androidGradleTool = "7.2.0"
 androidx-lifecycle-runtime-compose = '2.6.0-alpha03'
 activityCompose = '1.6.1'
 composeUi = '1.2.0'
@@ -18,6 +19,12 @@ robolectric = "4.9.2"
 room = "2.4.3"
 
 [libraries]
+# use in build-logic
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradleTool" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
+# kotlin
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin" }
 

@@ -23,5 +23,9 @@ gradlePlugin {
             id = "haroo.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
+        register("androidLibrary") {
+            id = "haroo.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
     }
 }

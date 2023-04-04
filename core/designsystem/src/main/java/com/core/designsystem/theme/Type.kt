@@ -9,9 +9,9 @@ import androidx.compose.ui.unit.sp
 import com.core.designsystem.R
 
 private val BM = FontFamily(
-    Font(R.font.BMDOHYEON, weight = FontWeight.Bold),
-    Font(R.font.BMHANNAPro, weight = FontWeight.Medium),
-    Font(R.font.BMHANNAAir, weight = FontWeight.Light)
+    Font(R.font.bm_dohyeon, weight = FontWeight.Bold),
+    Font(R.font.bm_hanna_pro, weight = FontWeight.Medium),
+    Font(R.font.bm_hanna_air, weight = FontWeight.Light)
 )
 
 val Typography = Typography(

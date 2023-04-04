@@ -1,6 +1,8 @@
 package com.core.designsystem.theme
 
 import androidx.compose.material.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -14,6 +16,7 @@ private val BM = FontFamily(
     Font(R.font.bm_hanna_air, weight = FontWeight.Light)
 )
 
+@OptIn(ExperimentalTextApi::class)
 val Typography = Typography(
     h2 = TextStyle(
         fontFamily = BM,
@@ -49,5 +52,13 @@ val Typography = Typography(
         fontFamily = BM,
         fontSize = 10.sp,
         fontWeight = FontWeight.Light
+    ),
+    button = TextStyle(
+        fontFamily = BM,
+        fontSize = 10.sp,
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     )
 )

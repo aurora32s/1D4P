@@ -25,5 +25,6 @@ internal fun Project.configureAndroidCompose(
     }
     dependencies {
         "implementation"(libs.findBundle("compose").get())
+        "debugImplementation"(libs.findLibrary("androidx.compose.ui.tooling").get())
     }
 }

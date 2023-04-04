@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 private val DarkColorScheme = HarooColors(
     gradient4_1 = listOf(PinkA400, DeepBlue900, Black, DeepBlue800),
     brand = PinkA400,
+    uiBackground = White,
     text = White,
     iconPrimary = White,
     isDark = true
@@ -17,6 +18,7 @@ private val DarkColorScheme = HarooColors(
 private val LightColorScheme = HarooColors(
     gradient4_1 = listOf(PinkA400, DeepBlue900, Black, DeepBlue800),
     brand = PinkA400,
+    uiBackground = White,
     text = White,
     iconPrimary = White,
     isDark = false
@@ -62,6 +64,7 @@ fun ProvideHarooColors(
 class HarooColors(
     gradient4_1: List<Color>,
     brand: Color,
+    uiBackground: Color,
     interactiveBackground: List<Color> = gradient4_1,
     text: Color,
     iconPrimary: Color = brand,
@@ -70,6 +73,8 @@ class HarooColors(
     var gradient4_1 by mutableStateOf(gradient4_1)
         private set
     var brand by mutableStateOf(brand)
+        private set
+    var uiBackground by mutableStateOf(uiBackground)
         private set
     var interactiveBackground by mutableStateOf(interactiveBackground)
         private set
@@ -83,6 +88,7 @@ class HarooColors(
     fun update(other: HarooColors) {
         this.gradient4_1 = other.gradient4_1
         this.brand = other.brand
+        this.uiBackground = other.uiBackground
         this.interactiveBackground = other.interactiveBackground
         this.text = other.text
         this.iconPrimary = other.iconPrimary
@@ -92,6 +98,7 @@ class HarooColors(
     fun copy() = HarooColors(
         gradient4_1 = gradient4_1,
         brand = brand,
+        uiBackground = uiBackground,
         interactiveBackground = interactiveBackground,
         text = text,
         iconPrimary = iconPrimary,

@@ -24,13 +24,16 @@ import com.core.designsystem.theme.HarooTheme
 fun HarooButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    enabled: Boolean = true,
+    enabled: Boolean = true, // 사용 가능 여부
     shape: Shape = MaterialTheme.shapes.small,
-    border: BorderStroke? = null,
-    backgroundColor: Color = Color.Unspecified,
-    disableBackgroundColor: Color = Color.Unspecified,
-    contentColor: Color = HarooTheme.colors.text,
+    border: BorderStroke? = null, // 테두리 모양
+    alpha: Float = 1f, // 배경색 투명도
+    backgroundColor: Color = Color.Unspecified, // 배경 색
+    disableBackgroundColor: Color = Color.Unspecified, // disable 일때 배경 색
+    contentColor: Color = HarooTheme.colors.text, // 내부 색
+    // disable 일때 배경 색
     disableContentColor: Color = HarooTheme.colors.text.copy(alpha = 0.3f),
+    // 내부 padding
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -43,6 +46,7 @@ fun HarooButton(
         shape = shape,
         color = if (enabled) backgroundColor else disableBackgroundColor,
         contentColor = if (enabled) contentColor else disableContentColor,
+        alpha = alpha,
         border = border
     ) {
         ProvideTextStyle(value = MaterialTheme.typography.button) {
@@ -73,6 +77,7 @@ fun ButtonPreview() {
                     color = HarooTheme.colors.uiBackground
                 ),
                 onClick = {},
+                alpha = 0f,
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Text(text = "추가")

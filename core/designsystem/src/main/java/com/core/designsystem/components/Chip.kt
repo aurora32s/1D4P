@@ -25,6 +25,7 @@ fun HarooChip(
     onClick: () -> Unit = {},
     shape: Shape = MaterialTheme.shapes.small,
     backgroundColor: Color = HarooTheme.colors.uiBackground,
+    // 테두리 색
     border: BorderStroke = BorderStroke(width = 1.dp, color = backgroundColor),
     contentColor: Color = HarooTheme.colors.text,
     content: @Composable RowScope.() -> Unit

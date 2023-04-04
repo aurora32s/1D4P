@@ -32,11 +32,17 @@ import java.util.*
 fun Calendar(
     modifier: Modifier = Modifier,
     currentMonth: YearMonth, // 현재 year & month
+    // 한주가 시작 하는 요일
     firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek,
+    // 금일
     today: LocalDate = LocalDate.now(),
+    // 이전, 다음 달의 요일도 component 에 표현 할지 여부
     showAdjacentMonths: Boolean = false,
+    // 세로 라인 중간 space 넓이
     space: Dp = 0.dp,
+    // 날짜 Component
     dayContent: @Composable BoxScope.(DayState) -> Unit,
+    // 요일 component
     weekHeader: @Composable ColumnScope.(List<DayOfWeek>) -> Unit = { BaseWeekHeader(dayOfWeek = it) },
 ) {
     val daysOfWeek = remember(firstDayOfWeek) {

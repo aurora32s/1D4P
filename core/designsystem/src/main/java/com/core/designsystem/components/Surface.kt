@@ -29,12 +29,12 @@ import com.core.designsystem.theme.HarooTheme
 @Composable
 fun HarooSurface(
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.medium,
-    color: Color = HarooTheme.colors.uiBackground,
-    contentColor: Color = HarooTheme.colors.text,
-    border: BorderStroke? = null,
-    elevation: Dp = 0.dp,
-    alpha: Float = 0.15f,
+    shape: Shape = MaterialTheme.shapes.medium, // 모양
+    color: Color = HarooTheme.colors.uiBackground, // 배경색
+    contentColor: Color = HarooTheme.colors.text, // 내용 색
+    border: BorderStroke? = null, // 테두리 모양
+    elevation: Dp = 0.dp, // 그림자 크기
+    alpha: Float = 0.15f, // 배경 투명도
     content: @Composable () -> Unit
 ) {
     Box(

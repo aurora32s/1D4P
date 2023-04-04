@@ -21,37 +21,58 @@ val Typography = Typography(
     h2 = TextStyle(
         fontFamily = BM,
         fontSize = 60.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     h4 = TextStyle(
         fontFamily = BM,
         fontSize = 33.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     h5 = TextStyle(
         fontFamily = BM,
         fontSize = 20.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     h6 = TextStyle(
         fontFamily = BM,
         fontSize = 18.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     subtitle1 = TextStyle(
         fontFamily = BM,
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     body1 = TextStyle(
         fontFamily = BM,
         fontSize = 12.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     body2 = TextStyle(
         fontFamily = BM,
         fontSize = 10.sp,
-        fontWeight = FontWeight.Light
+        fontWeight = FontWeight.Light,
+        platformStyle = PlatformTextStyle(
+            includeFontPadding = false
+        )
     ),
     button = TextStyle(
         fontFamily = BM,

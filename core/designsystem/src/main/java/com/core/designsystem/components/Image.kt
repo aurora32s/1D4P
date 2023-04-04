@@ -29,8 +29,8 @@ import com.core.designsystem.theme.HarooTheme
 @Composable
 fun HarooImageList(
     modifier: Modifier = Modifier,
-    images: List<Image>,
-    padding: Dp = 0.dp
+    images: List<Image>, // 이미지 정보 리스트
+    padding: Dp = 0.dp // 이미지 사이 넓이
 ) {
     Layout(
         modifier = modifier.fillMaxWidth(),
@@ -76,9 +76,9 @@ fun HarooImageList(
 fun HarooImage(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    shape: Shape = MaterialTheme.shapes.medium,
-    elevation: Dp = 2.dp,
-    imageType: Image
+    shape: Shape = MaterialTheme.shapes.medium, // 이미지 모양
+    elevation: Dp = 2.dp, // 그림자 크기
+    imageType: Image // 이미지 정보
 ) {
     HarooSurface(
         modifier = modifier.clickable(

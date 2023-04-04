@@ -22,16 +22,16 @@ import com.core.designsystem.theme.HarooTheme
 @Composable
 fun HarooTextField(
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    value: String,
-    onValueChange: (String) -> Unit,
+    enabled: Boolean = true, // 사용 가능 여부
+    value: String, // 입력 값
+    onValueChange: (String) -> Unit, // 입력값 변경
     shape: Shape = MaterialTheme.shapes.medium,
-    color: Color = HarooTheme.colors.uiBackground,
-    contentColor: Color = HarooTheme.colors.text,
-    border: BorderStroke? = null,
-    placeHolder: String = "",
-    singleLine: Boolean = true,
-    maxLines: Int = Int.MAX_VALUE
+    color: Color = HarooTheme.colors.uiBackground, // 배경 색
+    contentColor: Color = HarooTheme.colors.text, // 내부 색
+    border: BorderStroke? = null, // 테두리 모양
+    placeHolder: String = "", // hint
+    singleLine: Boolean = true, // 한줄 여부
+    maxLines: Int = Int.MAX_VALUE // 최대 입력 가능 라인
 ) {
     HarooSurface(
         modifier = modifier,

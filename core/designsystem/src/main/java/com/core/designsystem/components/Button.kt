@@ -73,7 +73,7 @@ fun ButtonPreview() {
                     color = HarooTheme.colors.uiBackground
                 ),
                 onClick = {},
-                contentPadding = PaddingValues(4.dp)
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 Text(text = "추가")
             }

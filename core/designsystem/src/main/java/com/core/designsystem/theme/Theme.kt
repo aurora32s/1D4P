@@ -68,6 +68,7 @@ class HarooColors(
     interactiveBackground: List<Color> = gradient4_1,
     text: Color,
     iconPrimary: Color = brand,
+    dim: Color = Black,
     isDark: Boolean
 ) {
     var gradient4_1 by mutableStateOf(gradient4_1)
@@ -82,6 +83,8 @@ class HarooColors(
         private set
     var iconPrimary by mutableStateOf(iconPrimary)
         private set
+    var dim by mutableStateOf(dim)
+        private set
     var isDark by mutableStateOf(isDark)
         private set
 
@@ -92,6 +95,7 @@ class HarooColors(
         this.interactiveBackground = other.interactiveBackground
         this.text = other.text
         this.iconPrimary = other.iconPrimary
+        this.dim = other.dim
         this.isDark = other.isDark
     }
 
@@ -102,6 +106,7 @@ class HarooColors(
         interactiveBackground = interactiveBackground,
         text = text,
         iconPrimary = iconPrimary,
+        dim = dim,
         isDark = isDark
     )
 }

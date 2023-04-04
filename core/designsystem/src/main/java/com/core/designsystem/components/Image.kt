@@ -5,14 +5,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.R
@@ -23,14 +27,51 @@ import com.core.designsystem.theme.HarooTheme
  * 하루 이미지 4개를 가로 리스트 로 보여 주는 Component
  */
 @Composable
-fun HarooImageList() {
+fun HarooImageList(
+    modifier: Modifier = Modifier,
+    images: List<Image>,
+    padding: Dp = 0.dp
+) {
+    Layout(
+        modifier = modifier.fillMaxWidth(),
+        content = {
+            images.forEach {
+                HarooImage(imageType = it)
+            }
+        }
+    ) { measureables, constraints ->
+        val children = measureables.size
+        val space = padding.toPx().toInt()
+        val imageSize = (constraints.maxWidth - space * 2 * (children)) / children
+        val imageConstraints = Constraints(
+            minWidth = imageSize,
+            minHeight = imageSize,
+            maxWidth = imageSize,
+            maxHeight = imageSize
+        )
+        val placeable = measureables.map {
+            it.measure(imageConstraints)
+        }
 
+        layout(
+            width = constraints.maxWidth,
+            height = constraints.maxHeight
+        ) {
+            var x = space
+            placeable.forEach {
+                it.placeRelative(
+                    x = x,
+                    y = 0
+                )
+                x += it.width + space * 2
+            }
+        }
+    }
 }
 
 /**
  * 기본 Image Component
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HarooImage(
     modifier: Modifier = Modifier,
@@ -78,7 +119,7 @@ sealed interface Image {
 @Composable
 fun ImagePreview() {
     AllForMemoryTheme {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
@@ -90,6 +131,16 @@ fun ImagePreview() {
                     .padding(12.dp)
                     .size(120.dp),
                 imageType = Image.ResourceImage(R.drawable.test)
+            )
+
+            HarooImageList(
+                images = listOf(
+                    Image.ResourceImage(R.drawable.test),
+                    Image.ResourceImage(R.drawable.test),
+                    Image.ResourceImage(R.drawable.test),
+                    Image.ResourceImage(R.drawable.test)
+                ),
+                padding = 8.dp
             )
         }
     }

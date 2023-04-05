@@ -6,3 +6,10 @@ plugins {
 android {
     namespace = "com.core.datasource"
 }
+
+dependencies {
+    implementation(project(":core:database"))
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.paging.runtime)
+}

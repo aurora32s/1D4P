@@ -1,4 +1,4 @@
-package com.core.model.database
+package com.core.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "post")
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: String,
+    val id: Int,
     val year: Int,
     val month: Int,
     val day: Int,

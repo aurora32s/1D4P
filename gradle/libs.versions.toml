@@ -5,6 +5,7 @@ androidx-lifecycle-runtime-compose = '2.6.0-alpha03'
 activityCompose = '1.6.1'
 composeUi = '1.2.0'
 compose-kotlin-compiler = '1.2.0'
+coroutine = '1.6.4'
 espresso = '3.5.1'
 hamcrest = "1.1"
 hilt = '2.42'
@@ -26,7 +27,8 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 
 # kotlin
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "kotlin" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutine" }
 
 # compose
 androidx-activitiy-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -57,7 +59,7 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room"}
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 # paging
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }

@@ -21,6 +21,10 @@ interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertImages(images: List<ImageEntity>): Int
 
+    // tag 추가
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTags(tags: List<TagEntity>): Int
+
     // 특정 년도/월/일의 post 요청
     @Query("SELECT * FROM post WHERE year = :year AND month = :month AND day = :day")
     suspend fun selectPostByDate(year: Int, month: Int, day: Int): List<PostEntity>

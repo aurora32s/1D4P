@@ -27,7 +27,7 @@ interface PostDao {
 
     // 특정 년도/월/일의 post 요청
     @Query("SELECT * FROM post WHERE year = :year AND month = :month AND day = :day")
-    suspend fun selectPostByDate(year: Int, month: Int, day: Int): List<PostEntity>
+    suspend fun selectPostByDate(year: Int, month: Int, day: Int): PostEntity?
 
     // 특정 년도/월의 post 요청
     @Query("SELECT * FROM post WHERE year = :year AND month = :month")

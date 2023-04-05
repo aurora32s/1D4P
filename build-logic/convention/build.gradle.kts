@@ -35,5 +35,9 @@ gradlePlugin {
             id = "haroo.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
+        register("androidHilt") {
+            id = "haroo.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
     }
 }

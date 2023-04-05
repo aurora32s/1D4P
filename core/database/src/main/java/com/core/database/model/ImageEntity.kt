@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
 )
 data class ImageEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int?,
     @ColumnInfo(name = "post_id")
     val postId: Int,
     @ColumnInfo(name = "image_url")

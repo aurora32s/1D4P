@@ -1,6 +1,6 @@
 plugins {
-    id ("haroo.android.library")
-    id ("org.jetbrains.kotlin.kapt")
+    id("haroo.android.library")
+    id("haroo.android.room")
 }
 
 android {
@@ -8,7 +8,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.room)
     implementation(libs.room.paging)
-    kapt(libs.room.compiler)
 }

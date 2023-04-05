@@ -1,0 +1,14 @@
+package com.core.datasource.model
+
+/**
+ * data source Post 정보
+ */
+data class Post(
+    val id: String, // post id
+    val year: Int, // 연도
+    val month: Int, // 월
+    val day: Int, // 일
+    val content: String?, // 내용
+    val images: List<Image>, // 이미지
+    val tags: List<Tag> // 태그
+)

@@ -4,9 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.core.model.database.ImageEntity
-import com.core.model.database.PostEntity
-import com.core.model.database.TagEntity
+import com.core.database.model.ImageEntity
+import com.core.database.model.PostEntity
+import com.core.database.model.TagEntity
 
 /**
  * 일별 기록과 관련된 Dao

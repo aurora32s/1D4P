@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.core.model.database.ImageEntity
 import com.core.model.database.PostEntity
+import com.core.model.database.TagEntity
 
 /**
  * 일별 기록과 관련된 Dao
@@ -31,4 +32,8 @@ interface PostDao {
     // 특정 post 의 image 요청
     @Query("SELECT * FROM image WHERE post_id = :postId")
     suspend fun selectImagesByPost(postId: Int): List<ImageEntity>
+
+    // 특정 post 의 tag 요청
+    @Query("SELECT * FROM tag WHERE post_id = :postId")
+    suspend fun selectTagsByPost(postId: Int): List<TagEntity>
 }

@@ -31,5 +31,9 @@ gradlePlugin {
             id = "haroo.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
+        register("androidRoom") {
+            id = "haroo.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
     }
 }

@@ -7,8 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
+import com.core.designsystem.theme.AllForMemoryTheme
 import com.feature.post.PostScreen
-import com.haman.allformemory.ui.theme.AllForMemoryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

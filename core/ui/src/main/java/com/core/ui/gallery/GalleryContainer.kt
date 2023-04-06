@@ -1,10 +1,13 @@
 package com.core.ui.gallery
 
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.paging.compose.LazyPagingItems
-import coil.compose.AsyncImage
+import com.core.designsystem.components.SelectableImage
 import com.core.model.feature.ImageUiModel
 
 private const val galleryColumn = 3
@@ -19,20 +22,13 @@ fun GalleryContainer(
         items(count = images.itemCount) { index ->
             images[index]?.let {
                 SelectableImage(
+                    modifier = Modifier.aspectRatio(1f),
                     image = it,
+                    shape = RectangleShape,
                     isSelected = it in selectedImages,
                     onClick = onImageSelect
                 )
             }
         }
     }
-}
-
-@Composable
-fun SelectableImage(
-    image: ImageUiModel, // 이미지
-    isSelected: Boolean, // 선택 여부
-    onClick: (ImageUiModel) -> Unit
-) {
-    AsyncImage(model = image.imageUrl, contentDescription = image.id)
 }

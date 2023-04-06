@@ -5,8 +5,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
@@ -19,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.core.designsystem.R
 import com.core.designsystem.theme.AllForMemoryTheme
@@ -87,11 +92,24 @@ fun SelectableImage(
     ) {
         if (isSelected) {
             HarooSurface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(2f),
                 shape = shape,
-                color = HarooTheme.colors.dim
-            ) {}
+                color = HarooTheme.colors.dim,
+                alpha = 0.7f
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp),
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = ""
+                )
+            }
         }
         HarooImage(
+            modifier = Modifier.zIndex(1f),
             imageType = Image.AsyncImage(image),
             shape = shape
         )

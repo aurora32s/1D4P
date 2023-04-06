@@ -1,7 +1,7 @@
 package com.core.data.image
 
 import androidx.paging.PagingData
-import com.core.data.model.ImageSource
+import com.core.model.data.ImageSource
 import kotlinx.coroutines.flow.Flow
 
 /**

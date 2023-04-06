@@ -2,10 +2,10 @@ package com.core.data.post.local
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.core.data.model.PostSource
-import com.core.data.model.toImageSource
-import com.core.data.model.toTag
 import com.core.database.dao.PostDao
+import com.core.model.data.PostSource
+import com.core.model.database.toImageSource
+import com.core.model.database.toTag
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

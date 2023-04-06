@@ -6,3 +6,8 @@ plugins {
 android {
     namespace = "com.core.designsystem"
 }
+
+dependencies {
+    implementation(project(":core:model"))
+    implementation(libs.bundles.coil)
+}

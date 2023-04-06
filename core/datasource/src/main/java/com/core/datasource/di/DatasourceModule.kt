@@ -1,7 +1,7 @@
 package com.core.datasource.di
 
 import com.core.datasource.PostDatasource
-import com.core.datasource.local.PostLocalDataSourceImpl
+import com.core.datasource.local.post.PostLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

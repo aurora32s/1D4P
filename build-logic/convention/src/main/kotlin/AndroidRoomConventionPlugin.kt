@@ -13,7 +13,6 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
             dependencies {
                 "implementation"(libs.findBundle("room").get())
                 "kapt"(libs.findLibrary("room.compiler").get())
-
             }
         }
     }

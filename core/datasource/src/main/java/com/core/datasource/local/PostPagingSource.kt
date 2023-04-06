@@ -6,9 +6,6 @@ import com.core.database.dao.PostDao
 import com.core.datasource.model.Post
 import com.core.datasource.model.toImage
 import com.core.datasource.model.toTag
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import java.time.YearMonth
 
 /**
@@ -23,39 +20,35 @@ class PostPagingSource(
         }
     }
 
-    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, Post> =
-        coroutineScope {
-            val date: YearMonth = params.key ?: YearMonth.now()
+    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, Post> {
+        val date: YearMonth = params.key ?: YearMonth.now()
 
-            try {
-                val posts =
-                    postDao.selectPostByMonth(date.year, date.monthValue).map { post ->
-                        async {
-                            post.id?.let {
-                                val images = async { postDao.selectImagesByPost(it) }
-                                val tags = async { postDao.selectTagsByPost(it) }
-                                Post(
-                                    id = it,
-                                    year = post.year,
-                                    month = post.month,
-                                    day = post.day,
-                                    content = post.content,
-                                    images = images.await().map { image -> image.toImage() },
-                                    tags = tags.await().map { tag -> tag.toTag() }
-                                )
-                            }
-                        }
-                    }.awaitAll()
-
-                LoadResult.Page(
-                    prevKey = date.minusMonths(1),
-                    data = posts.filterNotNull(),
-                    nextKey = date.plusMonths(1)
-                )
-            } catch (exception: Exception) {
-                LoadResult.Error(exception)
+        return try {
+            val posts = postDao.selectPostByMonth(date.year, date.monthValue).mapNotNull { post ->
+                post.id?.let {
+                    val images = postDao.selectImagesByPost(it)
+                    val tags = postDao.selectTagsByPost(it)
+                    Post(
+                        id = it,
+                        year = post.year,
+                        month = post.month,
+                        day = post.day,
+                        content = post.content,
+                        images = images.map { image -> image.toImage() },
+                        tags = tags.map { tag -> tag.toTag() }
+                    )
+                }
             }
+
+            LoadResult.Page(
+                prevKey = date.minusMonths(1),
+                data = posts,
+                nextKey = date.plusMonths(1)
+            )
+        } catch (exception: Exception) {
+            LoadResult.Error(exception)
         }
+    }
 
     companion object {
         const val PAGING_SIZE = 31

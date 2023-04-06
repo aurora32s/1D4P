@@ -1,7 +1,7 @@
 package com.core.data.image
 
 import androidx.paging.PagingData
-import com.core.data.model.Image
+import com.core.data.model.ImageSource
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -9,5 +9,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ImageRepository {
     // 이미지 paging 요청
-    fun getImages(): Flow<PagingData<Image>>
+    fun getImages(): Flow<PagingData<ImageSource>>
 }

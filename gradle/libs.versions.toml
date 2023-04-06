@@ -76,6 +76,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 compose = [
     'androidx-activitiy-compose',
     'androidx-lifecycle-runtime-compose',
+    'hilt-navigation-compose',
     'androidx-compose-ui-util',
     'androidx-compose-material',
     'androidx-compose-animation',

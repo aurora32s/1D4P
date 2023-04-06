@@ -34,8 +34,6 @@ android {
 dependencies {
     implementation(project(":feature:post"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.bundles.compose)
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso)

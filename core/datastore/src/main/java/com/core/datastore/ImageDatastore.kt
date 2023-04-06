@@ -2,14 +2,17 @@ package com.core.datastore
 
 import android.content.ContentUris
 import android.content.Context
-import android.net.Uri
 import android.provider.MediaStore
+import com.core.datastore.model.ImageData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.coroutineScope
+import javax.inject.Inject
 
-class ImageDatastore(
+class ImageDatastore @Inject constructor(
+    @ApplicationContext
     private val context: Context
 ) {
-    suspend fun getImages(limit: Int, offset: Int): List<Uri> = coroutineScope {
+    suspend fun getImages(limit: Int, offset: Int): List<ImageData> = coroutineScope {
         try {
             val uriExternal = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             val projection = arrayOf(MediaStore.Images.ImageColumns._ID)
@@ -18,14 +21,14 @@ class ImageDatastore(
             val query =
                 context.contentResolver.query(uriExternal, projection, null, null, sortOrder)
 
-            val galleryImage = mutableListOf<Uri>()
+            val galleryImage = mutableListOf<ImageData>()
             query?.use { cursor ->
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
 
                 while (cursor.moveToNext()) {
                     val id = cursor.getLong(idColumn)
                     val contentUri = ContentUris.withAppendedId(uriExternal, id)
-                    galleryImage.add(contentUri)
+                    galleryImage.add(ImageData(id, contentUri))
                 }
             }
             galleryImage.toList()

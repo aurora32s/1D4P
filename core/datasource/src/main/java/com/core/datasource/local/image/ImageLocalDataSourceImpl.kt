@@ -5,9 +5,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.core.datasource.ImageDatasource
 import com.core.datasource.model.Image
+import com.core.datastore.ImageDatastore
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ImageLocalDataSourceImpl : ImageDatasource {
+class ImageLocalDataSourceImpl @Inject constructor(
+    private val imageDatastore: ImageDatastore
+) : ImageDatasource {
     override fun getImages(): Flow<PagingData<Image>> {
         return Pager(
             config = PagingConfig(
@@ -16,7 +20,7 @@ class ImageLocalDataSourceImpl : ImageDatasource {
                 maxSize = ImagePagingSource.PAGING_SIZE * 5
             ),
             pagingSourceFactory = {
-                ImagePagingSource()
+                ImagePagingSource(imageDatastore)
             }
         ).flow
     }

@@ -1,4 +1,4 @@
-package com.core.database.model
+package com.core.model.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -22,9 +22,9 @@ import androidx.room.PrimaryKey
 )
 data class ImageEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: String,
     @ColumnInfo(name = "post_id")
-    val postId: Int,
+    val postId: String,
     @ColumnInfo(name = "image_url")
     val imageUrl: String
 )

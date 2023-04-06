@@ -1,11 +1,11 @@
-package com.core.datasource.local.post
+package com.core.data.post.local
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.core.data.model.Post
+import com.core.data.model.toImage
+import com.core.data.model.toTag
 import com.core.database.dao.PostDao
-import com.core.datasource.model.Post
-import com.core.datasource.model.toImage
-import com.core.datasource.model.toTag
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -14,7 +14,7 @@ import java.time.YearMonth
 /**
  * 특정 연도 / 월에 대한 게시글(post) 정보를 paging 으로 요청
  */
-class PostPagingSource(
+class PostLocalPagingSource(
     private val postDao: PostDao
 ) : PagingSource<YearMonth, Post>() {
     override fun getRefreshKey(state: PagingState<YearMonth, Post>): YearMonth? {

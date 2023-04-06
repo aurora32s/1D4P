@@ -3,8 +3,8 @@ package com.core.domain.post
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.core.data.image.ImageRepository
-import com.core.domain.model.Image
-import com.core.domain.model.toImage
+import com.core.model.data.toImage
+import com.core.model.domain.Image
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface PostDatasource {
     // post 추가
-    suspend fun addPost(post: Post): Int
+    suspend fun addPost(post: Post): Long
 
     // 특정 년도/월/일 post 요청
     suspend fun getPost(year: Int, month: Int, day: Int): Post?

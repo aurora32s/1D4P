@@ -15,15 +15,15 @@ import com.core.database.model.TagEntity
 interface PostDao {
     // post 추가
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPost(post: PostEntity): Int
+    suspend fun insertPost(post: PostEntity): Long
 
     // image 추가
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertImages(images: List<ImageEntity>): Int
+    suspend fun insertImages(images: List<ImageEntity>): List<Long>
 
     // tag 추가
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTags(tags: List<TagEntity>): Int
+    suspend fun insertTags(tags: List<TagEntity>): List<Long>
 
     // 특정 년도/월/일의 post 요청
     @Query("SELECT * FROM post WHERE year = :year AND month = :month AND day = :day")
@@ -35,9 +35,9 @@ interface PostDao {
 
     // 특정 post 의 image 요청
     @Query("SELECT * FROM image WHERE post_id = :postId")
-    suspend fun selectImagesByPost(postId: Int): List<ImageEntity>
+    suspend fun selectImagesByPost(postId: Long): List<ImageEntity>
 
     // 특정 post 의 tag 요청
     @Query("SELECT * FROM tag WHERE post_id = :postId")
-    suspend fun selectTagsByPost(postId: Int): List<TagEntity>
+    suspend fun selectTagsByPost(postId: Long): List<TagEntity>
 }

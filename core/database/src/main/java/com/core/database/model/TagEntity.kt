@@ -19,8 +19,8 @@ import androidx.room.PrimaryKey
 )
 data class TagEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    @ColumnInfo(name = "post_id")
-    val postId: Int,
+    val id: Long?,
+    @ColumnInfo(name = "post_id", index = true)
+    val postId: Long?,
     val name: String
 )

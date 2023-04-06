@@ -6,7 +6,7 @@ import com.core.database.model.PostEntity
  * data source Post 정보
  */
 data class Post(
-    val id: Int?, // post id
+    val id: Long?, // post id
     val year: Int, // 연도
     val month: Int, // 월
     val day: Int, // 일

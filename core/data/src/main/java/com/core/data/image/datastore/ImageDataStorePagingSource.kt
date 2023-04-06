@@ -1,13 +1,13 @@
-package com.core.datasource.local.image
+package com.core.data.image.datastore
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.core.datasource.model.Image
-import com.core.datasource.model.toImage
+import com.core.data.model.Image
+import com.core.data.model.toImage
 import com.core.datastore.ImageDatastore
 import kotlinx.coroutines.coroutineScope
 
-class ImagePagingSource(
+class ImageDataStorePagingSource(
     private val imageDatastore: ImageDatastore
 ) : PagingSource<Int, Image>() {
     override fun getRefreshKey(state: PagingState<Int, Image>): Int? {

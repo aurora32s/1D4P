@@ -9,7 +9,7 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:designsystem"))
 
-    implementation(libs.bundles.coil)
     implementation(libs.paging.compose)
 }

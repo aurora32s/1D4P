@@ -19,9 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.core.designsystem.R
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
+import com.core.model.feature.ImageUiModel
 
 /**
  * 하루 이미지 4개를 가로 리스트 로 보여 주는 Component
@@ -69,6 +71,33 @@ fun HarooImageList(
     }
 }
 
+@Composable
+fun SelectableImage(
+    modifier: Modifier = Modifier,
+    image: ImageUiModel,
+    shape: Shape = MaterialTheme.shapes.medium,
+    isSelected: Boolean,
+    onClick: (ImageUiModel) -> Unit
+) {
+    Box(
+        modifier = modifier.clickable(
+            role = Role.Button,
+            onClick = { onClick(image) }
+        )
+    ) {
+        if (isSelected) {
+            HarooSurface(
+                shape = shape,
+                color = HarooTheme.colors.dim
+            ) {}
+        }
+        HarooImage(
+            imageType = Image.AsyncImage(image),
+            shape = shape
+        )
+    }
+}
+
 /**
  * 기본 Image Component
  */
@@ -78,6 +107,7 @@ fun HarooImage(
     onClick: () -> Unit = {},
     shape: Shape = MaterialTheme.shapes.medium, // 이미지 모양
     elevation: Dp = 2.dp, // 그림자 크기
+    contentScale: ContentScale = ContentScale.Crop,
     imageType: Image // 이미지 정보
 ) {
     HarooSurface(
@@ -92,12 +122,17 @@ fun HarooImage(
             is Image.BitmapImage -> Image(
                 bitmap = imageType.bitmap,
                 contentDescription = imageType.contentDescription,
-                contentScale = ContentScale.Crop
+                contentScale = contentScale
             )
             is Image.ResourceImage -> Image(
                 painter = painterResource(id = imageType.resource),
                 contentDescription = imageType.contentDescription,
-                contentScale = ContentScale.Crop
+                contentScale = contentScale
+            )
+            is Image.AsyncImage -> AsyncImage(
+                model = imageType.image.imageUrl,
+                contentDescription = imageType.contentDescription,
+                contentScale = contentScale
             )
         }
     }
@@ -111,6 +146,11 @@ sealed interface Image {
 
     data class ResourceImage(
         @DrawableRes val resource: Int,
+        val contentDescription: String? = null
+    ) : Image
+
+    data class AsyncImage(
+        val image: ImageUiModel,
         val contentDescription: String? = null
     ) : Image
 }

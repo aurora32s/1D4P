@@ -10,6 +10,8 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:model"))
 
     implementation(libs.paging.compose)
 }

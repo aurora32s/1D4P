@@ -33,6 +33,7 @@ android {
 
 dependencies {
     implementation(project(":feature:post"))
+    implementation(project(":core:designsystem"))
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,8 @@
 package com.core.datasource.di
 
+import com.core.datasource.ImageDatasource
 import com.core.datasource.PostDatasource
+import com.core.datasource.local.image.ImageLocalDataSourceImpl
 import com.core.datasource.local.post.PostLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,9 @@ interface DatasourceModule {
     fun bindPostDatasource(
         postLocalDataSourceImpl: PostLocalDataSourceImpl
     ): PostDatasource
+
+    @Binds
+    fun bindImageDatasource(
+        imageLocalDataSourceImpl: ImageLocalDataSourceImpl
+    ): ImageDatasource
 }

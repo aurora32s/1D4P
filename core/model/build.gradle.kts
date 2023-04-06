@@ -1,6 +1,5 @@
 plugins {
-    id("haroo.android.library")
-    id("haroo.android.room")
+    id ("haroo.android.library")
 }
 
 android {

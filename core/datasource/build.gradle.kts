@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(project(":core:database"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.paging.runtime)

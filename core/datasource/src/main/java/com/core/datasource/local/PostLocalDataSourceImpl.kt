@@ -1,7 +1,5 @@
 package com.core.datasource.local
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.core.database.dao.PostDao
 import com.core.datasource.PostDatasource
@@ -56,15 +54,6 @@ class PostLocalDataSourceImpl @Inject constructor(
     }
 
     override fun getPostPaging(year: Int, month: Int): Flow<PagingData<Post>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = PostPagingSource.PAGING_SIZE,
-                enablePlaceholders = true,
-                maxSize = PostPagingSource.PAGING_SIZE * 5
-            ),
-            pagingSourceFactory = {
-                PostPagingSource(postDao)
-            }
-        ).flow
+        TODO("Not yet implemented")
     }
 }

@@ -3,8 +3,8 @@ package com.core.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.core.database.dao.PostDao
-import com.core.database.model.ImageEntity
-import com.core.database.model.PostEntity
+import com.core.model.database.ImageEntity
+import com.core.model.database.PostEntity
 
 @Database(
     entities = [

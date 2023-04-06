@@ -16,7 +16,7 @@ import javax.inject.Inject
 class PostLocalDataSourceImpl @Inject constructor(
     private val postDao: PostDao
 ) : PostDatasource {
-    override suspend fun addPost(post: Post): Int = coroutineScope {
+    override suspend fun addPost(post: Post): Long = coroutineScope {
         val postId = postDao.insertPost(post.toPostEntity())
         launch { postDao.insertImages(post.images.map { it.toImageEntity(postId) }) }
         launch { postDao.insertTags(post.tags.map { it.toTagEntity(postId) }) }

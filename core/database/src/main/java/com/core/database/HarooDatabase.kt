@@ -5,13 +5,16 @@ import androidx.room.RoomDatabase
 import com.core.database.dao.PostDao
 import com.core.database.model.ImageEntity
 import com.core.database.model.PostEntity
+import com.core.database.model.TagEntity
 
 @Database(
     entities = [
         PostEntity::class,
-        ImageEntity::class
+        ImageEntity::class,
+        TagEntity::class
     ],
-    version = HarooDatabase.DATABASE_VERSION
+    version = HarooDatabase.DATABASE_VERSION,
+    exportSchema = false
 )
 abstract class HarooDatabase : RoomDatabase() {
 

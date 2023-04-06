@@ -1,7 +1,7 @@
 plugins {
     id 'haroo.android.application'
     id 'haroo.android.application.compose'
-    id 'org.jetbrains.kotlin.android'
+    id("haroo.android.hilt")
 }
 
 android {
@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:post"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.compose)
     testImplementation(libs.junit4)

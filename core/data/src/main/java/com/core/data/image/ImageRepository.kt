@@ -1,13 +1,13 @@
-package com.core.datasource
+package com.core.data.image
 
 import androidx.paging.PagingData
-import com.core.datasource.model.Image
+import com.core.data.model.Image
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 이미지 리스트 를 요청 하기 위한 data source
+ * 이미지 리스트 요청 repository
  */
-interface ImageDatasource {
+interface ImageRepository {
     // 이미지 paging 요청
     fun getImages(): Flow<PagingData<Image>>
 }

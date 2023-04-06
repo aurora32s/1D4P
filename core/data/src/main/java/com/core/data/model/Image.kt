@@ -1,4 +1,4 @@
-package com.core.datasource.model
+package com.core.data.model
 
 import com.core.database.model.ImageEntity
 import com.core.datastore.model.ImageData

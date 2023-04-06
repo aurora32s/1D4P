@@ -1,11 +1,11 @@
-package com.core.datasource.local.post
+package com.core.data.post.local
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.core.data.model.*
+import com.core.data.post.PostRepository
 import com.core.database.dao.PostDao
-import com.core.datasource.PostDatasource
-import com.core.datasource.model.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class PostLocalDataSourceImpl @Inject constructor(
+class PostLocalRepositoryImpl @Inject constructor(
     private val postDao: PostDao
-) : PostDatasource {
+) : PostRepository {
     override suspend fun addPost(post: Post): Long = coroutineScope {
         val postId = postDao.insertPost(post.toPostEntity())
         launch { postDao.insertImages(post.images.map { it.toImageEntity(postId) }) }
@@ -64,12 +64,12 @@ class PostLocalDataSourceImpl @Inject constructor(
     override fun getPostPaging(year: Int, month: Int): Flow<PagingData<Post>> {
         return Pager(
             config = PagingConfig(
-                pageSize = PostPagingSource.PAGING_SIZE,
+                pageSize = PostLocalPagingSource.PAGING_SIZE,
                 enablePlaceholders = true,
-                maxSize = PostPagingSource.PAGING_SIZE * 5
+                maxSize = PostLocalPagingSource.PAGING_SIZE * 5
             ),
             pagingSourceFactory = {
-                PostPagingSource(postDao)
+                PostLocalPagingSource(postDao)
             }
         ).flow
     }

@@ -2,36 +2,38 @@ package com.core.data.image.datastore
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.core.data.model.Image
-import com.core.data.model.toImage
+import com.core.data.model.ImageSource
+import com.core.data.model.toImageSource
 import com.core.datastore.ImageDatastore
 import kotlinx.coroutines.coroutineScope
 
 class ImageDataStorePagingSource(
     private val imageDatastore: ImageDatastore
-) : PagingSource<Int, Image>() {
-    override fun getRefreshKey(state: PagingState<Int, Image>): Int? {
+) : PagingSource<Int, ImageSource>() {
+    override fun getRefreshKey(state: PagingState<Int, ImageSource>): Int? {
         return state.anchorPosition?.let { position ->
             val page = state.closestPageToPosition(position)
             return page?.prevKey?.plus(1) ?: page?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Image> = coroutineScope {
-        val offset: Int = params.key ?: INIT_OFFSET
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ImageSource> =
+        coroutineScope {
+            val offset: Int = params.key ?: INIT_OFFSET
 
-        try {
-            val images = imageDatastore.getImages(PAGING_SIZE, offset).map { it.toImage() }
+            try {
+                val images =
+                    imageDatastore.getImages(PAGING_SIZE, offset).map { it.toImageSource() }
 
-            LoadResult.Page(
-                prevKey = if (offset == INIT_OFFSET) null else offset - PAGING_SIZE,
-                data = images,
-                nextKey = if (images.size < PAGING_SIZE) null else offset + PAGING_SIZE
-            )
-        } catch (exception: Exception) {
-            LoadResult.Error(exception)
+                LoadResult.Page(
+                    prevKey = if (offset == INIT_OFFSET) null else offset - PAGING_SIZE,
+                    data = images,
+                    nextKey = if (images.size < PAGING_SIZE) null else offset + PAGING_SIZE
+                )
+            } catch (exception: Exception) {
+                LoadResult.Error(exception)
+            }
         }
-    }
 
     companion object {
         const val PAGING_SIZE = 50

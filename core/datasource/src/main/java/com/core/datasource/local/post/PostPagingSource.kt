@@ -1,4 +1,4 @@
-package com.core.datasource.local
+package com.core.datasource.local.post
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

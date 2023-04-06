@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.example.datastore"
 }
+
+dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+}

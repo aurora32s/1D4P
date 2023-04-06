@@ -1,19 +1,8 @@
 package com.core.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
 import com.core.database.dao.PostDao
-import com.core.model.database.ImageEntity
-import com.core.model.database.PostEntity
 
-@Database(
-    entities = [
-        PostEntity::class,
-        ImageEntity::class
-    ],
-    version = HarooDatabase.DATABASE_VERSION
-)
-abstract class HarooDatabase : RoomDatabase() {
+abstract class HarooDatabase {
 
     abstract fun getPostDao(): PostDao
 

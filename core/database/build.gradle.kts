@@ -7,3 +7,7 @@ plugins {
 android {
     namespace = "com.core.database"
 }
+
+dependencies {
+    implementation(project(":core:model"))
+}

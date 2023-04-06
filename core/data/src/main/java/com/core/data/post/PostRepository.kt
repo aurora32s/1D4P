@@ -1,7 +1,7 @@
 package com.core.data.post
 
 import androidx.paging.PagingData
-import com.core.data.model.PostSource
+import com.core.model.data.PostSource
 import kotlinx.coroutines.flow.Flow
 
 /**

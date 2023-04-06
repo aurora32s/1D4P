@@ -1,6 +1,6 @@
-package com.core.data.model
+package com.core.model.data
 
-import com.core.database.model.PostEntity
+import com.core.model.database.PostEntity
 
 /**
  * data source Post 정보
@@ -15,7 +15,7 @@ data class PostSource(
     val tags: List<TagSource> // 태그
 )
 
-internal fun PostSource.toPostEntity() = PostEntity(
+fun PostSource.toPostEntity() = PostEntity(
     id = id,
     year = year,
     month = month,

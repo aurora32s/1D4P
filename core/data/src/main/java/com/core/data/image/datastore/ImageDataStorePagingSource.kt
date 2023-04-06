@@ -2,9 +2,9 @@ package com.core.data.image.datastore
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.core.data.model.ImageSource
-import com.core.data.model.toImageSource
 import com.core.datastore.ImageDatastore
+import com.core.model.data.ImageSource
+import com.core.model.datastore.toImageSource
 import kotlinx.coroutines.coroutineScope
 
 class ImageDataStorePagingSource(

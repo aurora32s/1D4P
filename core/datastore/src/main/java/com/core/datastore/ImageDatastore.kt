@@ -22,11 +22,8 @@ class ImageDatastore @Inject constructor(
         try {
             val uriExternal = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             val projection = arrayOf(
-                MediaStore.Images.ImageColumns.DISPLAY_NAME,
-                MediaStore.Images.ImageColumns.SIZE,
-                MediaStore.Images.ImageColumns.DATE_TAKEN,
-                MediaStore.Images.ImageColumns.DATE_ADDED,
-                MediaStore.Images.ImageColumns._ID
+                MediaStore.Images.ImageColumns._ID,
+                MediaStore.Images.ImageColumns.DATE_TAKEN
             )
             val resolver = context.contentResolver
             val query = resolver.createCursor(uriExternal, projection, limit, offset)

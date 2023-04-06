@@ -2,8 +2,8 @@ package com.core.data.post.local
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.core.data.model.Post
-import com.core.data.model.toImage
+import com.core.data.model.PostSource
+import com.core.data.model.toImageSource
 import com.core.data.model.toTag
 import com.core.database.dao.PostDao
 import kotlinx.coroutines.async
@@ -16,14 +16,14 @@ import java.time.YearMonth
  */
 class PostLocalPagingSource(
     private val postDao: PostDao
-) : PagingSource<YearMonth, Post>() {
-    override fun getRefreshKey(state: PagingState<YearMonth, Post>): YearMonth? {
+) : PagingSource<YearMonth, PostSource>() {
+    override fun getRefreshKey(state: PagingState<YearMonth, PostSource>): YearMonth? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plusMonths(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, Post> =
+    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, PostSource> =
         coroutineScope {
             val date: YearMonth = params.key ?: YearMonth.now()
 
@@ -34,13 +34,13 @@ class PostLocalPagingSource(
                             post.id?.let {
                                 val images = async { postDao.selectImagesByPost(it) }
                                 val tags = async { postDao.selectTagsByPost(it) }
-                                Post(
+                                PostSource(
                                     id = it,
                                     year = post.year,
                                     month = post.month,
                                     day = post.day,
                                     content = post.content,
-                                    images = images.await().map { image -> image.toImage() },
+                                    images = images.await().map { image -> image.toImageSource() },
                                     tags = tags.await().map { tag -> tag.toTag() }
                                 )
                             }

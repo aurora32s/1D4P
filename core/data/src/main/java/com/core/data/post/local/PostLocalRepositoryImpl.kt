@@ -16,44 +16,44 @@ import javax.inject.Inject
 class PostLocalRepositoryImpl @Inject constructor(
     private val postDao: PostDao
 ) : PostRepository {
-    override suspend fun addPost(post: Post): Long = coroutineScope {
+    override suspend fun addPost(post: PostSource): Long = coroutineScope {
         val postId = postDao.insertPost(post.toPostEntity())
         launch { postDao.insertImages(post.images.map { it.toImageEntity(postId) }) }
         launch { postDao.insertTags(post.tags.map { it.toTagEntity(postId) }) }
         postId
     }
 
-    override suspend fun getPost(year: Int, month: Int, day: Int): Post? = coroutineScope {
+    override suspend fun getPost(year: Int, month: Int, day: Int): PostSource? = coroutineScope {
         val post = postDao.selectPostByDate(year, month, day)
         post?.id?.let {
             val images = async { postDao.selectImagesByPost(it) }
             val tags = async { postDao.selectTagsByPost(it) }
-            Post(
+            PostSource(
                 id = it,
                 year = post.year,
                 month = post.month,
                 day = post.day,
                 content = post.content,
-                images = images.await().map { image -> image.toImage() },
+                images = images.await().map { image -> image.toImageSource() },
                 tags = tags.await().map { tag -> tag.toTag() }
             )
         }
     }
 
-    override suspend fun getPosts(year: Int, month: Int): List<Post> = coroutineScope {
+    override suspend fun getPosts(year: Int, month: Int): List<PostSource> = coroutineScope {
         val posts = postDao.selectPostByMonth(year, month)
         posts.map { post ->
             async {
                 post.id?.let {
                     val images = async { postDao.selectImagesByPost(it) }
                     val tags = async { postDao.selectTagsByPost(it) }
-                    Post(
+                    PostSource(
                         id = it,
                         year = post.year,
                         month = post.month,
                         day = post.day,
                         content = post.content,
-                        images = images.await().map { image -> image.toImage() },
+                        images = images.await().map { image -> image.toImageSource() },
                         tags = tags.await().map { tag -> tag.toTag() }
                     )
                 }
@@ -61,7 +61,7 @@ class PostLocalRepositoryImpl @Inject constructor(
         }.awaitAll().filterNotNull()
     }
 
-    override fun getPostPaging(year: Int, month: Int): Flow<PagingData<Post>> {
+    override fun getPostPaging(year: Int, month: Int): Flow<PagingData<PostSource>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PostLocalPagingSource.PAGING_SIZE,

@@ -3,6 +3,7 @@ androidGradlePlugin = "7.4.2"
 androidGradleTool = "7.2.0"
 androidx-lifecycle-runtime-compose = '2.6.0-alpha03'
 activityCompose = '1.6.1'
+coil = '2.2.2'
 composeUi = '1.2.0'
 compose-kotlin-compiler = '1.2.0'
 coroutine = '1.6.4'
@@ -65,6 +66,10 @@ room-paging = { group = "androidx.room", name = "room-paging", version.ref = "ro
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose" }
 
+# coil
+coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -84,3 +89,4 @@ compose = [
     'androidx-compose-ui-tooling-preview'
 ]
 room = ["room-runtime", "room-ktx"]
+coil = ["coil-kt", "coil-kt-compose"]

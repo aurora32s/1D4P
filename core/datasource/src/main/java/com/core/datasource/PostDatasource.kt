@@ -15,7 +15,7 @@ interface PostDatasource {
     suspend fun getPost(year: Int, month: Int, day: Int): Post?
 
     // 특정 년도/월 post 요창
-    suspend fun getPosts(year: Int, month: Int): List<Post>
+    suspend fun getPost(year: Int, month: Int): List<Post>
 
     // 특정 년도/월 post paging 요청
     fun getPostPaging(year: Int, month: Int): Flow<PagingData<Post>>

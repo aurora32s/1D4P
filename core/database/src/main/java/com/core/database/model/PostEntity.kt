@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "post")
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    val id: Int,
     val year: Int,
     val month: Int,
     val day: Int,

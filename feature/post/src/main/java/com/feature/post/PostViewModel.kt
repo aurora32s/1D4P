@@ -35,6 +35,10 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun setImages(selectedImages: List<ImageUiModel>) {
+        _selectedImages.value = selectedImages
+    }
+
     companion object {
         const val IMAGE_SELECT_LIMIT = 4
     }

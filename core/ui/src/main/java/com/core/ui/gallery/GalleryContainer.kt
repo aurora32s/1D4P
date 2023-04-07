@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.BottomDrawerState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.RectangleShape
@@ -20,6 +25,41 @@ import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.ImageUiModel
 
 private const val galleryColumn = 3
+
+
+@ExperimentalMaterialApi
+@Composable
+fun DrawerGalleryContainer(
+    drawerState: BottomDrawerState,
+    images: LazyPagingItems<ImageUiModel>,
+    selectedImages: List<ImageUiModel>,
+    limit: Int,
+    onClose: () -> Unit,
+    onImageSelect: (List<ImageUiModel>) -> Unit
+) {
+    val tempSelectedImages = remember(selectedImages) { mutableStateOf(selectedImages) }
+
+    LaunchedEffect(key1 = drawerState.isAnimationRunning) {
+        if (drawerState.isExpanded) {
+            tempSelectedImages.value = selectedImages
+        }
+    }
+
+    GalleryContainer(
+        images = images,
+        selectedImages = tempSelectedImages.value,
+        limit = limit,
+        onClose = onClose,
+        onSelectFinish = { onImageSelect(tempSelectedImages.value) },
+        onImageSelect = { image ->
+            if (image in tempSelectedImages.value) {
+                tempSelectedImages.value = tempSelectedImages.value.filterNot { image == it }
+            } else {
+                tempSelectedImages.value += image
+            }
+        }
+    )
+}
 
 @Composable
 fun GalleryContainer(
@@ -51,12 +91,12 @@ fun GalleryContainer(
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             items(count = images.itemCount) { index ->
-                images[index]?.let {
+                images[index]?.let { image ->
                     SelectableImage(
                         modifier = Modifier.aspectRatio(1f),
-                        image = it,
+                        image = image,
                         shape = RectangleShape,
-                        selectedIndex = selectedImages.indexOf(it),
+                        selectedIndex = selectedImages.indexOf(image),
                         enableSelectFlag = selectedImages.size < limit,
                         onClick = onImageSelect
                     )

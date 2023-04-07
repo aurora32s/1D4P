@@ -68,7 +68,7 @@ val Typography = Typography(
     ),
     body2 = TextStyle(
         fontFamily = BM,
-        fontSize = 10.sp,
+        fontSize = 12.sp,
         fontWeight = FontWeight.Light,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false
@@ -76,7 +76,7 @@ val Typography = Typography(
     ),
     button = TextStyle(
         fontFamily = BM,
-        fontSize = 10.sp,
+        fontSize = 12.sp,
         fontWeight = FontWeight.Medium,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false

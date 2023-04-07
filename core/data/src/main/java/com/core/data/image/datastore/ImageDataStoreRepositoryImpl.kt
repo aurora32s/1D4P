@@ -17,7 +17,7 @@ class ImageDataStoreRepositoryImpl @Inject constructor(
             config = PagingConfig(
                 pageSize = ImageDataStorePagingSource.PAGING_SIZE,
                 enablePlaceholders = true,
-                maxSize = ImageDataStorePagingSource.PAGING_SIZE * 5
+//                maxSize = ImageDataStorePagingSource.PAGING_SIZE * 10
             ),
             pagingSourceFactory = {
                 ImageDataStorePagingSource(imageDatastore)

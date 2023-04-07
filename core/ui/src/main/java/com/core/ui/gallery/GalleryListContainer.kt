@@ -56,7 +56,7 @@ fun GalleryListContainer(
                     SelectableImage(
                         modifier = Modifier.aspectRatio(1f),
                         image = it,
-                        selectedIndex = selectedImages.indexOf(it),
+                        isSelected = it in selectedImages,
                         enableSelectFlag = selectedImages.size < limit,
                         onClick = onImageSelect
                     )

@@ -26,6 +26,8 @@ fun GalleryContainer(
     images: LazyPagingItems<ImageUiModel>, // gallery image 정보
     selectedImages: List<ImageUiModel>, // 선택된 이미지 정보
     limit: Int = 0, // 선택할 수 이미지 최대 개수
+    onClose: () -> Unit, // 닫기 버튼 클릭 event
+    onSelectFinish: () -> Unit, // 선택 완료 버튼 클릭 event
     onImageSelect: (ImageUiModel) -> Unit = {} // 이미지 선택 event
 ) {
     Column(
@@ -36,8 +38,8 @@ fun GalleryContainer(
         BackAndRightButtonHeader(
             title = "갤러리",
             showButtonFlag = selectedImages.isNotEmpty(),
-            onBackPressed = { },
-            onClick = { },
+            onBackPressed = onClose,
+            onClick = onSelectFinish,
             content = {
                 Text(text = "${selectedImages.size}개 선택")
             }

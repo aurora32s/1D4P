@@ -22,7 +22,7 @@ import com.core.designsystem.theme.HarooTheme
 @Composable
 fun HarooChip(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onClick: (() -> Unit)? = null,
     shape: Shape = MaterialTheme.shapes.small,
     backgroundColor: Color = HarooTheme.colors.uiBackground,
     // 테두리 색
@@ -32,9 +32,13 @@ fun HarooChip(
     content: @Composable RowScope.() -> Unit
 ) {
     HarooSurface(
-        modifier = modifier.clickable(
-            role = Role.Button,
-            onClick = onClick
+        modifier = modifier.then(
+            onClick?.let {
+                Modifier.clickable(
+                    role = Role.Button,
+                    onClick = it
+                )
+            } ?: Modifier
         ),
         color = backgroundColor,
         shape = shape,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -16,6 +17,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.gallery.GalleryContainer
 import com.core.ui.gallery.GalleryListContainer
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -25,17 +27,25 @@ fun PostScreen(
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
 
-    val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    ModalBottomSheetLayout(
-        sheetState = modalSheetState,
-        sheetContent = {
+//    val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
+    val bottomDrawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
+
+    BottomDrawer(
+        drawerState = bottomDrawerState,
+        drawerContent = {
             GalleryContainer(
                 images = images,
                 selectedImages = selectedImages.value,
                 limit = PostViewModel.IMAGE_SELECT_LIMIT,
+                onClose = {
+                    coroutineScope.launch { bottomDrawerState.close() }
+                },
+                onSelectFinish = {},
                 onImageSelect = postViewModel::selectImage
             )
-        }
+        },
+        scrimColor = HarooTheme.colors.dim
     ) {
         Column(
             modifier = Modifier
@@ -54,6 +64,9 @@ fun PostScreen(
                     images = images,
                     selectedImages = selectedImages.value,
                     limit = PostViewModel.IMAGE_SELECT_LIMIT,
+                    onClickAddButton = {
+                        coroutineScope.launch { bottomDrawerState.expand() }
+                    },
                     onImageSelect = postViewModel::selectImage
                 )
             }

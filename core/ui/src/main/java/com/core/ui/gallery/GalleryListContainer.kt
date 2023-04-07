@@ -25,6 +25,7 @@ fun GalleryListContainer(
     images: LazyPagingItems<ImageUiModel>,
     selectedImages: List<ImageUiModel>,
     limit: Int = 0,
+    onClickAddButton: () -> Unit = {},
     onImageSelect: (ImageUiModel) -> Unit = {}
 ) {
     Row(
@@ -34,7 +35,7 @@ fun GalleryListContainer(
             modifier = Modifier
                 .fillMaxHeight()
                 .aspectRatio(1f),
-            onClick = {},
+            onClick = onClickAddButton,
             shape = MaterialTheme.shapes.medium,
             backgroundColor = HarooTheme.colors.uiBackground,
             alpha = 0.1f,

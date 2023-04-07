@@ -68,7 +68,7 @@ class HarooColors(
     interactiveBackground: List<Color> = gradient4_1,
     text: Color,
     iconPrimary: Color = brand,
-    dim: Color = Black,
+    dim: Color = Dim,
     isDark: Boolean
 ) {
     var gradient4_1 by mutableStateOf(gradient4_1)

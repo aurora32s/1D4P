@@ -1,5 +1,6 @@
 package com.feature.post
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,12 @@ fun PostScreen(
     val coroutineScope = rememberCoroutineScope()
     val bottomDrawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
 
+    BackHandler(enabled = bottomDrawerState.isOpen) {
+        coroutineScope.launch {
+            bottomDrawerState.close()
+        }
+    }
+
     BottomDrawer(
         drawerState = bottomDrawerState,
         drawerContent = {
@@ -45,6 +52,7 @@ fun PostScreen(
                 onImageSelect = postViewModel::selectImage
             )
         },
+        gesturesEnabled = false,
         scrimColor = HarooTheme.colors.dim
     ) {
         Column(

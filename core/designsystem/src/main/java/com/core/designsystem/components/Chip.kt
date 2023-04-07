@@ -2,7 +2,6 @@ package com.core.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
@@ -16,6 +15,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 
@@ -34,7 +34,7 @@ fun HarooChip(
     HarooSurface(
         modifier = modifier.then(
             onClick?.let {
-                Modifier.clickable(
+                Modifier.noRippleClickable(
                     role = Role.Button,
                     onClick = it
                 )

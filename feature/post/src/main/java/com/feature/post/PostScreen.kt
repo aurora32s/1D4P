@@ -1,14 +1,21 @@
 package com.feature.post
 
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.core.designsystem.theme.HarooTheme
 import com.core.ui.gallery.GalleryContainer
+import com.core.ui.gallery.GalleryListContainer
 
 @ExperimentalMaterialApi
 @Composable
@@ -30,6 +37,26 @@ fun PostScreen(
             )
         }
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
 
+            }
+            BottomAppBar(
+                modifier = Modifier.padding(vertical = 12.dp),
+                backgroundColor = Color.Transparent
+            ) {
+                GalleryListContainer(
+                    modifier = Modifier,
+                    images = images,
+                    selectedImages = selectedImages.value,
+                    limit = PostViewModel.IMAGE_SELECT_LIMIT,
+                    onImageSelect = postViewModel::selectImage
+                )
+            }
+        }
     }
 }

@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.core.designsystem.R
+import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.ImageUiModel
@@ -86,7 +86,7 @@ fun SelectableImage(
 ) {
     Box(
         modifier = modifier
-            .clickable(
+            .noRippleClickable(
                 role = Role.Button,
                 onClick = { onClick(image) },
                 enabled = enableSelectFlag || selectedIndex >= 0

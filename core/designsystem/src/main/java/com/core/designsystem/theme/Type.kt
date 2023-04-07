@@ -60,7 +60,7 @@ val Typography = Typography(
     ),
     body1 = TextStyle(
         fontFamily = BM,
-        fontSize = 12.sp,
+        fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false

@@ -105,7 +105,7 @@ fun GalleryContainer(
             visible = selectedImages.isNotEmpty(),
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> -fullHeight },
-                animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing)
+                animationSpec = tween(durationMillis = 300, easing = LinearOutSlowInEasing)
             ) + fadeIn()
         ) {
             AsyncImageList(

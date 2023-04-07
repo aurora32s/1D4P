@@ -11,10 +11,10 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
@@ -32,6 +32,7 @@ fun HarooSurface(
     shape: Shape = MaterialTheme.shapes.medium, // 모양
     color: Color = HarooTheme.colors.uiBackground, // 배경색
     contentColor: Color = HarooTheme.colors.text, // 내용 색
+    contentAlignment: Alignment = Alignment.Center,
     border: BorderStroke? = null, // 테두리 모양
     elevation: Dp = 0.dp, // 그림자 크기
     alpha: Float = 0.15f, // 배경 투명도
@@ -47,7 +48,8 @@ fun HarooSurface(
             )
             .then(if (border != null) Modifier.border(border, shape) else Modifier)
             .background(color.copy(alpha = alpha), shape)
-            .clip(shape)
+            .clip(shape),
+        contentAlignment = contentAlignment
     ) {
         CompositionLocalProvider(
             LocalContentColor provides contentColor,

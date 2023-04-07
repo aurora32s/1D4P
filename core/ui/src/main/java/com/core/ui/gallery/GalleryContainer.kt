@@ -88,6 +88,7 @@ fun GalleryContainer(
                 Text(text = "${selectedImages.size}개 선택")
             }
         )
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(galleryColumn),
             contentPadding = PaddingValues(space),
@@ -101,7 +102,7 @@ fun GalleryContainer(
                         image = image,
                         shape = RectangleShape,
                         borderWidth = 2.dp,
-                        selectedIndex = selectedImages.indexOf(image),
+                        isSelected = image in selectedImages,
                         enableSelectFlag = selectedImages.size < limit,
                         onClick = onImageSelect
                     )

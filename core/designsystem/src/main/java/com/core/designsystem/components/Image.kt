@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
@@ -82,7 +83,8 @@ fun SelectableImage(
     image: ImageUiModel,
     shape: Shape = MaterialTheme.shapes.medium,
     borderWidth: Dp = 1.dp,
-    selectedIndex: Int,
+    selectedColor: Color = HarooTheme.colors.brand,
+    isSelected: Boolean,
     enableSelectFlag: Boolean = false,
     onClick: (ImageUiModel) -> Unit
 ) {
@@ -91,17 +93,15 @@ fun SelectableImage(
             .noRippleClickable(
                 role = Role.Button,
                 onClick = { onClick(image) },
-                enabled = enableSelectFlag || selectedIndex >= 0
+                enabled = enableSelectFlag || isSelected
             )
             .then(
-                if (selectedIndex >= 0) Modifier.border(
-                    borderWidth,
-                    HarooTheme.colors.brand,
-                    shape = shape
+                if (isSelected) Modifier.border(
+                    borderWidth, selectedColor, shape = shape
                 ) else Modifier
             )
     ) {
-        if (selectedIndex >= 0) {
+        if (isSelected) {
             HarooSurface(
                 modifier = Modifier
                     .fillMaxSize()
@@ -113,7 +113,7 @@ fun SelectableImage(
                 Icon(
                     imageVector = Icons.Rounded.CheckCircle,
                     contentDescription = "select",
-                    tint = HarooTheme.colors.brand
+                    tint = selectedColor
                 )
             }
         } else if (enableSelectFlag.not()) {

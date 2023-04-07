@@ -106,7 +106,7 @@ fun SelectableImage(
                     .zIndex(1f),
                 shape = shape,
                 color = HarooTheme.colors.dim,
-                alpha = 0.3f
+                alpha = 0.5f
             ) {
                 HarooChip(
                     modifier = Modifier
@@ -125,7 +125,7 @@ fun SelectableImage(
                     .zIndex(1f),
                 shape = shape,
                 color = HarooTheme.colors.uiBackground,
-                alpha = 0.5f
+                alpha = 0.4f
             ) {}
         }
         HarooImage(

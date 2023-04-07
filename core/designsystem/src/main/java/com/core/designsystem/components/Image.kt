@@ -5,10 +5,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
@@ -80,6 +81,7 @@ fun SelectableImage(
     modifier: Modifier = Modifier,
     image: ImageUiModel,
     shape: Shape = MaterialTheme.shapes.medium,
+    borderWidth: Dp = 1.dp,
     selectedIndex: Int,
     enableSelectFlag: Boolean = false,
     onClick: (ImageUiModel) -> Unit
@@ -93,7 +95,7 @@ fun SelectableImage(
             )
             .then(
                 if (selectedIndex >= 0) Modifier.border(
-                    3.dp,
+                    borderWidth,
                     HarooTheme.colors.brand,
                     shape = shape
                 ) else Modifier
@@ -108,15 +110,11 @@ fun SelectableImage(
                 color = HarooTheme.colors.dim,
                 alpha = 0.5f
             ) {
-                HarooChip(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(12.dp),
-                    backgroundColor = HarooTheme.colors.brand,
-                    alpha = 1f
-                ) {
-                    Text(text = "${selectedIndex + 1}")
-                }
+                Icon(
+                    imageVector = Icons.Rounded.CheckCircle,
+                    contentDescription = "select",
+                    tint = HarooTheme.colors.brand
+                )
             }
         } else if (enableSelectFlag.not()) {
             HarooSurface(

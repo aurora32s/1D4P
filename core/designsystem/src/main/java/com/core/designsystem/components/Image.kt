@@ -3,12 +3,11 @@ package com.core.designsystem.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,37 +80,58 @@ fun SelectableImage(
     modifier: Modifier = Modifier,
     image: ImageUiModel,
     shape: Shape = MaterialTheme.shapes.medium,
-    isSelected: Boolean,
+    selectedIndex: Int,
+    enableSelectFlag: Boolean = false,
     onClick: (ImageUiModel) -> Unit
 ) {
     Box(
-        modifier = modifier.clickable(
-            role = Role.Button,
-            onClick = { onClick(image) }
-        )
+        modifier = modifier
+            .clickable(
+                role = Role.Button,
+                onClick = { onClick(image) },
+                enabled = enableSelectFlag || selectedIndex >= 0
+            )
+            .then(
+                if (selectedIndex >= 0) Modifier.border(
+                    3.dp,
+                    HarooTheme.colors.brand,
+                    shape = shape
+                ) else Modifier
+            )
     ) {
-        if (isSelected) {
+        if (selectedIndex >= 0) {
             HarooSurface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .zIndex(2f),
+                    .zIndex(1f),
                 shape = shape,
                 color = HarooTheme.colors.dim,
-                alpha = 0.7f
+                alpha = 0.3f
             ) {
-                Icon(
+                HarooChip(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.Center)
                         .padding(12.dp),
-                    imageVector = Icons.Outlined.Done,
-                    contentDescription = ""
-                )
+                    backgroundColor = HarooTheme.colors.brand,
+                    alpha = 1f
+                ) {
+                    Text(text = "${selectedIndex + 1}")
+                }
             }
+        } else if (enableSelectFlag.not()) {
+            HarooSurface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(1f),
+                shape = shape,
+                color = HarooTheme.colors.uiBackground,
+                alpha = 0.5f
+            ) {}
         }
         HarooImage(
-            modifier = Modifier.zIndex(1f),
             imageType = Image.AsyncImage(image),
-            shape = shape
+            shape = shape,
+            elevation = 0.dp
         )
     }
 }
@@ -122,17 +142,13 @@ fun SelectableImage(
 @Composable
 fun HarooImage(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
     shape: Shape = MaterialTheme.shapes.medium, // 이미지 모양
     elevation: Dp = 2.dp, // 그림자 크기
     contentScale: ContentScale = ContentScale.Crop,
     imageType: Image // 이미지 정보
 ) {
     HarooSurface(
-        modifier = modifier.clickable(
-            role = Role.Button,
-            onClick = onClick
-        ),
+        modifier = modifier,
         shape = shape,
         elevation = elevation
     ) {

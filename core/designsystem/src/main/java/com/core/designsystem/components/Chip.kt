@@ -28,6 +28,7 @@ fun HarooChip(
     // 테두리 색
     border: BorderStroke = BorderStroke(width = 1.dp, color = backgroundColor),
     contentColor: Color = HarooTheme.colors.text,
+    alpha: Float = 0f,
     content: @Composable RowScope.() -> Unit
 ) {
     HarooSurface(
@@ -35,7 +36,9 @@ fun HarooChip(
             role = Role.Button,
             onClick = onClick
         ),
+        color = backgroundColor,
         shape = shape,
+        alpha = alpha,
         border = border,
         contentColor = contentColor
     ) {

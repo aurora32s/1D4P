@@ -17,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.gallery.DrawerGalleryContainer
-import com.core.ui.gallery.GalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import kotlinx.coroutines.launch
 
@@ -47,6 +46,7 @@ fun PostScreen(
                 images = images,
                 selectedImages = selectedImages.value,
                 limit = PostViewModel.IMAGE_SELECT_LIMIT,
+                space = 2.dp,
                 onClose = {
                     coroutineScope.launch { bottomDrawerState.close() }
                 },

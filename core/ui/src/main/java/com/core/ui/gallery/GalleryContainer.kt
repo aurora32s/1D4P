@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.core.designsystem.components.BackAndRightButtonHeader
@@ -34,6 +35,7 @@ fun DrawerGalleryContainer(
     images: LazyPagingItems<ImageUiModel>,
     selectedImages: List<ImageUiModel>,
     limit: Int,
+    space: Dp = 0.dp,
     onClose: () -> Unit,
     onImageSelect: (List<ImageUiModel>) -> Unit
 ) {
@@ -49,6 +51,7 @@ fun DrawerGalleryContainer(
         images = images,
         selectedImages = tempSelectedImages.value,
         limit = limit,
+        space = space,
         onClose = onClose,
         onSelectFinish = { onImageSelect(tempSelectedImages.value) },
         onImageSelect = { image ->
@@ -66,6 +69,7 @@ fun GalleryContainer(
     images: LazyPagingItems<ImageUiModel>, // gallery image 정보
     selectedImages: List<ImageUiModel>, // 선택된 이미지 정보
     limit: Int = 0, // 선택할 수 이미지 최대 개수
+    space: Dp = 0.dp, // 각 이미지 사이 space
     onClose: () -> Unit, // 닫기 버튼 클릭 event
     onSelectFinish: () -> Unit, // 선택 완료 버튼 클릭 event
     onImageSelect: (ImageUiModel) -> Unit = {} // 이미지 선택 event
@@ -86,9 +90,9 @@ fun GalleryContainer(
         )
         LazyVerticalGrid(
             columns = GridCells.Fixed(galleryColumn),
-            contentPadding = PaddingValues(1.dp),
-            horizontalArrangement = Arrangement.spacedBy(1.dp),
-            verticalArrangement = Arrangement.spacedBy(1.dp)
+            contentPadding = PaddingValues(space),
+            horizontalArrangement = Arrangement.spacedBy(space),
+            verticalArrangement = Arrangement.spacedBy(space)
         ) {
             items(count = images.itemCount) { index ->
                 images[index]?.let { image ->
@@ -96,6 +100,7 @@ fun GalleryContainer(
                         modifier = Modifier.aspectRatio(1f),
                         image = image,
                         shape = RectangleShape,
+                        borderWidth = 2.dp,
                         selectedIndex = selectedImages.indexOf(image),
                         enableSelectFlag = selectedImages.size < limit,
                         onClick = onImageSelect

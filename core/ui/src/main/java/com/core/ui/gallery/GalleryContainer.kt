@@ -1,5 +1,10 @@
 package com.core.ui.gallery
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +25,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.core.designsystem.components.AsyncImageList
 import com.core.designsystem.components.BackAndRightButtonHeader
+import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.components.SelectableImage
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.ImageUiModel
@@ -53,6 +60,11 @@ fun DrawerGalleryContainer(
         limit = limit,
         space = space,
         onClose = onClose,
+        onRemoveImage = { image ->
+            if (image in tempSelectedImages.value) {
+                tempSelectedImages.value = tempSelectedImages.value.filterNot { image == it }
+            }
+        },
         onSelectFinish = { onImageSelect(tempSelectedImages.value) },
         onImageSelect = { image ->
             if (image in tempSelectedImages.value) {
@@ -71,6 +83,7 @@ fun GalleryContainer(
     limit: Int = 0, // 선택할 수 이미지 최대 개수
     space: Dp = 0.dp, // 각 이미지 사이 space
     onClose: () -> Unit, // 닫기 버튼 클릭 event
+    onRemoveImage: (ImageUiModel) -> Unit, // 선택된 이미지 제거 event
     onSelectFinish: () -> Unit, // 선택 완료 버튼 클릭 event
     onImageSelect: (ImageUiModel) -> Unit = {} // 이미지 선택 event
 ) {
@@ -88,7 +101,25 @@ fun GalleryContainer(
                 Text(text = "${selectedImages.size}개 선택")
             }
         )
-
+        AnimatedVisibility(
+            visible = selectedImages.isNotEmpty(),
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> -fullHeight },
+                animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing)
+            ) + fadeIn()
+        ) {
+            AsyncImageList(
+                images = selectedImages,
+                imageCount = limit,
+                contentPadding = 4.dp,
+                content = {
+                    RemovableImage(
+                        image = it.image,
+                        onRemove = onRemoveImage
+                    )
+                }
+            )
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(galleryColumn),
             contentPadding = PaddingValues(space),

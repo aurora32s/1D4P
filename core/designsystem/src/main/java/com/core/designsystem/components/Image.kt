@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +33,25 @@ import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.ImageUiModel
 
+@Composable
+fun AsyncImageList(
+    modifier: Modifier = Modifier,
+    images: List<ImageUiModel>,
+    space: Dp = 0.dp,
+    imageCount: Int = 1,
+    contentPadding: Dp = 0.dp,
+    content: @Composable (Image.AsyncImage) -> Unit
+) {
+    HarooImageList(
+        modifier = modifier,
+        images = images.map { Image.AsyncImage(image = it) },
+        space = space,
+        imageCount = imageCount,
+        contentPadding = contentPadding,
+        content = { content(it as Image.AsyncImage) }
+    )
+}
+
 /**
  * 하루 이미지 4개를 가로 리스트 로 보여 주는 Component
  */
@@ -38,41 +59,107 @@ import com.core.model.feature.ImageUiModel
 fun HarooImageList(
     modifier: Modifier = Modifier,
     images: List<Image>, // 이미지 정보 리스트
-    padding: Dp = 0.dp // 이미지 사이 넓이
+    space: Dp = 0.dp, // 이미지 사이 넓이
+    imageCount: Int = 1, // 화면에 보여줄 이미지 개수
+    contentPadding: Dp = 0.dp,
+    content: @Composable (Image) -> Unit
 ) {
     Layout(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(contentPadding),
         content = {
-            images.forEach {
-                HarooImage(imageType = it)
-            }
+            images.forEach { content(it) }
         }
     ) { measureables, constraints ->
-        val children = measureables.size
-        val space = padding.toPx().toInt()
-        val imageSize = (constraints.maxWidth - space * 2 * (children)) / children
+        val spaceBy = space.toPx().toInt()
+        val padding = contentPadding.toPx().toInt()
+
+        val width = (constraints.maxWidth - (imageCount - 1) * spaceBy - padding) / imageCount
         val imageConstraints = Constraints(
-            minWidth = imageSize,
-            minHeight = imageSize,
-            maxWidth = imageSize,
-            maxHeight = imageSize
+            minWidth = width,
+            minHeight = width,
+            maxWidth = width,
+            maxHeight = width
         )
         val placeable = measureables.map {
             it.measure(imageConstraints)
         }
-
         layout(
             width = constraints.maxWidth,
-            height = constraints.maxHeight
+            height = width
         ) {
-            var x = space
+            var x = 0
             placeable.forEach {
                 it.placeRelative(
                     x = x,
                     y = 0
                 )
-                x += it.width + space * 2
+                x += it.width + spaceBy
             }
+        }
+    }
+}
+
+@Composable
+fun RemovableImage(
+    modifier: Modifier = Modifier,
+    image: ImageUiModel,
+    shape: Shape = MaterialTheme.shapes.medium,
+    elevation: Dp = 0.dp,
+    onRemove: (ImageUiModel) -> Unit
+) {
+    Layout(
+        modifier = modifier.noRippleClickable { onRemove(image) },
+        content = {
+            HarooImage(
+                modifier = Modifier.layoutId("Image"),
+                imageType = Image.AsyncImage(image),
+                shape = shape,
+                elevation = elevation
+            )
+            HarooButton(
+                modifier = Modifier.layoutId("RemoveBtn"),
+                onClick = { onRemove(image) },
+                backgroundColor = HarooTheme.colors.dim,
+                alpha = 0.5f,
+                contentPadding = PaddingValues(2.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "remove",
+                    tint = HarooTheme.colors.text
+                )
+            }
+        }
+    ) { measureables, constraints ->
+        val removeButtonSize = (constraints.maxHeight / 5).coerceIn(0, 36.dp.toPx().toInt())
+        val removePlaceable = measureables.find { it.layoutId == "RemoveBtn" }?.measure(
+            Constraints(
+                minWidth = removeButtonSize, maxWidth = removeButtonSize,
+                minHeight = removeButtonSize, maxHeight = removeButtonSize
+            )
+        )
+        val width = constraints.maxWidth - removeButtonSize
+        val height = constraints.maxHeight - removeButtonSize
+        val imagePlaceable = measureables.find { it.layoutId == "Image" }?.measure(
+            Constraints(
+                minWidth = width, maxWidth = width,
+                minHeight = height, maxHeight = height
+            )
+        )
+
+        layout(
+            constraints.maxWidth, constraints.maxHeight
+        ) {
+            imagePlaceable?.placeRelative(
+                x = removeButtonSize / 2,
+                y = removeButtonSize / 2
+            )
+            removePlaceable?.placeRelative(
+                x = constraints.maxWidth - removeButtonSize,
+                y = 0
+            )
         }
     }
 }
@@ -203,16 +290,6 @@ fun ImagePreview() {
                     .padding(12.dp)
                     .size(120.dp),
                 imageType = Image.ResourceImage(R.drawable.test)
-            )
-
-            HarooImageList(
-                images = listOf(
-                    Image.ResourceImage(R.drawable.test),
-                    Image.ResourceImage(R.drawable.test),
-                    Image.ResourceImage(R.drawable.test),
-                    Image.ResourceImage(R.drawable.test)
-                ),
-                padding = 8.dp
             )
         }
     }

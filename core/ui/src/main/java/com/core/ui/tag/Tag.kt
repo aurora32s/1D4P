@@ -100,6 +100,7 @@ fun TagTextField(
                 modifier = Modifier.weight(1f),
                 value = tag.value,
                 onValueChange = { tag.value = it },
+                autoFocus = true,
                 color = Color.Transparent,
                 placeHolder = "태그 입력...",
                 contentPadding = PaddingValues(horizontal = 8.dp)

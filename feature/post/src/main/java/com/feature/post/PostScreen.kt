@@ -18,6 +18,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
+import com.core.ui.tag.TagContainer
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -67,6 +68,10 @@ fun PostScreen(
             Column(modifier = Modifier.weight(1f)) {
 
             }
+            TagContainer(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                tags = emptyList(), onAddTag = {}
+            )
             BottomAppBar(
                 modifier = Modifier.padding(vertical = 12.dp),
                 backgroundColor = Color.Transparent

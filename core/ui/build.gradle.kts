@@ -12,4 +12,5 @@ dependencies {
     implementation(project(":core:designsystem"))
 
     implementation(libs.paging.compose)
+    implementation(libs.accompanist.flowlayout)
 }

@@ -1,4 +1,5 @@
 [versions]
+accompanist = "0.28.0"
 androidGradlePlugin = "7.4.2"
 androidGradleTool = "7.2.0"
 androidx-lifecycle-runtime-compose = '2.6.0-alpha03'
@@ -69,6 +70,9 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 # coil
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# accompanist
+accompanist-flowlayout = { group = "com.google.accompanist", name = "accompanist-flowlayout", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

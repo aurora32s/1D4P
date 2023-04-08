@@ -10,6 +10,7 @@ private val DarkColorScheme = HarooColors(
     gradient4_1 = listOf(PinkA400, DeepBlue900, Black, DeepBlue800),
     brand = PinkA400,
     uiBackground = White,
+    uiBorder = White,
     text = White,
     iconPrimary = White,
     isDark = true
@@ -19,6 +20,7 @@ private val LightColorScheme = HarooColors(
     gradient4_1 = listOf(PinkA400, DeepBlue900, Black, DeepBlue800),
     brand = PinkA400,
     uiBackground = White,
+    uiBorder = White,
     text = White,
     iconPrimary = White,
     isDark = false
@@ -65,6 +67,7 @@ class HarooColors(
     gradient4_1: List<Color>,
     brand: Color,
     uiBackground: Color,
+    uiBorder: Color,
     interactiveBackground: List<Color> = gradient4_1,
     text: Color,
     iconPrimary: Color = brand,
@@ -76,6 +79,8 @@ class HarooColors(
     var brand by mutableStateOf(brand)
         private set
     var uiBackground by mutableStateOf(uiBackground)
+        private set
+    var uiBorder by mutableStateOf(uiBorder)
         private set
     var interactiveBackground by mutableStateOf(interactiveBackground)
         private set
@@ -92,6 +97,7 @@ class HarooColors(
         this.gradient4_1 = other.gradient4_1
         this.brand = other.brand
         this.uiBackground = other.uiBackground
+        this.uiBorder = other.uiBorder
         this.interactiveBackground = other.interactiveBackground
         this.text = other.text
         this.iconPrimary = other.iconPrimary
@@ -103,6 +109,7 @@ class HarooColors(
         gradient4_1 = gradient4_1,
         brand = brand,
         uiBackground = uiBackground,
+        uiBorder = uiBorder,
         interactiveBackground = interactiveBackground,
         text = text,
         iconPrimary = iconPrimary,

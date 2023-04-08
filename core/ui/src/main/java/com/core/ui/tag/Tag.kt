@@ -29,7 +29,6 @@ import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.model.feature.TagUiModel
 import com.google.accompanist.flowlayout.FlowRow
 
-
 @Composable
 fun TagContainer(
     modifier: Modifier = Modifier,
@@ -85,6 +84,12 @@ fun TagTextField(
     onAddTag: (String) -> Unit
 ) {
     val tag = remember { mutableStateOf("") }
+    val onAddTagAndClearTag = remember(key1 = onAddTag) {
+        {
+            onAddTag(tag.value)
+            tag.value = ""
+        }
+    }
 
     Column(
         modifier = modifier.fillMaxWidth()
@@ -99,14 +104,12 @@ fun TagTextField(
                 autoFocus = true,
                 color = Color.Transparent,
                 placeHolder = "태그 입력...",
-                contentPadding = PaddingValues(horizontal = 8.dp)
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                onDone = { onAddTagAndClearTag() }
             )
             HarooButton(
                 alpha = 0f,
-                onClick = {
-                    onAddTag(tag.value)
-                    tag.value = ""
-                }
+                onClick = onAddTagAndClearTag
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Add,

@@ -35,7 +35,7 @@ fun TagContainer(
     modifier: Modifier = Modifier,
     tags: List<TagUiModel>,
     tagSpace: Dp = 2.dp,
-    onAddTag: (String) -> Boolean,
+    onAddTag: (String) -> Unit,
     onRemoveTag: (TagUiModel) -> Unit
 ) {
     val showTagTextField = remember { mutableStateOf(false) }
@@ -47,7 +47,7 @@ fun TagContainer(
             crossAxisSpacing = tagSpace
         ) {
             tags.forEach { tag ->
-                TagChip(name = tag.name, onClick = { onRemoveTag(tag) })
+                TagChip(name = "#${tag.name}", onClick = { onRemoveTag(tag) })
             }
             TagChip(
                 name = "+태그추가",
@@ -61,11 +61,7 @@ fun TagContainer(
             )
         ) {
             TagTextField(
-                onAddTag = {
-                    // tag 를 성공적으로 추가한 경우에만 태그 입력란 hide
-                    val isSuccess = onAddTag(it)
-                    if (isSuccess) showTagTextField.value = false
-                }
+                onAddTag = onAddTag
             )
         }
     }
@@ -107,7 +103,10 @@ fun TagTextField(
             )
             HarooButton(
                 alpha = 0f,
-                onClick = { onAddTag(tag.value) }
+                onClick = {
+                    onAddTag(tag.value)
+                    tag.value = ""
+                }
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Add,
@@ -145,7 +144,7 @@ fun TagContainerPreview() {
                 TagUiModel(name = "test5"),
                 TagUiModel(name = "test6")
             ),
-            onAddTag = { true },
+            onAddTag = { },
             onRemoveTag = {}
         )
     }

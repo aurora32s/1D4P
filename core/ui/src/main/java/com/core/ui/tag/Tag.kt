@@ -1,5 +1,9 @@
 package com.core.ui.tag
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,6 +24,27 @@ import com.core.designsystem.components.HarooDivider
 import com.core.designsystem.components.HarooTextField
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.model.feature.TagUiModel
+
+
+@Composable
+fun TagContainer(
+    modifier: Modifier = Modifier,
+    tags: List<TagUiModel>,
+    onAddTag: (TagUiModel) -> Unit
+) {
+    val showTagTextField = remember { mutableStateOf(true) }
+
+    Column {
+        AnimatedVisibility(
+            visible = showTagTextField.value,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+            )
+        ) {
+            TagTextField(onAddTag = onAddTag)
+        }
+    }
+}
 
 @Composable
 fun TagTextField(
@@ -63,5 +88,13 @@ fun TagTextFieldPreview() {
         TagTextField(
             onAddTag = {}
         )
+    }
+}
+
+@Composable
+@Preview(name = "basic tag container")
+fun TagContainerPreview() {
+    AllForMemoryTheme {
+        TagContainer(tags = emptyList(), onAddTag = {})
     }
 }

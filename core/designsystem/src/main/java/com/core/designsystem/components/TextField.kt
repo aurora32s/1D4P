@@ -3,19 +3,20 @@ package com.core.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 
@@ -31,17 +32,19 @@ fun HarooTextField(
     border: BorderStroke? = null, // 테두리 모양
     placeHolder: String = "", // hint
     singleLine: Boolean = true, // 한줄 여부
+    contentPadding: PaddingValues = PaddingValues(), // Surface 와 TextField padding
     maxLines: Int = Int.MAX_VALUE // 최대 입력 가능 라인
 ) {
     HarooSurface(
-        modifier = modifier,
+        modifier = modifier
+            .padding(contentPadding),
         shape = shape,
         color = color,
         contentColor = contentColor,
+        contentAlignment = Alignment.CenterStart,
         border = border
     ) {
         BasicTextField(
-            modifier = Modifier.padding(16.dp),
             textStyle = MaterialTheme.typography.body1,
             value = value,
             onValueChange = onValueChange,

@@ -74,7 +74,7 @@ fun ButtonPreview() {
             HarooButton(
                 border = BorderStroke(
                     width = 1.dp,
-                    color = HarooTheme.colors.uiBackground
+                    color = HarooTheme.colors.uiBorder
                 ),
                 onClick = {},
                 alpha = 0f,

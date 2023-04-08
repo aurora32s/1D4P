@@ -45,7 +45,7 @@ fun BackAndRightButtonHeader(
                 HarooButton(
                     border = BorderStroke(
                         width = 1.dp,
-                        color = HarooTheme.colors.uiBackground
+                        color = HarooTheme.colors.uiBorder
                     ),
                     onClick = onClick,
                     alpha = 0f,

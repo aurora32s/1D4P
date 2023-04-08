@@ -7,6 +7,7 @@ import androidx.paging.map
 import com.core.domain.post.GetImagesUseCase
 import com.core.model.domain.toImageUiModel
 import com.core.model.feature.ImageUiModel
+import com.core.model.feature.TagUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,9 @@ class PostViewModel @Inject constructor(
     private val _selectedImages = MutableStateFlow<List<ImageUiModel>>(emptyList())
     val selectedImages: StateFlow<List<ImageUiModel>> = _selectedImages.asStateFlow()
 
+    private val _tags = MutableStateFlow<List<TagUiModel>>(emptyList())
+    val tags: StateFlow<List<TagUiModel>> = _tags.asStateFlow()
+
     fun selectImage(imageUiModel: ImageUiModel) {
         if (imageUiModel in _selectedImages.value) {
             _selectedImages.value = _selectedImages.value.filterNot { it == imageUiModel }
@@ -37,6 +41,19 @@ class PostViewModel @Inject constructor(
 
     fun setImages(selectedImages: List<ImageUiModel>) {
         _selectedImages.value = selectedImages
+    }
+
+    fun addTag(name: String): Boolean {
+        // 빈칸을 입력한 경우
+        if (_tags.value.isEmpty()) return false
+        // 동일한 이름의 tag 가 이미 존재 하는 경우
+        if (_tags.value.any { it.name == name }) return false
+        _tags.value += TagUiModel(name = name)
+        return true
+    }
+
+    fun removeTag(tagUiModel: TagUiModel) {
+        _tags.value = _tags.value.filterNot { it == tagUiModel }
     }
 
     companion object {

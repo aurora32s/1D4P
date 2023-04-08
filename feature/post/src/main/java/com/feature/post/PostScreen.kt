@@ -70,7 +70,9 @@ fun PostScreen(
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                tags = emptyList(), onAddTag = {}
+                tags = emptyList(),
+                onAddTag = postViewModel::addTag,
+                onRemoveTag = postViewModel::removeTag
             )
             BottomAppBar(
                 modifier = Modifier.padding(vertical = 12.dp),

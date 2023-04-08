@@ -26,7 +26,7 @@ fun HarooChip(
     shape: Shape = MaterialTheme.shapes.small,
     backgroundColor: Color = HarooTheme.colors.uiBackground,
     // 테두리 색
-    border: BorderStroke = BorderStroke(width = 1.dp, color = HarooTheme.colors.uiBorder),
+    border: BorderStroke? = BorderStroke(width = 1.dp, color = HarooTheme.colors.uiBorder),
     contentColor: Color = HarooTheme.colors.text,
     alpha: Float = 0f,
     content: @Composable RowScope.() -> Unit
@@ -46,7 +46,7 @@ fun HarooChip(
         border = border,
         contentColor = contentColor
     ) {
-        ProvideTextStyle(value = MaterialTheme.typography.body1) {
+        ProvideTextStyle(value = MaterialTheme.typography.body2) {
             Row(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.Center,

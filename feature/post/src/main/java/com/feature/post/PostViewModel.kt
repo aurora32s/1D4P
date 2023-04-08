@@ -43,13 +43,12 @@ class PostViewModel @Inject constructor(
         _selectedImages.value = selectedImages
     }
 
-    fun addTag(name: String): Boolean {
+    fun addTag(name: String) {
         // 빈칸을 입력한 경우
-        if (name.isBlank()) return false
+        if (name.isBlank()) return
         // 동일한 이름의 tag 가 이미 존재 하는 경우
-        if (_tags.value.any { it.name == name }) return false
+        if (_tags.value.any { it.name == name }) return
         _tags.value += TagUiModel(name = name)
-        return true
     }
 
     fun removeTag(tagUiModel: TagUiModel) {

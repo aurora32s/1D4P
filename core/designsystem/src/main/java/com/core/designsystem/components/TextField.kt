@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -18,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
@@ -37,7 +41,8 @@ fun HarooTextField(
     placeHolder: String = "", // hint
     singleLine: Boolean = true, // 한줄 여부
     contentPadding: PaddingValues = PaddingValues(), // Surface 와 TextField padding
-    maxLines: Int = Int.MAX_VALUE // 최대 입력 가능 라인
+    maxLines: Int = Int.MAX_VALUE, // 최대 입력 가능 라인
+    onDone: KeyboardActionScope.() -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(key1 = autoFocus) {
@@ -61,6 +66,10 @@ fun HarooTextField(
                 color = HarooTheme.colors.text
             ),
             value = value,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = onDone
+            ),
             onValueChange = onValueChange,
             readOnly = enabled.not(),
             singleLine = singleLine,
@@ -89,7 +98,8 @@ fun TextFieldPreview() {
             HarooTextField(
                 value = value,
                 onValueChange = { value = it },
-                placeHolder = "내용을 입력해주세요."
+                placeHolder = "내용을 입력해주세요.",
+                onDone = {}
             )
         }
     }

@@ -28,8 +28,8 @@ fun PostScreen(
 ) {
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
+    val tags = postViewModel.tags.collectAsState()
 
-//    val modalSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
     val bottomDrawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
 
@@ -70,7 +70,7 @@ fun PostScreen(
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                tags = emptyList(),
+                tags = tags.value,
                 onAddTag = postViewModel::addTag,
                 onRemoveTag = postViewModel::removeTag
             )

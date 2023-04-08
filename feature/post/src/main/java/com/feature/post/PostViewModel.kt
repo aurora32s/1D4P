@@ -45,7 +45,7 @@ class PostViewModel @Inject constructor(
 
     fun addTag(name: String): Boolean {
         // 빈칸을 입력한 경우
-        if (_tags.value.isEmpty()) return false
+        if (name.isBlank()) return false
         // 동일한 이름의 tag 가 이미 존재 하는 경우
         if (_tags.value.any { it.name == name }) return false
         _tags.value += TagUiModel(name = name)

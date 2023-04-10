@@ -5,14 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -23,11 +19,9 @@ import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.tag.TagContainer
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PostScreen(
-    postViewModel: PostViewModel = hiltViewModel(),
-    keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
+    postViewModel: PostViewModel = hiltViewModel()
 ) {
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
@@ -36,12 +30,6 @@ fun PostScreen(
 
     BackHandler(enabled = bottomDrawerState.isShow.value) {
         bottomDrawerState.hide()
-    }
-
-    LaunchedEffect(key1 = bottomDrawerState.isShow.value) {
-        if (bottomDrawerState.isShow.value) {
-            keyboardController?.hide()
-        }
     }
 
     HarooBottomDrawer(

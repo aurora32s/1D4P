@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +32,6 @@ import com.core.model.feature.ImageUiModel
 private const val galleryColumn = 3
 
 
-@ExperimentalMaterialApi
 @Composable
 fun DrawerGalleryContainer(
     images: LazyPagingItems<ImageUiModel>,

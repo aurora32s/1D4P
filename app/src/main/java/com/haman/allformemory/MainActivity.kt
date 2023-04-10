@@ -3,12 +3,12 @@ package com.haman.allformemory
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.LaunchedEffect
+import androidx.core.view.WindowCompat
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.feature.post.PostScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +28,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             AllForMemoryTheme {

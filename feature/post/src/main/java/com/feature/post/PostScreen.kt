@@ -2,24 +2,23 @@ package com.feature.post
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.core.designsystem.components.HarooBottomDrawer
+import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.tag.TagContainer
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -29,36 +28,31 @@ fun PostScreen(
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
     val tags = postViewModel.tags.collectAsState()
+    val bottomDrawerState = rememberHarooBottomDrawerState()
 
-    val coroutineScope = rememberCoroutineScope()
-    val bottomDrawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
-
-    BackHandler(enabled = bottomDrawerState.isOpen) {
-        coroutineScope.launch {
-            bottomDrawerState.close()
-        }
+    BackHandler(enabled = bottomDrawerState.isShow.value) {
+        bottomDrawerState.hide()
     }
 
-    BottomDrawer(
+    HarooBottomDrawer(
+        modifier = Modifier
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
         drawerState = bottomDrawerState,
         drawerContent = {
             DrawerGalleryContainer(
-                drawerState = bottomDrawerState,
                 images = images,
                 selectedImages = selectedImages.value,
                 limit = PostViewModel.IMAGE_SELECT_LIMIT,
                 space = 2.dp,
-                onClose = {
-                    coroutineScope.launch { bottomDrawerState.close() }
-                },
+                onClose = { bottomDrawerState.hide() },
                 onImageSelect = {
                     postViewModel.setImages(it)
-                    coroutineScope.launch { bottomDrawerState.close() }
+                    bottomDrawerState.hide()
                 }
             )
-        },
-        gesturesEnabled = false,
-        scrimColor = HarooTheme.colors.dim
+        }
     ) {
         Column(
             modifier = Modifier
@@ -83,12 +77,11 @@ fun PostScreen(
                     images = images,
                     selectedImages = selectedImages.value,
                     limit = PostViewModel.IMAGE_SELECT_LIMIT,
-                    onClickAddButton = {
-                        coroutineScope.launch { bottomDrawerState.expand() }
-                    },
+                    onClickAddButton = { bottomDrawerState.show() },
                     onImageSelect = postViewModel::selectImage
                 )
             }
         }
     }
 }
+//}

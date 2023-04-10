@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.BottomDrawerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -38,7 +36,6 @@ private const val galleryColumn = 3
 @ExperimentalMaterialApi
 @Composable
 fun DrawerGalleryContainer(
-    drawerState: BottomDrawerState,
     images: LazyPagingItems<ImageUiModel>,
     selectedImages: List<ImageUiModel>,
     limit: Int,
@@ -47,12 +44,6 @@ fun DrawerGalleryContainer(
     onImageSelect: (List<ImageUiModel>) -> Unit
 ) {
     val tempSelectedImages = remember(selectedImages) { mutableStateOf(selectedImages) }
-
-    LaunchedEffect(key1 = drawerState.isAnimationRunning) {
-        if (drawerState.isExpanded) {
-            tempSelectedImages.value = selectedImages
-        }
-    }
 
     GalleryContainer(
         images = images,

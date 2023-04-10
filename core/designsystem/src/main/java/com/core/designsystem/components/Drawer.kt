@@ -1,6 +1,7 @@
 package com.core.designsystem.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -19,9 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import com.core.designsystem.theme.HarooTheme
 
-private fun <T> drawerAnimationSpec() = tween<T>(durationMillis = 250, easing = LinearEasing)
+private fun <T> drawerAnimationSpec() = tween<T>(durationMillis = 150, easing = LinearEasing)
 
 @Composable
 fun HarooBottomDrawer(
@@ -30,6 +32,8 @@ fun HarooBottomDrawer(
     drawerContent: @Composable () -> Unit,
     drawerShape: Shape = MaterialTheme.shapes.large,
     drawerElevation: Dp = DrawerDefaults.Elevation,
+    enter: FiniteAnimationSpec<IntOffset> = drawerAnimationSpec(),
+    exit: FiniteAnimationSpec<IntOffset> = drawerAnimationSpec(),
     scrimColor: Color = HarooTheme.colors.dim,
     scrimAlpha: Float = 0.5f,
     content: @Composable BoxScope.() -> Unit
@@ -53,11 +57,11 @@ fun HarooBottomDrawer(
             visible = drawerState.isShow.value,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = drawerAnimationSpec()
+                animationSpec = enter
             ),
             exit = slideOutVertically(
                 targetOffsetY = { fullHeight -> fullHeight },
-                animationSpec = drawerAnimationSpec()
+                animationSpec = exit
             ),
             content = {
                 HarooSurface(

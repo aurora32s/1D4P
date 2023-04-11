@@ -22,12 +22,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.core.designsystem.components.AsyncImageList
 import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.components.SelectableImage
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.ImageUiModel
+import com.core.ui.image.AsyncImageList
 
 private const val galleryColumn = 3
 

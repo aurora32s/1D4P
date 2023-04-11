@@ -56,9 +56,11 @@ fun YearMonthDayText(
         val day = measurables.find { it.layoutId == "Day" }!!.measure(constraints)
         val dayOfWeek = measurables.find { it.layoutId == "DayOfWeek" }!!.measure(constraints)
 
+        val yearMonthHeight = yearMonth.height
+        val dayHeight = day[LastBaseline]
         layout(
             width = constraints.maxWidth,
-            height = constraints.maxHeight
+            height = yearMonthHeight + dayHeight
         ) {
             yearMonth.placeRelative(x = 0, y = 0)
             day.placeRelative(x = 0, y = yearMonth[LastBaseline])

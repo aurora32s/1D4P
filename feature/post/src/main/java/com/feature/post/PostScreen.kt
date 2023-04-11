@@ -13,10 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.core.designsystem.components.BackAndRightButtonHeader
-import com.core.designsystem.components.HarooBottomDrawer
-import com.core.designsystem.components.RemovableImage
-import com.core.designsystem.components.rememberHarooBottomDrawerState
+import com.core.designsystem.components.*
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
@@ -78,7 +75,9 @@ fun PostScreen(
                     date = LocalDate.now()
                 )
                 AsyncImageLazyRow(
-                    modifier = Modifier.fillMaxWidth().height(210.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(210.dp),
                     images = selectedImages.value,
                     space = 4.dp,
                     contentPadding = 12.dp,
@@ -89,6 +88,18 @@ fun PostScreen(
                             onRemove = postViewModel::removeImage
                         )
                     }
+                )
+                HarooTextField(
+                    modifier = Modifier.padding(
+                        horizontal = 12.dp, vertical = 8.dp
+                    ),
+                    value = "",
+                    onValueChange = {},
+                    autoFocus = true,
+                    alpha = 0.1f,
+                    placeHolder = "내용을 입력해주세요...",
+                    singleLine = false,
+                    contentPadding = PaddingValues(16.dp)
                 )
             }
             TagContainer(

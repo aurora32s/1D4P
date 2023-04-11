@@ -17,9 +17,11 @@ import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
 import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.designsystem.theme.HarooTheme
+import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.tag.TagContainer
+import java.time.LocalDate
 
 @Composable
 fun PostScreen(
@@ -68,6 +70,12 @@ fun PostScreen(
                     // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
                     Text(text = "저장")
                 }
+                YearMonthDayText(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 26.dp, start = 16.dp, end = 16.dp),
+                    date = LocalDate.now()
+                )
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),

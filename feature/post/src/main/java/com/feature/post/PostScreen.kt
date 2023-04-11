@@ -15,11 +15,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
+import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
+import com.core.ui.image.AsyncImageLazyRow
 import com.core.ui.tag.TagContainer
 import java.time.LocalDate
 
@@ -74,6 +76,20 @@ fun PostScreen(
                     modifier = Modifier
                         .padding(top = 26.dp, start = 16.dp),
                     date = LocalDate.now()
+                )
+                AsyncImageLazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    images = selectedImages.value,
+                    space = 4.dp,
+                    content = { image ->
+                        RemovableImage(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(180.dp),
+                            image = image,
+                            onRemove = postViewModel::removeImage
+                        )
+                    }
                 )
             }
             TagContainer(

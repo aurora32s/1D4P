@@ -2,18 +2,23 @@ package com.feature.post
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.core.designsystem.components.*
+import com.core.designsystem.modifiers.onInteraction
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
@@ -24,7 +29,8 @@ import java.time.LocalDate
 
 @Composable
 fun PostScreen(
-    postViewModel: PostViewModel = hiltViewModel()
+    postViewModel: PostViewModel = hiltViewModel(),
+    focusManager: FocusManager = LocalFocusManager.current
 ) {
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
@@ -34,6 +40,14 @@ fun PostScreen(
 
     BackHandler(enabled = bottomDrawerState.isShow.value) {
         bottomDrawerState.hide()
+    }
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPress = interactionSource.collectIsPressedAsState()
+    val currentFocusScope = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = isPress.value) {
+        focusManager.clearFocus()
     }
 
     HarooBottomDrawer(
@@ -61,7 +75,12 @@ fun PostScreen(
                 .fillMaxSize()
                 .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .onInteraction(interactionSource)
+                    .onFocusChanged { currentFocusScope.value = it.isFocused }
+            ) {
                 BackAndRightButtonHeader(
                     title = "글 작성",
                     onBackPressed = { },
@@ -105,6 +124,7 @@ fun PostScreen(
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),
+                isFocus = (isPress.value || currentFocusScope.value).not(),
                 tags = tags.value,
                 onAddTag = postViewModel::addTag,
                 onRemoveTag = postViewModel::removeTag

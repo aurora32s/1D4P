@@ -72,8 +72,7 @@ fun PostScreen(
                 }
                 YearMonthDayText(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 26.dp, start = 16.dp, end = 16.dp),
+                        .padding(top = 26.dp, start = 16.dp),
                     date = LocalDate.now()
                 )
             }

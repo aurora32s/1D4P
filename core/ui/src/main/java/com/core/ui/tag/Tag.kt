@@ -1,13 +1,11 @@
 package com.core.ui.tag
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -18,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -48,21 +47,21 @@ fun TagContainer(
             tags.forEach { tag ->
                 TagChip(name = "#${tag.name}", onClick = { onRemoveTag(tag) })
             }
-            TagChip(
-                name = "+태그추가",
-                onClick = { showTagTextField.value = true }
-            )
+//            TagChip(
+//                name = "+태그추가",
+//                onClick = { showTagTextField.value = true }
+//            )
         }
-        AnimatedVisibility(
-            visible = showTagTextField.value,
-            enter = expandVertically(
-                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
-            )
-        ) {
-            TagTextField(
-                onAddTag = onAddTag
-            )
-        }
+//        AnimatedVisibility(
+//            visible = showTagTextField.value,
+//            enter = expandVertically(
+//                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+//            )
+//        ) {
+        TagTextField(
+            onAddTag = onAddTag
+        )
+//        }
     }
 }
 
@@ -101,11 +100,14 @@ fun TagTextField(
                 modifier = Modifier.weight(1f),
                 value = tag.value,
                 onValueChange = { tag.value = it },
-                autoFocus = true,
+                autoFocus = false,
                 color = Color.Transparent,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = { onAddTagAndClearTag() }
+                ),
                 placeHolder = "태그 입력...",
-                contentPadding = PaddingValues(horizontal = 8.dp),
-                onDone = { onAddTagAndClearTag() }
+                contentPadding = PaddingValues(horizontal = 8.dp)
             )
             HarooButton(
                 alpha = 0f,

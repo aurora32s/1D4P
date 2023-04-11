@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -21,7 +20,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
@@ -36,13 +34,14 @@ fun HarooTextField(
     shape: Shape = MaterialTheme.shapes.medium,
     color: Color = HarooTheme.colors.uiBackground, // 배경 색
     contentColor: Color = HarooTheme.colors.text, // 내부 색
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     alpha: Float = 0f,
     border: BorderStroke? = null, // 테두리 모양
     placeHolder: String = "", // hint
     singleLine: Boolean = true, // 한줄 여부
     contentPadding: PaddingValues = PaddingValues(), // Surface 와 TextField padding
-    maxLines: Int = Int.MAX_VALUE, // 최대 입력 가능 라인
-    onDone: KeyboardActionScope.() -> Unit = {}
+    maxLines: Int = Int.MAX_VALUE // 최대 입력 가능 라인
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(key1 = autoFocus) {
@@ -63,23 +62,21 @@ fun HarooTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester),
-            textStyle = MaterialTheme.typography.body1.copy(
-                color = HarooTheme.colors.text
+            textStyle = MaterialTheme.typography.body2.copy(
+                color = contentColor
             ),
             value = value,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = onDone
-            ),
             onValueChange = onValueChange,
             readOnly = enabled.not(),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             singleLine = singleLine,
             maxLines = maxLines,
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) Text(text = placeHolder)
                 innerTextField()
             },
-            cursorBrush = SolidColor(color)
+            cursorBrush = SolidColor(contentColor)
         )
     }
 }
@@ -99,8 +96,7 @@ fun TextFieldPreview() {
             HarooTextField(
                 value = value,
                 onValueChange = { value = it },
-                placeHolder = "내용을 입력해주세요.",
-                onDone = {}
+                placeHolder = "내용을 입력해주세요."
             )
         }
     }

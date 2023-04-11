@@ -1,5 +1,6 @@
 package com.core.ui.image
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,19 +21,21 @@ fun AsyncImageLazyRow(
     contentPadding: Dp = 0.dp,
     content: @Composable (ImageUiModel) -> Unit
 ) {
-    Row(
-        modifier = modifier
-            .padding(vertical = contentPadding)
-            .horizontalScroll(
-                rememberScrollState()
-            ),
-        horizontalArrangement = Arrangement.spacedBy(space),
-    ) {
-        Spacer(modifier = Modifier.width(contentPadding))
-        images.forEach {
-            content(it)
+    AnimatedVisibility(visible = images.isNotEmpty()) {
+        Row(
+            modifier = modifier
+                .padding(vertical = contentPadding)
+                .horizontalScroll(
+                    rememberScrollState()
+                ),
+            horizontalArrangement = Arrangement.spacedBy(space),
+        ) {
+            Spacer(modifier = Modifier.width(contentPadding))
+            images.forEach {
+                content(it)
+            }
+            Spacer(modifier = Modifier.width(contentPadding))
         }
-        Spacer(modifier = Modifier.width(contentPadding))
     }
 }
 

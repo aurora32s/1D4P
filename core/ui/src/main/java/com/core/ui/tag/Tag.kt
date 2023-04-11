@@ -1,5 +1,9 @@
 package com.core.ui.tag
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,12 +36,17 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun TagContainer(
     modifier: Modifier = Modifier,
+    isFocus: Boolean = false,
     tags: List<TagUiModel>,
     tagSpace: Dp = 2.dp,
     onAddTag: (String) -> Unit,
     onRemoveTag: (TagUiModel) -> Unit
 ) {
     val showTagTextField = remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = isFocus) {
+        if (isFocus.not() && showTagTextField.value)
+            showTagTextField.value = false
+    }
 
     Column(modifier = modifier) {
         FlowRow(
@@ -47,21 +57,23 @@ fun TagContainer(
             tags.forEach { tag ->
                 TagChip(name = "#${tag.name}", onClick = { onRemoveTag(tag) })
             }
-//            TagChip(
-//                name = "+태그추가",
-//                onClick = { showTagTextField.value = true }
-//            )
+            if (showTagTextField.value.not()) {
+                TagChip(
+                    name = "+태그추가",
+                    onClick = { showTagTextField.value = true }
+                )
+            }
         }
-//        AnimatedVisibility(
-//            visible = showTagTextField.value,
-//            enter = expandVertically(
-//                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
-//            )
-//        ) {
-        TagTextField(
-            onAddTag = onAddTag
-        )
-//        }
+        AnimatedVisibility(
+            visible = showTagTextField.value,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+            )
+        ) {
+            TagTextField(
+                onAddTag = onAddTag
+            )
+        }
     }
 }
 
@@ -100,7 +112,7 @@ fun TagTextField(
                 modifier = Modifier.weight(1f),
                 value = tag.value,
                 onValueChange = { tag.value = it },
-                autoFocus = false,
+                autoFocus = true,
                 color = Color.Transparent,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(

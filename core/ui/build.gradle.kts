@@ -13,4 +13,5 @@ dependencies {
 
     implementation(libs.paging.compose)
     implementation(libs.accompanist.flowlayout)
+    implementation(libs.androidx.constraintlayout.compose)
 }

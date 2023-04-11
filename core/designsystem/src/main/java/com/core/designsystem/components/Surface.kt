@@ -3,10 +3,7 @@ package com.core.designsystem.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -33,6 +30,7 @@ fun HarooSurface(
     color: Color = HarooTheme.colors.uiBackground, // 배경색
     contentColor: Color = HarooTheme.colors.text, // 내용 색
     contentAlignment: Alignment = Alignment.Center,
+    contentPadding: PaddingValues = PaddingValues(),
     border: BorderStroke? = null, // 테두리 모양
     elevation: Dp = 0.dp, // 그림자 크기
     alpha: Float = 0.15f, // 배경 투명도
@@ -48,7 +46,8 @@ fun HarooSurface(
             )
             .then(if (border != null) Modifier.border(border, shape) else Modifier)
             .background(color.copy(alpha = alpha), shape)
-            .clip(shape),
+            .clip(shape)
+            .padding(contentPadding),
         contentAlignment = contentAlignment
     ) {
         CompositionLocalProvider(

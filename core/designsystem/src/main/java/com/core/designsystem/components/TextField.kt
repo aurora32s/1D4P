@@ -2,7 +2,10 @@ package com.core.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -47,14 +50,14 @@ fun HarooTextField(
     }
 
     HarooSurface(
-        modifier = modifier
-            .padding(contentPadding),
+        modifier = modifier,
         shape = shape,
         color = color,
         alpha = alpha,
         contentColor = contentColor,
         contentAlignment = Alignment.CenterStart,
-        border = border
+        border = border,
+        contentPadding = contentPadding
     ) {
         BasicTextField(
             modifier = Modifier

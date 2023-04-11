@@ -1,7 +1,11 @@
 package com.core.ui.image
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
@@ -10,6 +14,26 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.Image
 import com.core.model.feature.ImageUiModel
+
+@Composable
+fun AsyncImageLazyRow(
+    modifier: Modifier = Modifier,
+    images: List<ImageUiModel>,
+    space: Dp = 0.dp,
+    contentPadding: Dp = 0.dp,
+    content: @Composable (ImageUiModel) -> Unit
+) {
+    Row(
+        modifier = modifier.horizontalScroll(
+            rememberScrollState()
+        ).padding(contentPadding),
+        horizontalArrangement = Arrangement.spacedBy(space),
+    ) {
+        images.forEach {
+            content(it)
+        }
+    }
+}
 
 @Composable
 fun AsyncImageList(

@@ -43,6 +43,10 @@ class PostViewModel @Inject constructor(
         _selectedImages.value = selectedImages
     }
 
+    fun removeImage(imageUiModel: ImageUiModel) {
+        _selectedImages.value = _selectedImages.value.filterNot { it == imageUiModel }
+    }
+
     fun addTag(name: String) {
         // 빈칸을 입력한 경우
         if (name.isBlank()) return

@@ -16,7 +16,7 @@ import com.core.designsystem.theme.HarooTheme
 fun BackAndRightButtonHeader(
     modifier: Modifier = Modifier,
     title: String = "",
-    showButtonFlag: Boolean = false,
+    showButtonFlag: Boolean = true,
     onBackPressed: () -> Unit, // back button click event
     onClick: () -> Unit, // 오른쪽 버튼 클릭 event
     content: @Composable RowScope.() -> Unit

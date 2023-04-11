@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
 import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.designsystem.theme.HarooTheme
@@ -58,7 +60,14 @@ fun PostScreen(
                 .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
         ) {
             Column(modifier = Modifier.weight(1f)) {
-
+                BackAndRightButtonHeader(
+                    title = "글 작성",
+                    onBackPressed = { },
+                    onClick = { }
+                ) {
+                    // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
+                    Text(text = "저장")
+                }
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),

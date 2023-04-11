@@ -31,6 +31,9 @@ class PostViewModel @Inject constructor(
     private val _tags = MutableStateFlow<List<TagUiModel>>(emptyList())
     val tags: StateFlow<List<TagUiModel>> = _tags.asStateFlow()
 
+    private val _content = MutableStateFlow("")
+    val content: StateFlow<String> = _content.asStateFlow()
+
     fun selectImage(imageUiModel: ImageUiModel) {
         if (imageUiModel in _selectedImages.value) {
             _selectedImages.value = _selectedImages.value.filterNot { it == imageUiModel }
@@ -57,6 +60,10 @@ class PostViewModel @Inject constructor(
 
     fun removeTag(tagUiModel: TagUiModel) {
         _tags.value = _tags.value.filterNot { it == tagUiModel }
+    }
+
+    fun setContent(content: String) {
+        _content.value = content
     }
 
     companion object {

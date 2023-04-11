@@ -1,6 +1,5 @@
 package com.core.ui.date
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -8,10 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.LastBaseline
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
@@ -25,44 +25,46 @@ fun YearMonthDayText(
     date: LocalDate,
     contentColor: Color = HarooTheme.colors.text
 ) {
-    ConstraintLayout(modifier = modifier) {
-        val (yearMonth, day, dayOfWeek) = createRefs()
-        createVerticalChain(yearMonth, day, chainStyle = ChainStyle.Packed)
+    Layout(
+        modifier = modifier,
+        content = {
+            CompositionLocalProvider(
+                LocalContentColor provides contentColor
+            ) {
+                Text(
+                    modifier = Modifier
+                        .layoutId("YearMonth"),
+                    text = "2023.01",
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    modifier = Modifier
+                        .layoutId("Day"),
+                    text = "01",
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    modifier = Modifier
+                        .layoutId("DayOfWeek"),
+                    text = "SUNDAY",
+                    style = MaterialTheme.typography.body1
+                )
+            }
+        }
+    ) { measurables, constraints ->
+        val yearMonth = measurables.find { it.layoutId == "YearMonth" }!!.measure(constraints)
+        val day = measurables.find { it.layoutId == "Day" }!!.measure(constraints)
+        val dayOfWeek = measurables.find { it.layoutId == "DayOfWeek" }!!.measure(constraints)
 
-        CompositionLocalProvider(
-            LocalContentColor provides contentColor
+        layout(
+            width = constraints.maxWidth,
+            height = constraints.maxHeight
         ) {
-            Text(
-                text = "2023.01",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .constrainAs(yearMonth) {
-                        linkTo(
-                            top = parent.top,
-                            bottom = day.top
-                        )
-                    }
-            )
-            Text(
-                text = "01",
-                lineHeight = 0.sp,
-                style = MaterialTheme.typography.h4,
-                modifier = Modifier
-                    .constrainAs(day) {
-                        linkTo(
-                            top = yearMonth.bottom,
-                            bottom = parent.bottom
-                        )
-                    }
-            )
-            Text(
-                text = "SUNDAY",
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier
-                    .constrainAs(dayOfWeek) {
-                        bottom.linkTo(day.bottom)
-                        start.linkTo(day.end)
-                    }
+            yearMonth.placeRelative(x = 0, y = 0)
+            day.placeRelative(x = 0, y = yearMonth[LastBaseline])
+            dayOfWeek.placeRelative(
+                x = day.measuredWidth,
+                y = day[FirstBaseline] + (dayOfWeek.height - dayOfWeek[FirstBaseline])
             )
         }
     }
@@ -73,7 +75,6 @@ fun YearMonthDayText(
 fun YearMonthDayTextPreview() {
     AllForMemoryTheme {
         YearMonthDayText(
-            modifier = Modifier.fillMaxWidth(),
             date = LocalDate.now()
         )
     }

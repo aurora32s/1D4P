@@ -2,6 +2,7 @@
 accompanist = "0.28.0"
 androidGradlePlugin = "7.4.2"
 androidGradleTool = "7.2.0"
+androidx-constraintlayout = "1.0.1"
 androidx-lifecycle-runtime-compose = '2.6.0-alpha03'
 activityCompose = '1.6.1'
 coil = '2.2.2'
@@ -43,6 +44,7 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "composeUi" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "composeUi" }
 
+androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "androidx-constraintlayout" }
 # unit test
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 kotlin-coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlin" }

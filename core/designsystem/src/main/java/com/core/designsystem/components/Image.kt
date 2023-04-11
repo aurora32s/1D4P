@@ -66,33 +66,20 @@ fun RemovableImage(
             }
         }
     ) { measureables, constraints ->
-        val removeButtonSize = (constraints.maxHeight / 5).coerceIn(0, 36.dp.toPx().toInt())
+        val removeButtonSize = (constraints.maxHeight / 5).coerceIn(0, 25.dp.toPx().toInt())
         val removePlaceable = measureables.find { it.layoutId == "RemoveBtn" }?.measure(
             Constraints(
                 minWidth = removeButtonSize, maxWidth = removeButtonSize,
                 minHeight = removeButtonSize, maxHeight = removeButtonSize
             )
         )
-        val width = constraints.maxWidth - removeButtonSize
-        val height = constraints.maxHeight - removeButtonSize
-        val imagePlaceable = measureables.find { it.layoutId == "Image" }?.measure(
-            Constraints(
-                minWidth = width, maxWidth = width,
-                minHeight = height, maxHeight = height
-            )
-        )
+        val imagePlaceable = measureables.find { it.layoutId == "Image" }?.measure(constraints)
 
         layout(
             constraints.maxWidth, constraints.maxHeight
         ) {
-            imagePlaceable?.placeRelative(
-                x = removeButtonSize / 2,
-                y = removeButtonSize / 2
-            )
-            removePlaceable?.placeRelative(
-                x = constraints.maxWidth - removeButtonSize,
-                y = 0
-            )
+            imagePlaceable?.placeRelative(x = 0, y = 0)
+            removePlaceable?.placeRelative(x = constraints.maxWidth - removeButtonSize - 4, y = 4)
         }
     }
 }

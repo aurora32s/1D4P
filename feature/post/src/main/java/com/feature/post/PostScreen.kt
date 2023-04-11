@@ -78,14 +78,13 @@ fun PostScreen(
                     date = LocalDate.now()
                 )
                 AsyncImageLazyRow(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(210.dp),
                     images = selectedImages.value,
                     space = 4.dp,
+                    contentPadding = 12.dp,
                     content = { image ->
                         RemovableImage(
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(180.dp),
+                            modifier = Modifier.aspectRatio(2 / 3f),
                             image = image,
                             onRemove = postViewModel::removeImage
                         )

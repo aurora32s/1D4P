@@ -30,6 +30,7 @@ fun PostScreen(
     val selectedImages = postViewModel.selectedImages.collectAsState()
     val tags = postViewModel.tags.collectAsState()
     val bottomDrawerState = rememberHarooBottomDrawerState()
+    val content = postViewModel.content.collectAsState()
 
     BackHandler(enabled = bottomDrawerState.isShow.value) {
         bottomDrawerState.hide()
@@ -93,8 +94,8 @@ fun PostScreen(
                     modifier = Modifier.padding(
                         horizontal = 12.dp, vertical = 8.dp
                     ),
-                    value = "",
-                    onValueChange = {},
+                    value = content.value,
+                    onValueChange = postViewModel::setContent,
                     autoFocus = true,
                     alpha = 0.1f,
                     placeHolder = "내용을 입력해주세요...",

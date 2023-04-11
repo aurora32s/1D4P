@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -34,6 +37,7 @@ fun HarooTextField(
     shape: Shape = MaterialTheme.shapes.medium,
     color: Color = HarooTheme.colors.uiBackground, // 배경 색
     contentColor: Color = HarooTheme.colors.text, // 내부 색
+    selectionColor: Color = HarooTheme.colors.brand,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     alpha: Float = 0f,
@@ -58,26 +62,35 @@ fun HarooTextField(
         border = border,
         contentPadding = contentPadding
     ) {
-        BasicTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
-            textStyle = MaterialTheme.typography.body2.copy(
-                color = contentColor
-            ),
-            value = value,
-            onValueChange = onValueChange,
-            readOnly = enabled.not(),
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            singleLine = singleLine,
-            maxLines = maxLines,
-            decorationBox = { innerTextField ->
-                if (value.isEmpty()) Text(text = placeHolder)
-                innerTextField()
-            },
-            cursorBrush = SolidColor(contentColor)
-        )
+
+        CompositionLocalProvider(
+            LocalContentColor provides contentColor,
+            LocalTextSelectionColors provides TextSelectionColors(
+                handleColor = selectionColor,
+                backgroundColor = selectionColor.copy(alpha = 0.3f)
+            )
+        ) {
+            BasicTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                textStyle = MaterialTheme.typography.body2.copy(
+                    color = contentColor
+                ),
+                value = value,
+                onValueChange = onValueChange,
+                readOnly = enabled.not(),
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                singleLine = singleLine,
+                maxLines = maxLines,
+                decorationBox = { innerTextField ->
+                    if (value.isEmpty()) Text(text = placeHolder)
+                    innerTextField()
+                },
+                cursorBrush = SolidColor(contentColor)
+            )
+        }
     }
 }
 

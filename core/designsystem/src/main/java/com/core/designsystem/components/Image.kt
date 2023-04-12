@@ -40,6 +40,7 @@ fun RemovableImage(
     image: ImageUiModel,
     shape: Shape = MaterialTheme.shapes.medium,
     elevation: Dp = 0.dp,
+    contentScale: ContentScale = ContentScale.Crop,
     onRemove: (ImageUiModel) -> Unit
 ) {
     Layout(
@@ -49,6 +50,7 @@ fun RemovableImage(
                 modifier = Modifier.layoutId("Image"),
                 imageType = Image.AsyncImage(image),
                 shape = shape,
+                contentScale = contentScale,
                 elevation = elevation
             )
             HarooButton(
@@ -74,12 +76,14 @@ fun RemovableImage(
             )
         )
         val imagePlaceable = measureables.find { it.layoutId == "Image" }?.measure(constraints)
+        val imageWidth = imagePlaceable?.width ?: constraints.minWidth
 
         layout(
-            constraints.maxWidth, constraints.maxHeight
+            imageWidth,
+            constraints.maxHeight
         ) {
             imagePlaceable?.placeRelative(x = 0, y = 0)
-            removePlaceable?.placeRelative(x = constraints.maxWidth - removeButtonSize - 4, y = 4)
+            removePlaceable?.placeRelative(x = imageWidth - removeButtonSize - 4, y = 4)
         }
     }
 }

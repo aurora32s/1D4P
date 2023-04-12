@@ -101,6 +101,7 @@ fun GalleryContainer(
                 images = selectedImages,
                 imageCount = limit,
                 contentPadding = 4.dp,
+                space = 4.dp,
                 content = {
                     RemovableImage(
                         image = it.image,

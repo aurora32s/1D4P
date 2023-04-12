@@ -154,14 +154,20 @@ fun PostScreen(
                 backgroundColor = Color.Transparent
             ) {
                 GalleryListContainer(
-                    modifier = Modifier
-                        .onInteraction(interactionSource),
                     images = images,
                     space = 8.dp,
                     selectedImages = selectedImages.value,
                     limit = PostViewModel.IMAGE_SELECT_LIMIT,
-                    onClickAddButton = { bottomDrawerState.show() },
-                    onImageSelect = postViewModel::selectImage
+                    onClickAddButton = {
+                        if (showTagTextField.value) showTagTextField.value = false
+                        focusManager.clearFocus()
+                        bottomDrawerState.show()
+                    },
+                    onImageSelect = {
+                        if (showTagTextField.value) showTagTextField.value = false
+                        focusManager.clearFocus()
+                        postViewModel.selectImage(it)
+                    }
                 )
             }
         }

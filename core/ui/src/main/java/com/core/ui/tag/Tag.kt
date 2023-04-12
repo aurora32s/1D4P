@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,18 +35,13 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun TagContainer(
     modifier: Modifier = Modifier,
-    isFocus: Boolean = false,
+    showTagTextFieldFlag: Boolean = false,
     tags: List<TagUiModel>,
     tagSpace: Dp = 2.dp,
     onAddTag: (String) -> Unit,
-    onRemoveTag: (TagUiModel) -> Unit
+    onRemoveTag: (TagUiModel) -> Unit,
+    showTagTextField: () -> Unit
 ) {
-    val showTagTextField = remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = isFocus) {
-        if (isFocus.not() && showTagTextField.value)
-            showTagTextField.value = false
-    }
-
     Column(modifier = modifier) {
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
@@ -57,15 +51,15 @@ fun TagContainer(
             tags.forEach { tag ->
                 TagChip(name = "#${tag.name}", onClick = { onRemoveTag(tag) })
             }
-            if (showTagTextField.value.not()) {
+            if (showTagTextFieldFlag.not()) {
                 TagChip(
                     name = "+태그추가",
-                    onClick = { showTagTextField.value = true }
+                    onClick = showTagTextField
                 )
             }
         }
         AnimatedVisibility(
-            visible = showTagTextField.value,
+            visible = showTagTextFieldFlag,
             enter = expandVertically(
                 animationSpec = tween(durationMillis = 250, easing = LinearEasing)
             )
@@ -162,7 +156,8 @@ fun TagContainerPreview() {
                 TagUiModel(name = "test6")
             ),
             onAddTag = { },
-            onRemoveTag = {}
+            onRemoveTag = {},
+            showTagTextField = {}
         )
     }
 }

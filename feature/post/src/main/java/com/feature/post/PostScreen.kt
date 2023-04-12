@@ -27,10 +27,12 @@ import com.core.ui.image.AsyncImageLazyRow
 import com.core.ui.tag.TagContainer
 import java.time.LocalDate
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PostScreen(
     postViewModel: PostViewModel = hiltViewModel(),
-    focusManager: FocusManager = LocalFocusManager.current
+    focusManager: FocusManager = LocalFocusManager.current,
+    isImeVisible: Boolean = WindowInsets.isImeVisible
 ) {
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
@@ -44,10 +46,22 @@ fun PostScreen(
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPress = interactionSource.collectIsPressedAsState()
-    val currentFocusScope = remember { mutableStateOf(false) }
+    val showTagTextField = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = isPress.value) {
-        focusManager.clearFocus()
+        // 1. A, B 클릭 시
+        if (isPress.value) {
+            // 2. C, D focus lost
+            focusManager.clearFocus()
+            // 3. D close
+            if (showTagTextField.value)
+                showTagTextField.value = false
+        }
+    }
+    LaunchedEffect(key1 = isImeVisible) {
+        if (isImeVisible.not() && showTagTextField.value) {
+            showTagTextField.value = false
+        }
     }
 
     HarooBottomDrawer(
@@ -79,7 +93,11 @@ fun PostScreen(
                 modifier = Modifier
                     .weight(1f)
                     .onInteraction(interactionSource)
-                    .onFocusChanged { currentFocusScope.value = it.isFocused }
+                    .onFocusChanged {
+                        // 4. C 클릭 시, D가 열려 있는 경우 close
+                        if (it.isFocused && showTagTextField.value)
+                            showTagTextField.value = false
+                    }
             ) {
                 BackAndRightButtonHeader(
                     title = "글 작성",
@@ -124,18 +142,22 @@ fun PostScreen(
             }
             TagContainer(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                isFocus = (isPress.value || currentFocusScope.value).not(),
+                showTagTextFieldFlag = showTagTextField.value,
                 tags = tags.value,
                 onAddTag = postViewModel::addTag,
-                onRemoveTag = postViewModel::removeTag
+                onRemoveTag = postViewModel::removeTag,
+                showTagTextField = { showTagTextField.value = true }
             )
             BottomAppBar(
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier
+                    .padding(vertical = 12.dp),
                 backgroundColor = Color.Transparent
             ) {
                 GalleryListContainer(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .onInteraction(interactionSource),
                     images = images,
+                    space = 8.dp,
                     selectedImages = selectedImages.value,
                     limit = PostViewModel.IMAGE_SELECT_LIMIT,
                     onClickAddButton = { bottomDrawerState.show() },

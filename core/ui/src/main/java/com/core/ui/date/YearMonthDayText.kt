@@ -12,6 +12,8 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
+import com.core.common.ext.dayOfWeek
+import com.core.common.ext.getDate
 import com.core.common.ext.getYearMonth
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
@@ -41,13 +43,13 @@ fun YearMonthDayText(
                 Text(
                     modifier = Modifier
                         .layoutId("Day"),
-                    text = "01",
+                    text = date.getDate(),
                     style = MaterialTheme.typography.h4
                 )
                 Text(
                     modifier = Modifier
                         .layoutId("DayOfWeek"),
-                    text = "SUNDAY",
+                    text = date.dayOfWeek(),
                     style = MaterialTheme.typography.body1
                 )
             }

@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
+import com.core.common.ext.getYearMonth
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
@@ -34,7 +35,7 @@ fun YearMonthDayText(
                 Text(
                     modifier = Modifier
                         .layoutId("YearMonth"),
-                    text = "2023.01",
+                    text = date.getYearMonth(),
                     style = MaterialTheme.typography.body1
                 )
                 Text(

@@ -13,6 +13,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -121,8 +122,8 @@ fun PostScreen(
                     contentPadding = 12.dp,
                     content = { image ->
                         RemovableImage(
-                            modifier = Modifier.aspectRatio(2 / 3f),
                             image = image,
+                            contentScale = ContentScale.FillHeight,
                             onRemove = postViewModel::removeImage
                         )
                     }

@@ -43,7 +43,7 @@ fun RemovableImage(
     onRemove: (ImageUiModel) -> Unit
 ) {
     Layout(
-        modifier = modifier.noRippleClickable { onRemove(image) },
+        modifier = modifier,
         content = {
             HarooImage(
                 modifier = Modifier.layoutId("Image"),

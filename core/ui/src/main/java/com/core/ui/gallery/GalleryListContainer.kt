@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
@@ -25,11 +26,13 @@ fun GalleryListContainer(
     images: LazyPagingItems<ImageUiModel>,
     selectedImages: List<ImageUiModel>,
     limit: Int = 0,
+    space: Dp = 0.dp,
     onClickAddButton: () -> Unit = {},
     onImageSelect: (ImageUiModel) -> Unit = {}
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(space)
     ) {
         HarooButton(
             modifier = Modifier
@@ -48,8 +51,7 @@ fun GalleryListContainer(
             }
         )
         LazyRow(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(space)
         ) {
             items(items = images, key = { image -> image.id ?: image.hashCode() }) { image ->
                 image?.let {

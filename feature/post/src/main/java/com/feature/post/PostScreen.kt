@@ -28,9 +28,10 @@ import com.feature.post.ui.Dimens
 
 @Composable
 fun PostScreen(
+    year: Int, month: Int, day: Int,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
-    val postStateHolder = rememberPostScreenState(postViewModel = postViewModel)
+    val postStateHolder = rememberPostScreenState(year, month, day, postViewModel = postViewModel)
     PostScreen(postStateHolder = postStateHolder)
 }
 

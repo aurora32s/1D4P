@@ -17,13 +17,11 @@ import com.core.model.feature.TagUiModel
 import java.time.LocalDate
 
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
 fun rememberPostScreenState(
     year: Int, month: Int, day: Int,
     postViewModel: PostViewModel,
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
-    isImeVisible: Boolean = WindowInsets.isImeVisible,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onBackPressed: () -> Unit
 ): PostScreenStateHolder {
@@ -46,7 +44,6 @@ fun rememberPostScreenState(
             _content = content,
             bottomDrawerState = bottomDrawerState,
             focusManager = focusManager,
-            isImeVisible = isImeVisible,
             interactionSource = interactionSource,
             pressFlag = pressFlag,
             postId = postId,
@@ -68,7 +65,6 @@ class PostScreenStateHolder(
     private val _content: State<String>,
     val bottomDrawerState: HarooBottomDrawerState,
     val focusManager: FocusManager,
-    val isImeVisible: Boolean,
     val interactionSource: MutableInteractionSource,
     val pressFlag: State<Boolean>,
     val postId: State<Long?>,
@@ -99,7 +95,10 @@ class PostScreenStateHolder(
         get() = postType != PostType.SHOW
 
     @Composable
-    fun CollectImeVisible() {
+    @OptIn(ExperimentalLayoutApi::class)
+    fun CollectImeVisible(
+        isImeVisible: Boolean = WindowInsets.isImeVisible
+    ) {
         LaunchedEffect(key1 = isImeVisible) {
             if (isImeVisible.not() && _showTagTextFieldFlag.value) {
                 _showTagTextFieldFlag.value = false

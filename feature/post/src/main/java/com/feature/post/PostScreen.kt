@@ -4,9 +4,12 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -14,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
-import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
+import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooTextField
 import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.modifiers.onInteraction
@@ -36,7 +39,8 @@ fun PostScreen(
     year: Int, month: Int, day: Int,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
-    val postStateHolder = rememberPostScreenState(year, month, day, postViewModel = postViewModel)
+    val postStateHolder =
+        rememberPostScreenState(year, month, day, postViewModel = postViewModel, onBackPressed = {})
     PostScreen(postStateHolder = postStateHolder)
 }
 
@@ -77,7 +81,9 @@ fun PostScreen(
             PostBody(
                 interactionSource = postStateHolder.interactionSource,
                 closeTegTextField = postStateHolder::closeTagTextField,
-                savePost = postStateHolder::savePost,
+                onBaseClick = postStateHolder::onBaseBtnClick,
+                onBackPressed = postStateHolder::onBackPressed,
+                postType = postStateHolder.postType,
                 date = postStateHolder.date,
                 selectedImages = postStateHolder.selectedImages,
                 onRemoveSelectedImage = postStateHolder::removeImage,
@@ -106,7 +112,9 @@ fun PostScreen(
 fun ColumnScope.PostBody(
     interactionSource: MutableInteractionSource,
     closeTegTextField: () -> Unit,
-    savePost: () -> Unit,
+    onBaseClick: () -> Unit,
+    onBackPressed: () -> Unit,
+    postType: PostType,
     date: LocalDate,
     selectedImages: List<ImageUiModel>,
     onRemoveSelectedImage: (ImageUiModel) -> Unit,
@@ -122,7 +130,11 @@ fun ColumnScope.PostBody(
                 if (it.isFocused) closeTegTextField()
             }
     ) {
-        PostScreenHeader(savePost = savePost)
+        PostScreenHeader(
+            postType = postType,
+            onBackPressed = onBackPressed,
+            onBaseClick = onBaseClick,
+        )
         PostContent(
             date = date,
             selectedImages = selectedImages,
@@ -138,15 +150,56 @@ fun ColumnScope.PostBody(
  */
 @Composable
 fun PostScreenHeader(
-    savePost: () -> Unit
+    modifier: Modifier = Modifier,
+    postType: PostType,
+    onBaseClick: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
-    BackAndRightButtonHeader(
-        title = "글 작성",
-        onBackPressed = { },
-        onClick = savePost
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(Dimens.headerPadding),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
-        Text(text = getString(id = R.string.save_btn))
+        CompositionLocalProvider(
+            LocalContentColor provides HarooTheme.colors.text
+        ) {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "back"
+                )
+            }
+            Text(
+                modifier = Modifier.weight(1f),
+                text = when (postType) {
+                    PostType.NEW -> getString(id = R.string.title_new)
+                    PostType.SHOW -> getString(id = R.string.title_show)
+                    PostType.EDIT -> getString(id = R.string.title_edit)
+                },
+                style = MaterialTheme.typography.subtitle1
+            )
+            // 기본 button
+            HarooButton(
+                onClick = onBaseClick,
+            ) {
+                Text(
+                    text = when (postType) {
+                        PostType.SHOW -> getString(id = R.string.edit_btn)
+                        else -> getString(id = R.string.save_btn)
+                    }
+                )
+            }
+            if (postType == PostType.SHOW) {
+                // 기본 button
+                HarooButton(
+                    modifier = Modifier.padding(Dimens.headerExtraBtnPadding),
+                    onClick = onBaseClick,
+                ) {
+                    Text(text = getString(id = R.string.del_btn))
+                }
+            }
+        }
     }
 }
 

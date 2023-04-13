@@ -24,16 +24,23 @@ fun rememberPostScreenState(
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
     isImeVisible: Boolean = WindowInsets.isImeVisible,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    onBackPressed: () -> Unit
 ): PostScreenStateHolder {
-    LaunchedEffect(year, month, day) {
-        postViewModel.getPost(year, month, day)
-    }
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
     val tags = postViewModel.tags.collectAsState()
     val content = postViewModel.content.collectAsState()
     val pressFlag = interactionSource.collectIsPressedAsState()
+
+    val isPostFlag = postViewModel.isPostFlag.collectAsState()
+    val isEditMode = postViewModel.isEditMode.collectAsState()
+
+    LaunchedEffect(year, month, day) {
+        if (isPostFlag.value.not())
+            postViewModel.getPost(year, month, day)
+    }
+
     return remember(year, month, day, postViewModel, bottomDrawerState) {
         PostScreenStateHolder(
             year, month, day,
@@ -47,7 +54,10 @@ fun rememberPostScreenState(
             isImeVisible = isImeVisible,
             interactionSource = interactionSource,
             pressFlag = pressFlag,
-            _showTagTextFieldFlag = mutableStateOf(false)
+            isPostFlag = isPostFlag,
+            isEditMode = isEditMode,
+            _showTagTextFieldFlag = mutableStateOf(false),
+            _onBackPressed = onBackPressed
         )
     }
 }
@@ -66,7 +76,10 @@ class PostScreenStateHolder(
     val isImeVisible: Boolean,
     val interactionSource: MutableInteractionSource,
     val pressFlag: State<Boolean>,
-    private val _showTagTextFieldFlag: MutableState<Boolean>
+    val isPostFlag: State<Boolean>,
+    val isEditMode: State<Boolean>,
+    private val _showTagTextFieldFlag: MutableState<Boolean>,
+    private val _onBackPressed: () -> Unit
 ) {
     val selectedImages: List<ImageUiModel>
         get() = _selectedImages.value
@@ -81,6 +94,12 @@ class PostScreenStateHolder(
 
     val isBottomDrawer: State<Boolean>
         get() = bottomDrawerState.isShow
+    val postType: PostType
+        get() = when {
+            isPostFlag.value && isEditMode.value -> PostType.EDIT
+            isPostFlag.value -> PostType.SHOW
+            else -> PostType.NEW
+        }
 
     @Composable
     fun CollectImeVisible() {
@@ -152,7 +171,29 @@ class PostScreenStateHolder(
         _showTagTextFieldFlag.value = true
     }
 
-    fun savePost() {
-        postViewModel.savePost()
+    /**
+     * header 의 기본 버튼 클릭
+     */
+    fun onBaseBtnClick() {
+        when (postType) {
+            PostType.SHOW -> postViewModel.toggleEditMode()
+            PostType.NEW,
+            PostType.EDIT -> postViewModel.savePost()
+        }
     }
+
+    /**
+     * back button 클릭
+     */
+    fun onBackPressed() {
+        when (postType) {
+            PostType.EDIT -> postViewModel.toggleEditMode()
+            PostType.NEW,
+            PostType.SHOW -> _onBackPressed()
+        }
+    }
+}
+
+enum class PostType {
+    NEW, SHOW, EDIT
 }

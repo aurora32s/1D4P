@@ -17,4 +17,7 @@ internal object Dimens {
     val tagPadding = PaddingValues(horizontal = 12.dp)
     val bottomAppBarPadding = PaddingValues(vertical = 12.dp)
     val galleryListContainerSpace = 8.dp
+
+    val headerPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+    val headerExtraBtnPadding = PaddingValues(start = 8.dp)
 }

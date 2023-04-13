@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_new">새 하루네컷</string>
+    <string name="title_show">하루네컷</string>
+    <string name="title_edit">하루네컷 수정</string>
+
     <string name="save_btn">저장</string>
     <string name="edit_btn">수정</string>
     <string name="del_btn">삭제</string>

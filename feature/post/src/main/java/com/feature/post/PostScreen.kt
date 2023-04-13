@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -41,6 +42,18 @@ fun PostScreen(
 ) {
     val postStateHolder =
         rememberPostScreenState(year, month, day, postViewModel = postViewModel, onBackPressed = {})
+
+    LaunchedEffect(Unit) {
+        postViewModel.postUiEvent.collect {
+            when (it) {
+                PostUiEvent.Initialized -> postViewModel.getPost(year, month, day)
+                PostUiEvent.EndLoadInitDate -> {}
+                PostUiEvent.FailSaveOrEditPost -> {}
+                PostUiEvent.SuccessSaveOrEditPost -> {}
+            }
+        }
+    }
+
     PostScreen(postStateHolder = postStateHolder)
 }
 
@@ -60,7 +73,8 @@ fun PostScreen(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
-            .imePadding(),
+            .imePadding()
+            .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground)),
         drawerState = postStateHolder.bottomDrawerState,
         drawerContent = {
             DrawerGalleryContainer(
@@ -74,9 +88,7 @@ fun PostScreen(
         }
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
+            modifier = Modifier.fillMaxSize()
         ) {
             PostBody(
                 interactionSource = postStateHolder.interactionSource,
@@ -246,7 +258,6 @@ fun PostContent(
         modifier = Modifier.padding(Dimens.contentPadding),
         value = content,
         onValueChange = setContent,
-        autoFocus = false,
         enabled = isEditMode,
         alpha = Dimens.contentAlpha,
         placeHolder = getString(id = R.string.content_hint),

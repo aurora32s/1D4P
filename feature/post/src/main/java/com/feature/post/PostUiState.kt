@@ -36,11 +36,6 @@ fun rememberPostScreenState(
     val isPostFlag = postViewModel.isPostFlag.collectAsState()
     val isEditMode = postViewModel.isEditMode.collectAsState()
 
-    LaunchedEffect(year, month, day) {
-        if (isPostFlag.value.not())
-            postViewModel.getPost(year, month, day)
-    }
-
     return remember(year, month, day, postViewModel, bottomDrawerState) {
         PostScreenStateHolder(
             year, month, day,

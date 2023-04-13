@@ -23,6 +23,9 @@ class PostViewModel @Inject constructor(
     private val addPostUseCase: AddPostUseCase,
     private val getPostByDateUseCase: GetPostByDateUseCase
 ) : ViewModel() {
+    private val _postUiEvent = MutableStateFlow<PostUiEvent>(PostUiEvent.Initialized)
+    val postUiEvent: StateFlow<PostUiEvent> = _postUiEvent.asStateFlow()
+
     private val _isPostFlag = MutableStateFlow(false)
     val isPostFlag: StateFlow<Boolean> = _isPostFlag.asStateFlow()
     private val _isEditMode = MutableStateFlow(false)
@@ -54,6 +57,7 @@ class PostViewModel @Inject constructor(
 
                 _isPostFlag.value = post.id != null
             }
+            _postUiEvent.value = PostUiEvent.EndLoadInitDate
         }
     }
 
@@ -118,4 +122,11 @@ class PostViewModel @Inject constructor(
     companion object {
         const val IMAGE_SELECT_LIMIT = 4
     }
+}
+
+sealed interface PostUiEvent {
+    object Initialized : PostUiEvent
+    object EndLoadInitDate : PostUiEvent
+    object SuccessSaveOrEditPost : PostUiEvent
+    object FailSaveOrEditPost : PostUiEvent
 }

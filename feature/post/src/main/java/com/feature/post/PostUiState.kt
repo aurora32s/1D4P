@@ -14,10 +14,12 @@ import com.core.designsystem.components.HarooBottomDrawerState
 import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.model.feature.ImageUiModel
 import com.core.model.feature.TagUiModel
+import java.time.LocalDate
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 fun rememberPostScreenState(
+    date: LocalDate = LocalDate.now(),
     postViewModel: PostViewModel,
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
@@ -31,6 +33,7 @@ fun rememberPostScreenState(
     val pressFlag = interactionSource.collectIsPressedAsState()
     return remember(postViewModel, bottomDrawerState) {
         PostScreenStateHolder(
+            date = date,
             postViewModel = postViewModel,
             images = images,
             _selectedImages = selectedImages,
@@ -47,6 +50,7 @@ fun rememberPostScreenState(
 }
 
 class PostScreenStateHolder(
+    val date: LocalDate,
     private val postViewModel: PostViewModel,
     val images: LazyPagingItems<ImageUiModel>,
     private val _selectedImages: State<List<ImageUiModel>>,

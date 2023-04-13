@@ -14,3 +14,8 @@ fun Tag.toSource() = TagSource(
     id = id,
     name = name
 )
+
+fun TagSource.toTag() = Tag(
+    id = id,
+    name = name
+)

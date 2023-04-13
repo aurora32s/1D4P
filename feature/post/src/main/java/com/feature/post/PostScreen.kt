@@ -35,6 +35,9 @@ fun PostScreen(
     focusManager: FocusManager = LocalFocusManager.current,
     isImeVisible: Boolean = WindowInsets.isImeVisible
 ) {
+    LaunchedEffect(Unit) {
+        postViewModel.getPost(2023, 4, 13)
+    }
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
     val tags = postViewModel.tags.collectAsState()

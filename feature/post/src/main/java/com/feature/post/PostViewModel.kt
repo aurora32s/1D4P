@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.core.domain.post.AddPostUseCase
 import com.core.domain.post.GetImagesUseCase
+import com.core.domain.post.GetPostByDateUseCase
 import com.core.model.domain.Post
 import com.core.model.feature.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     getImagesUseCase: GetImagesUseCase,
-    private val addPostUseCase: AddPostUseCase
+    private val addPostUseCase: AddPostUseCase,
+    private val getPostByDateUseCase: GetPostByDateUseCase
 ) : ViewModel() {
 
     val images = getImagesUseCase()
@@ -35,6 +37,19 @@ class PostViewModel @Inject constructor(
 
     private val _content = MutableStateFlow("")
     val content: StateFlow<String> = _content.asStateFlow()
+
+    /**
+     * 기존 Post 요청
+     */
+    fun getPost(year: Int, month: Int, day: Int) {
+        viewModelScope.launch {
+            getPostByDateUseCase(year, month, day)?.let { post ->
+                _content.value = post.content ?: ""
+                _selectedImages.value = post.images.map { it.toImageUiModel() }
+                _tags.value = post.tags.map { it.toTagUiModel() }
+            }
+        }
+    }
 
     /**
      * 신규 post 저장

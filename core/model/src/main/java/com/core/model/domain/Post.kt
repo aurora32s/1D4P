@@ -24,3 +24,13 @@ fun Post.toSource() = PostSource(
     images = images.map { it.toSource() },
     tags = tags.map { it.toSource() }
 )
+
+fun PostSource.toPost() = Post(
+    id = id,
+    year = year,
+    month = month,
+    day = day,
+    content = content,
+    images = images.map { it.toImage() },
+    tags = tags.map { it.toTag() }
+)

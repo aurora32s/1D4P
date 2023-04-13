@@ -24,7 +24,6 @@ import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
 import com.core.ui.tag.TagContainer
-import java.time.LocalDate
 
 @Composable
 fun PostScreen(
@@ -66,86 +65,123 @@ fun PostScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        HarooTheme.colors.interactiveBackground
-                    )
-                )
+                .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .onInteraction(postStateHolder.interactionSource)
-                    .onFocusChanged {
-                        // 4. C 클릭 시, D가 열려 있는 경우 close
-                        if (it.isFocused)
-                            postStateHolder.closeTagTextField()
-                    }
-            ) {
-                BackAndRightButtonHeader(
-                    title = "글 작성",
-                    onBackPressed = { },
-                    onClick = postStateHolder::savePost
-                ) {
-                    // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
-                    Text(text = "저장")
-                }
-                YearMonthDayText(
-                    modifier = Modifier
-                        .padding(top = 26.dp, start = 16.dp),
-                    date = LocalDate.now()
-                )
-                AsyncImageLazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(210.dp),
-                    images = postStateHolder.selectedImages,
-                    space = 4.dp,
-                    contentPadding = 12.dp,
-                    content = { image ->
-                        RemovableImage(
-                            image = image,
-                            contentScale = ContentScale.FillHeight,
-                            onRemove = postStateHolder::removeImage
-                        )
-                    }
-                )
-                HarooTextField(
-                    modifier = Modifier.padding(
-                        horizontal = 12.dp, vertical = 8.dp
-                    ),
-                    value = postStateHolder.content,
-                    onValueChange = postStateHolder::setContent,
-                    autoFocus = true,
-                    alpha = 0.1f,
-                    placeHolder = "내용을 입력해주세요...",
-                    singleLine = false,
-                    contentPadding = PaddingValues(16.dp)
-                )
-            }
-            TagContainer(
-                modifier = Modifier.padding(horizontal = 12.dp),
-                showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
-                tags = postStateHolder.tags,
-                onAddTag = postStateHolder::addTag,
-                onRemoveTag = postStateHolder::removeTag,
-                showTagTextField = postStateHolder::showTagTextField
-            )
-            BottomAppBar(
-                modifier = Modifier
-                    .padding(vertical = 12.dp),
-                backgroundColor = Color.Transparent
-            ) {
-                GalleryListContainer(
-                    images = postStateHolder.images,
-                    space = 8.dp,
-                    selectedImages = postStateHolder.selectedImages,
-                    limit = PostViewModel.IMAGE_SELECT_LIMIT,
-                    onClickAddButton = postStateHolder::showBottomDrawer,
-                    onImageSelect = postStateHolder::setSelectedImage
-                )
-            }
+            PostBody(postStateHolder = postStateHolder)
+            PostScreenBottomAppBar(postStateHolder = postStateHolder)
         }
     }
 }
-//}
+
+/**
+ * PostScreen 의 header / body / bottom 중 header 와 body
+ */
+@Composable
+fun ColumnScope.PostBody(
+    postStateHolder: PostScreenStateHolder
+) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
+            .onInteraction(postStateHolder.interactionSource)
+            .onFocusChanged {
+                // 4. C 클릭 시, D가 열려 있는 경우 close
+                if (it.isFocused)
+                    postStateHolder.closeTagTextField()
+            }
+    ) {
+        PostScreenHeader(postStateHolder = postStateHolder)
+        PostContent(postStateHolder = postStateHolder)
+    }
+}
+
+/**
+ * PostScreen 의 header / body / bottom 중 header
+ */
+@Composable
+fun PostScreenHeader(
+    postStateHolder: PostScreenStateHolder
+) {
+    BackAndRightButtonHeader(
+        title = "글 작성",
+        onBackPressed = { },
+        onClick = postStateHolder::savePost
+    ) {
+        // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
+        Text(text = "저장")
+    }
+}
+
+/**
+ * PostScreen 의 header / body / bottom 중 body
+ */
+@Composable
+fun PostContent(
+    postStateHolder: PostScreenStateHolder
+) {
+    // 날짜
+    YearMonthDayText(
+        modifier = Modifier.padding(top = 26.dp, start = 16.dp),
+        date = postStateHolder.date
+    )
+    // 사용자 가 선택한 이미지 리스트
+    AsyncImageLazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(210.dp),
+        images = postStateHolder.selectedImages,
+        space = 4.dp,
+        contentPadding = 12.dp,
+        content = { image ->
+            RemovableImage(
+                image = image,
+                contentScale = ContentScale.FillHeight,
+                onRemove = postStateHolder::removeImage
+            )
+        }
+    )
+    // 게시글 의 내용을 입력 하는 TextField
+    HarooTextField(
+        modifier = Modifier.padding(
+            horizontal = 12.dp, vertical = 8.dp
+        ),
+        value = postStateHolder.content,
+        onValueChange = postStateHolder::setContent,
+        autoFocus = true,
+        alpha = 0.1f,
+        placeHolder = "내용을 입력해주세요...",
+        singleLine = false,
+        contentPadding = PaddingValues(16.dp)
+    )
+}
+
+/**
+ * PostScreen 의 header / body / bottom 중 bottom
+ */
+@Composable
+fun PostScreenBottomAppBar(
+    postStateHolder: PostScreenStateHolder
+) {
+    TagContainer(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
+        tags = postStateHolder.tags,
+        onAddTag = postStateHolder::addTag,
+        onRemoveTag = postStateHolder::removeTag,
+        showTagTextField = postStateHolder::showTagTextField
+    )
+    BottomAppBar(
+        modifier = Modifier
+            .padding(vertical = 12.dp),
+        backgroundColor = Color.Transparent
+    ) {
+        GalleryListContainer(
+            images = postStateHolder.images,
+            space = 8.dp,
+            selectedImages = postStateHolder.selectedImages,
+            limit = PostViewModel.IMAGE_SELECT_LIMIT,
+            onClickAddButton = postStateHolder::showBottomDrawer,
+            onImageSelect = postStateHolder::setSelectedImage
+        )
+    }
+}

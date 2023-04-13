@@ -26,8 +26,8 @@ class PostViewModel @Inject constructor(
     private val _postUiEvent = MutableStateFlow<PostUiEvent>(PostUiEvent.Initialized)
     val postUiEvent: StateFlow<PostUiEvent> = _postUiEvent.asStateFlow()
 
-    private val _isPostFlag = MutableStateFlow(false)
-    val isPostFlag: StateFlow<Boolean> = _isPostFlag.asStateFlow()
+    private val _postId = MutableStateFlow<Long?>(null)
+    val postId: StateFlow<Long?> = _postId.asStateFlow()
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode: StateFlow<Boolean> = _isEditMode.asStateFlow()
 
@@ -38,9 +38,11 @@ class PostViewModel @Inject constructor(
 
     private val _selectedImages = MutableStateFlow<List<ImageUiModel>>(emptyList())
     val selectedImages: StateFlow<List<ImageUiModel>> = _selectedImages.asStateFlow()
+    private val removeImages = mutableListOf<ImageUiModel>()
 
     private val _tags = MutableStateFlow<List<TagUiModel>>(emptyList())
     val tags: StateFlow<List<TagUiModel>> = _tags.asStateFlow()
+    private val removeTags = mutableListOf<TagUiModel>()
 
     private val _content = MutableStateFlow("")
     val content: StateFlow<String> = _content.asStateFlow()
@@ -55,7 +57,7 @@ class PostViewModel @Inject constructor(
                 _selectedImages.value = post.images.map { it.toImageUiModel() }
                 _tags.value = post.tags.map { it.toTagUiModel() }
 
-                _isPostFlag.value = post.id != null
+                _postId.value = post.id ?: -1
             }
             _postUiEvent.value = PostUiEvent.EndLoadInitDate
         }
@@ -64,22 +66,26 @@ class PostViewModel @Inject constructor(
     /**
      * 신규 post 저장
      */
-    fun savePost() {
+    fun savePost(year: Int, month: Int, day: Int) {
         // 유효성 검사 1. 내용
         if (_content.value.isBlank()) return
         // 유효성 검사 2. 이미지 1개 이상
         if (_selectedImages.value.isEmpty()) return
 
         viewModelScope.launch {
-            addPostUseCase(
+            val newPostId = addPostUseCase(
                 Post(
-                    id = null,
-                    year = 2023, month = 4, day = 13,
+                    id = _postId.value,
+                    year = year, month = month, day = day,
                     content = _content.value,
                     images = _selectedImages.value.map { it.toImage() },
                     tags = _tags.value.map { it.toTag() }
-                )
+                ),
+                removeImages = removeImages.map { it.toImage() },
+                removeTags = removeTags.map { it.toTag() }
             )
+            _postId.value = newPostId
+            _isEditMode.value = false
         }
     }
 
@@ -97,6 +103,7 @@ class PostViewModel @Inject constructor(
 
     fun removeImage(imageUiModel: ImageUiModel) {
         _selectedImages.value = _selectedImages.value.filterNot { it == imageUiModel }
+        if (imageUiModel.id != null) removeImages.add(imageUiModel)
     }
 
     fun addTag(name: String) {
@@ -109,6 +116,7 @@ class PostViewModel @Inject constructor(
 
     fun removeTag(tagUiModel: TagUiModel) {
         _tags.value = _tags.value.filterNot { it == tagUiModel }
+        if (tagUiModel.id != null) removeTags.add(tagUiModel)
     }
 
     fun setContent(content: String) {

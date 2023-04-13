@@ -16,10 +16,39 @@ import javax.inject.Inject
 class PostLocalRepositoryImpl @Inject constructor(
     private val postDao: PostDao
 ) : PostRepository {
-    override suspend fun addPost(post: PostSource): Long = coroutineScope {
+    override suspend fun addPost(
+        post: PostSource,
+        removeImages: List<ImageSource>,
+        removeTags: List<TagSource>
+    ): Long = coroutineScope {
         val postId = postDao.insertPost(post.toPostEntity())
-        launch { postDao.insertImages(post.images.map { it.toImageEntity(postId) }) }
-        launch { postDao.insertTags(post.tags.map { it.toTagEntity(postId) }) }
+        if (postId >= 0L) {
+            launch { postDao.insertImages(post.images.map { it.toImageEntity(postId) }) }
+            launch { postDao.insertTags(post.tags.map { it.toTagEntity(postId) }) }
+
+            // 기존 이미지 제거
+            if (removeImages.isNotEmpty())
+                launch {
+                    postDao.deleteImages(removeImages.mapNotNull { image ->
+                        image.id?.let {
+                            image.toImageEntity(
+                                it
+                            )
+                        }
+                    })
+                }
+            // 기존 태그 제거
+            if (removeTags.isNotEmpty())
+                launch {
+                    postDao.deleteTags(removeTags.mapNotNull { tag ->
+                        tag.id?.let {
+                            tag.toTagEntity(
+                                it
+                            )
+                        }
+                    })
+                }
+        }
         postId
     }
 

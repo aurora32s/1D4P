@@ -184,7 +184,10 @@ class PostScreenStateHolder(
      */
     fun onBackPressed() {
         when (postType) {
-            PostType.EDIT -> postViewModel.toggleEditMode()
+            PostType.EDIT -> {
+                postViewModel.getPost(year,month,day)
+                postViewModel.toggleEditMode()
+            }
             PostType.NEW,
             PostType.SHOW -> _onBackPressed()
         }

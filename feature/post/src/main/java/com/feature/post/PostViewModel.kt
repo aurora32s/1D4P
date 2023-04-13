@@ -51,9 +51,9 @@ class PostViewModel @Inject constructor(
                 _content.value = post.content ?: ""
                 _selectedImages.value = post.images.map { it.toImageUiModel() }
                 _tags.value = post.tags.map { it.toTagUiModel() }
-            }
 
-            _isPostFlag.value = true
+                _isPostFlag.value = post.id != null
+            }
         }
     }
 

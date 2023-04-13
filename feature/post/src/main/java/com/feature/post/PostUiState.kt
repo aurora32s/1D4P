@@ -100,6 +100,8 @@ class PostScreenStateHolder(
             isPostFlag.value -> PostType.SHOW
             else -> PostType.NEW
         }
+    val editable: Boolean
+        get() = postType != PostType.SHOW
 
     @Composable
     fun CollectImeVisible() {

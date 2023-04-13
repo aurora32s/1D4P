@@ -11,3 +11,5 @@ data class TagUiModel(
 ) : Model(id, CellType.TAG)
 
 fun TagUiModel.toTag() = Tag(id = id, name = name)
+
+fun Tag.toTagUiModel() = TagUiModel(id = id, name = name)

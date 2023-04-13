@@ -1,9 +1,6 @@
 package com.core.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.core.model.database.ImageEntity
 import com.core.model.database.PostEntity
 import com.core.model.database.TagEntity
@@ -40,4 +37,10 @@ interface PostDao {
     // 특정 post 의 tag 요청
     @Query("SELECT * FROM tag WHERE post_id = :postId")
     suspend fun selectTagsByPost(postId: Long): List<TagEntity>
+
+    @Delete
+    suspend fun deleteImages(images: List<ImageEntity>)
+
+    @Delete
+    suspend fun deleteTags(tags: List<TagEntity>)
 }

@@ -7,11 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.view.WindowCompat
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.feature.post.PostScreen
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,7 +39,12 @@ class MainActivity : ComponentActivity() {
                         requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
-                PostScreen()
+                val date = LocalDate.now()
+                PostScreen(
+                    year = date.year,
+                    month = date.monthValue,
+                    day = date.dayOfMonth
+                )
             }
         }
     }

@@ -18,23 +18,23 @@ fun AsyncImageLazyRow(
     modifier: Modifier = Modifier,
     images: List<ImageUiModel>,
     space: Dp = 0.dp,
-    contentPadding: Dp = 0.dp,
+    contentPadding: PaddingValues = PaddingValues(),
     content: @Composable (ImageUiModel) -> Unit
 ) {
     AnimatedVisibility(visible = images.isNotEmpty()) {
         Row(
             modifier = modifier
-                .padding(vertical = contentPadding)
+                .padding(contentPadding)
                 .horizontalScroll(
                     rememberScrollState()
                 ),
             horizontalArrangement = Arrangement.spacedBy(space),
         ) {
-            Spacer(modifier = Modifier.width(contentPadding))
+            Spacer(modifier = Modifier.width(space))
             images.forEach {
                 content(it)
             }
-            Spacer(modifier = Modifier.width(contentPadding))
+            Spacer(modifier = Modifier.width(space))
         }
     }
 }

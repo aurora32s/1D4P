@@ -292,7 +292,9 @@ fun PostScreenBottomAppBar(
         showTagTextField = showTagTextField
     )
 
-    if (isEditMode) {
+    if (isEditMode.not()) {
+        Spacer(modifier = Modifier.height(Dimens.spaceBetweenTagAndGalleryList))
+    } else {
         BottomAppBar(
             modifier = Modifier
                 .padding(Dimens.bottomAppBarPadding),

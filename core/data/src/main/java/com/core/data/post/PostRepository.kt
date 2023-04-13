@@ -1,7 +1,9 @@
 package com.core.data.post
 
 import androidx.paging.PagingData
+import com.core.model.data.ImageSource
 import com.core.model.data.PostSource
+import com.core.model.data.TagSource
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -9,7 +11,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface PostRepository {
     // post 추가
-    suspend fun addPost(post: PostSource): Long
+    suspend fun addPost(
+        post: PostSource,
+        removeImages: List<ImageSource>,
+        removeTags: List<TagSource>
+    ): Long
 
     // 특정 년도/월/일 post 요청
     suspend fun getPost(year: Int, month: Int, day: Int): PostSource?

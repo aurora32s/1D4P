@@ -33,7 +33,7 @@ fun rememberPostScreenState(
     val content = postViewModel.content.collectAsState()
     val pressFlag = interactionSource.collectIsPressedAsState()
 
-    val isPostFlag = postViewModel.isPostFlag.collectAsState()
+    val postId = postViewModel.postId.collectAsState()
     val isEditMode = postViewModel.isEditMode.collectAsState()
 
     return remember(year, month, day, postViewModel, bottomDrawerState) {
@@ -49,7 +49,7 @@ fun rememberPostScreenState(
             isImeVisible = isImeVisible,
             interactionSource = interactionSource,
             pressFlag = pressFlag,
-            isPostFlag = isPostFlag,
+            postId = postId,
             isEditMode = isEditMode,
             _showTagTextFieldFlag = mutableStateOf(false),
             _onBackPressed = onBackPressed
@@ -71,7 +71,7 @@ class PostScreenStateHolder(
     val isImeVisible: Boolean,
     val interactionSource: MutableInteractionSource,
     val pressFlag: State<Boolean>,
-    val isPostFlag: State<Boolean>,
+    val postId: State<Long?>,
     val isEditMode: State<Boolean>,
     private val _showTagTextFieldFlag: MutableState<Boolean>,
     private val _onBackPressed: () -> Unit
@@ -91,8 +91,8 @@ class PostScreenStateHolder(
         get() = bottomDrawerState.isShow
     val postType: PostType
         get() = when {
-            isPostFlag.value && isEditMode.value -> PostType.EDIT
-            isPostFlag.value -> PostType.SHOW
+            postId.value != null && isEditMode.value -> PostType.EDIT
+            postId.value != null -> PostType.SHOW
             else -> PostType.NEW
         }
     val editable: Boolean
@@ -175,7 +175,7 @@ class PostScreenStateHolder(
         when (postType) {
             PostType.SHOW -> postViewModel.toggleEditMode()
             PostType.NEW,
-            PostType.EDIT -> postViewModel.savePost()
+            PostType.EDIT -> postViewModel.savePost(year, month, day)
         }
     }
 
@@ -185,7 +185,7 @@ class PostScreenStateHolder(
     fun onBackPressed() {
         when (postType) {
             PostType.EDIT -> {
-                postViewModel.getPost(year,month,day)
+                postViewModel.getPost(year, month, day)
                 postViewModel.toggleEditMode()
             }
             PostType.NEW,

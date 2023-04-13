@@ -2,6 +2,7 @@ package com.feature.post
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Text
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
 import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
 import com.core.designsystem.components.HarooTextField
@@ -19,12 +21,15 @@ import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.modifiers.onInteraction
 import com.core.designsystem.theme.HarooTheme
 import com.core.designsystem.util.getString
+import com.core.model.feature.ImageUiModel
+import com.core.model.feature.TagUiModel
 import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
 import com.core.ui.tag.TagContainer
 import com.feature.post.ui.Dimens
+import java.time.LocalDate
 
 @Composable
 fun PostScreen(
@@ -69,8 +74,27 @@ fun PostScreen(
                 .fillMaxSize()
                 .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground))
         ) {
-            PostBody(postStateHolder = postStateHolder)
-            PostScreenBottomAppBar(postStateHolder = postStateHolder)
+            PostBody(
+                interactionSource = postStateHolder.interactionSource,
+                closeTegTextField = postStateHolder::closeTagTextField,
+                savePost = postStateHolder::savePost,
+                date = postStateHolder.date,
+                selectedImages = postStateHolder.selectedImages,
+                onRemoveSelectedImage = postStateHolder::removeImage,
+                content = postStateHolder.content,
+                setContent = postStateHolder::setContent
+            )
+            PostScreenBottomAppBar(
+                showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
+                tags = postStateHolder.tags,
+                images = postStateHolder.images,
+                selectedImages = postStateHolder.selectedImages,
+                onAddTags = postStateHolder::addTag,
+                onRemoveTag = postStateHolder::removeTag,
+                showTagTextField = postStateHolder::showTagTextField,
+                showBottomDrawer = postStateHolder::showBottomDrawer,
+                onImageSelect = postStateHolder::setSelectedImage
+            )
         }
     }
 }
@@ -80,20 +104,32 @@ fun PostScreen(
  */
 @Composable
 fun ColumnScope.PostBody(
-    postStateHolder: PostScreenStateHolder
+    interactionSource: MutableInteractionSource,
+    closeTegTextField: () -> Unit,
+    savePost: () -> Unit,
+    date: LocalDate,
+    selectedImages: List<ImageUiModel>,
+    onRemoveSelectedImage: (ImageUiModel) -> Unit,
+    content: String,
+    setContent: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .weight(1f)
-            .onInteraction(postStateHolder.interactionSource)
+            .onInteraction(interactionSource)
             .onFocusChanged {
                 // 4. C 클릭 시, D가 열려 있는 경우 close
-                if (it.isFocused)
-                    postStateHolder.closeTagTextField()
+                if (it.isFocused) closeTegTextField()
             }
     ) {
-        PostScreenHeader(postStateHolder = postStateHolder)
-        PostContent(postStateHolder = postStateHolder)
+        PostScreenHeader(savePost = savePost)
+        PostContent(
+            date = date,
+            selectedImages = selectedImages,
+            onRemoveSelectedImage = onRemoveSelectedImage,
+            content = content,
+            setContent = setContent
+        )
     }
 }
 
@@ -102,12 +138,12 @@ fun ColumnScope.PostBody(
  */
 @Composable
 fun PostScreenHeader(
-    postStateHolder: PostScreenStateHolder
+    savePost: () -> Unit
 ) {
     BackAndRightButtonHeader(
         title = "글 작성",
         onBackPressed = { },
-        onClick = postStateHolder::savePost
+        onClick = savePost
     ) {
         // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
         Text(text = getString(id = R.string.save_btn))
@@ -119,34 +155,38 @@ fun PostScreenHeader(
  */
 @Composable
 fun PostContent(
-    postStateHolder: PostScreenStateHolder
+    date: LocalDate,
+    selectedImages: List<ImageUiModel>,
+    onRemoveSelectedImage: (ImageUiModel) -> Unit,
+    content: String,
+    setContent: (String) -> Unit
 ) {
     // 날짜
     YearMonthDayText(
         modifier = Modifier.padding(Dimens.datePadding),
-        date = postStateHolder.date
+        date = date
     )
     // 사용자 가 선택한 이미지 리스트
     AsyncImageLazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(Dimens.selectedImageListHeight),
-        images = postStateHolder.selectedImages,
+        images = selectedImages,
         space = Dimens.selectedImageListSpace,
         contentPadding = Dimens.selectedImageListPadding,
         content = { image ->
             RemovableImage(
                 image = image,
                 contentScale = ContentScale.FillHeight,
-                onRemove = postStateHolder::removeImage
+                onRemove = onRemoveSelectedImage
             )
         }
     )
     // 게시글 의 내용을 입력 하는 TextField
     HarooTextField(
         modifier = Modifier.padding(Dimens.contentPadding),
-        value = postStateHolder.content,
-        onValueChange = postStateHolder::setContent,
+        value = content,
+        onValueChange = setContent,
         autoFocus = true,
         alpha = Dimens.contentAlpha,
         placeHolder = getString(id = R.string.content_hint),
@@ -160,15 +200,23 @@ fun PostContent(
  */
 @Composable
 fun PostScreenBottomAppBar(
-    postStateHolder: PostScreenStateHolder
+    showTagTextFieldFlag: Boolean,
+    tags: List<TagUiModel>,
+    images: LazyPagingItems<ImageUiModel>,
+    selectedImages: List<ImageUiModel>,
+    onAddTags: (String) -> Unit,
+    onRemoveTag: (TagUiModel) -> Unit,
+    showTagTextField: () -> Unit,
+    showBottomDrawer: () -> Unit,
+    onImageSelect: (ImageUiModel) -> Unit
 ) {
     TagContainer(
         modifier = Modifier.padding(Dimens.tagPadding),
-        showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
-        tags = postStateHolder.tags,
-        onAddTag = postStateHolder::addTag,
-        onRemoveTag = postStateHolder::removeTag,
-        showTagTextField = postStateHolder::showTagTextField
+        showTagTextFieldFlag = showTagTextFieldFlag,
+        tags = tags,
+        onAddTag = onAddTags,
+        onRemoveTag = onRemoveTag,
+        showTagTextField = showTagTextField
     )
     BottomAppBar(
         modifier = Modifier
@@ -176,12 +224,12 @@ fun PostScreenBottomAppBar(
         backgroundColor = Color.Transparent
     ) {
         GalleryListContainer(
-            images = postStateHolder.images,
+            images = images,
             space = Dimens.galleryListContainerSpace,
-            selectedImages = postStateHolder.selectedImages,
+            selectedImages = selectedImages,
             limit = PostViewModel.IMAGE_SELECT_LIMIT,
-            onClickAddButton = postStateHolder::showBottomDrawer,
-            onImageSelect = postStateHolder::setSelectedImage
+            onClickAddButton = showBottomDrawer,
+            onImageSelect = onImageSelect
         )
     }
 }

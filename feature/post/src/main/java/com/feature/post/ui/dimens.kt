@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
 
 internal object Dimens {
-    val galleryContainerSpace = 24.dp
+    val galleryContainerSpace = 2.dp
     val datePadding = PaddingValues(top = 26.dp, start = 16.dp)
     val selectedImageListHeight = 210.dp
     val selectedImageListSpace = 4.dp

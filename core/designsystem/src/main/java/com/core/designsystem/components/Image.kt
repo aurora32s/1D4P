@@ -37,6 +37,7 @@ import com.core.model.feature.ImageUiModel
 @Composable
 fun RemovableImage(
     modifier: Modifier = Modifier,
+    isEditMode: () -> Boolean = { true },
     image: ImageUiModel,
     shape: Shape = MaterialTheme.shapes.medium,
     elevation: Dp = 0.dp,
@@ -57,6 +58,7 @@ fun RemovableImage(
                 modifier = Modifier.layoutId("RemoveBtn"),
                 onClick = { onRemove(image) },
                 backgroundColor = HarooTheme.colors.dim,
+                border = null,
                 alpha = 0.5f,
                 contentPadding = PaddingValues(2.dp)
             ) {
@@ -68,13 +70,6 @@ fun RemovableImage(
             }
         }
     ) { measureables, constraints ->
-        val removeButtonSize = (constraints.maxHeight / 5).coerceIn(0, 25.dp.toPx().toInt())
-        val removePlaceable = measureables.find { it.layoutId == "RemoveBtn" }?.measure(
-            Constraints(
-                minWidth = removeButtonSize, maxWidth = removeButtonSize,
-                minHeight = removeButtonSize, maxHeight = removeButtonSize
-            )
-        )
         val imagePlaceable = measureables.find { it.layoutId == "Image" }?.measure(constraints)
         val imageWidth = imagePlaceable?.width ?: constraints.minWidth
 
@@ -83,7 +78,19 @@ fun RemovableImage(
             constraints.maxHeight
         ) {
             imagePlaceable?.placeRelative(x = 0, y = 0)
-            removePlaceable?.placeRelative(x = imageWidth - removeButtonSize - 4, y = 4)
+            if (isEditMode()) {
+                val removeButtonSize = (constraints.maxHeight / 5).coerceIn(0, 25.dp.toPx().toInt())
+                val removePlaceable = measureables.find { it.layoutId == "RemoveBtn" }?.measure(
+                    Constraints(
+                        minWidth = removeButtonSize, maxWidth = removeButtonSize,
+                        minHeight = removeButtonSize, maxHeight = removeButtonSize
+                    )
+                )
+                removePlaceable?.placeRelative(
+                    x = imageWidth - removeButtonSize - 4,
+                    y = 4
+                )
+            }
         }
     }
 }

@@ -42,6 +42,7 @@ fun GalleryListContainer(
             shape = MaterialTheme.shapes.medium,
             backgroundColor = HarooTheme.colors.uiBackground,
             alpha = 0.1f,
+            border = null,
             contentColor = HarooTheme.colors.text,
             content = {
                 Icon(

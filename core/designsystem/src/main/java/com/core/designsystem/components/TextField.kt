@@ -49,7 +49,9 @@ fun HarooTextField(
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(key1 = autoFocus) {
-        if (autoFocus) focusRequester.requestFocus()
+        if (autoFocus) {
+            focusRequester.requestFocus()
+        }
     }
 
     HarooSurface(

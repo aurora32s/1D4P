@@ -26,8 +26,11 @@ fun HarooButton(
     onClick: () -> Unit,
     enabled: Boolean = true, // 사용 가능 여부
     shape: Shape = MaterialTheme.shapes.small,
-    border: BorderStroke? = null, // 테두리 모양
-    alpha: Float = 1f, // 배경색 투명도
+    border: BorderStroke? = BorderStroke(
+        width = 1.dp,
+        color = HarooTheme.colors.uiBorder
+    ), // 테두리 모양
+    alpha: Float = 0f, // 배경색 투명도
     backgroundColor: Color = Color.Unspecified, // 배경 색
     disableBackgroundColor: Color = Color.Unspecified, // disable 일때 배경 색
     contentColor: Color = HarooTheme.colors.text, // 내부 색

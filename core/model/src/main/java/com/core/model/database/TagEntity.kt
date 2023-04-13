@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
-import com.core.model.data.TagSource
 
 @Entity(
     tableName = "tag",
@@ -24,9 +23,4 @@ data class TagEntity(
     @ColumnInfo(name = "post_id", index = true)
     val postId: Long?,
     val name: String
-)
-
-fun TagEntity.toTag() = TagSource(
-    id = id,
-    name = name
 )

@@ -15,3 +15,8 @@ fun TagSource.toTagEntity(postId: Long) = TagEntity(
     postId = postId,
     name = name
 )
+
+fun TagEntity.toSource() = TagSource(
+    id = id,
+    name = name
+)

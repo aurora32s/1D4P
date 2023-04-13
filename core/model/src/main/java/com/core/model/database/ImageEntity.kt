@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
-import com.core.model.data.ImageSource
 
 /**
  * Image Table
@@ -28,9 +27,4 @@ data class ImageEntity(
     val postId: Long,
     @ColumnInfo(name = "image_url")
     val imageUrl: String
-)
-
-fun ImageEntity.toImageSource() = ImageSource(
-    id = id,
-    imageUrl = imageUrl
 )

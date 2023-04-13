@@ -84,6 +84,7 @@ fun PostScreen(
                 onBaseClick = postStateHolder::onBaseBtnClick,
                 onBackPressed = postStateHolder::onBackPressed,
                 postType = postStateHolder.postType,
+                isEditMode = postStateHolder.editable,
                 date = postStateHolder.date,
                 selectedImages = postStateHolder.selectedImages,
                 onRemoveSelectedImage = postStateHolder::removeImage,
@@ -91,6 +92,7 @@ fun PostScreen(
                 setContent = postStateHolder::setContent
             )
             PostScreenBottomAppBar(
+                isEditMode = postStateHolder.editable,
                 showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
                 tags = postStateHolder.tags,
                 images = postStateHolder.images,
@@ -115,6 +117,7 @@ fun ColumnScope.PostBody(
     onBaseClick: () -> Unit,
     onBackPressed: () -> Unit,
     postType: PostType,
+    isEditMode: Boolean,
     date: LocalDate,
     selectedImages: List<ImageUiModel>,
     onRemoveSelectedImage: (ImageUiModel) -> Unit,
@@ -137,6 +140,7 @@ fun ColumnScope.PostBody(
         )
         PostContent(
             date = date,
+            isEditMode = isEditMode,
             selectedImages = selectedImages,
             onRemoveSelectedImage = onRemoveSelectedImage,
             content = content,
@@ -209,6 +213,7 @@ fun PostScreenHeader(
 @Composable
 fun PostContent(
     date: LocalDate,
+    isEditMode: Boolean,
     selectedImages: List<ImageUiModel>,
     onRemoveSelectedImage: (ImageUiModel) -> Unit,
     content: String,
@@ -230,6 +235,7 @@ fun PostContent(
         content = { image ->
             RemovableImage(
                 image = image,
+                isEditMode = { isEditMode },
                 contentScale = ContentScale.FillHeight,
                 onRemove = onRemoveSelectedImage
             )
@@ -240,7 +246,8 @@ fun PostContent(
         modifier = Modifier.padding(Dimens.contentPadding),
         value = content,
         onValueChange = setContent,
-        autoFocus = true,
+        autoFocus = false,
+        enabled = isEditMode,
         alpha = Dimens.contentAlpha,
         placeHolder = getString(id = R.string.content_hint),
         singleLine = false,
@@ -253,6 +260,7 @@ fun PostContent(
  */
 @Composable
 fun PostScreenBottomAppBar(
+    isEditMode: Boolean,
     showTagTextFieldFlag: Boolean,
     tags: List<TagUiModel>,
     images: LazyPagingItems<ImageUiModel>,
@@ -265,24 +273,28 @@ fun PostScreenBottomAppBar(
 ) {
     TagContainer(
         modifier = Modifier.padding(Dimens.tagPadding),
+        isEditMode = isEditMode,
         showTagTextFieldFlag = showTagTextFieldFlag,
         tags = tags,
         onAddTag = onAddTags,
         onRemoveTag = onRemoveTag,
         showTagTextField = showTagTextField
     )
-    BottomAppBar(
-        modifier = Modifier
-            .padding(Dimens.bottomAppBarPadding),
-        backgroundColor = Color.Transparent
-    ) {
-        GalleryListContainer(
-            images = images,
-            space = Dimens.galleryListContainerSpace,
-            selectedImages = selectedImages,
-            limit = PostViewModel.IMAGE_SELECT_LIMIT,
-            onClickAddButton = showBottomDrawer,
-            onImageSelect = onImageSelect
-        )
+
+    if (isEditMode) {
+        BottomAppBar(
+            modifier = Modifier
+                .padding(Dimens.bottomAppBarPadding),
+            backgroundColor = Color.Transparent
+        ) {
+            GalleryListContainer(
+                images = images,
+                space = Dimens.galleryListContainerSpace,
+                selectedImages = selectedImages,
+                limit = PostViewModel.IMAGE_SELECT_LIMIT,
+                onClickAddButton = showBottomDrawer,
+                onImageSelect = onImageSelect
+            )
+        }
     }
 }

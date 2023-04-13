@@ -35,6 +35,7 @@ import com.google.accompanist.flowlayout.FlowRow
 @Composable
 fun TagContainer(
     modifier: Modifier = Modifier,
+    isEditMode: Boolean = true,
     showTagTextFieldFlag: Boolean = false,
     tags: List<TagUiModel>,
     tagSpace: Dp = 2.dp,
@@ -51,7 +52,7 @@ fun TagContainer(
             tags.forEach { tag ->
                 TagChip(name = "#${tag.name}", onClick = { onRemoveTag(tag) })
             }
-            if (showTagTextFieldFlag.not()) {
+            if (isEditMode && showTagTextFieldFlag.not()) {
                 TagChip(
                     name = "+태그추가",
                     onClick = showTagTextField
@@ -117,6 +118,7 @@ fun TagTextField(
             )
             HarooButton(
                 alpha = 0f,
+                border = null,
                 onClick = onAddTagAndClearTag
             ) {
                 Icon(

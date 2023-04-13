@@ -23,6 +23,10 @@ class PostViewModel @Inject constructor(
     private val addPostUseCase: AddPostUseCase,
     private val getPostByDateUseCase: GetPostByDateUseCase
 ) : ViewModel() {
+    private val _isPostFlag = MutableStateFlow(false)
+    val isPostFlag: StateFlow<Boolean> = _isPostFlag.asStateFlow()
+    private val _isEditMode = MutableStateFlow(false)
+    val isEditMode: StateFlow<Boolean> = _isEditMode.asStateFlow()
 
     val images = getImagesUseCase()
         .map { images ->
@@ -48,6 +52,8 @@ class PostViewModel @Inject constructor(
                 _selectedImages.value = post.images.map { it.toImageUiModel() }
                 _tags.value = post.tags.map { it.toTagUiModel() }
             }
+
+            _isPostFlag.value = true
         }
     }
 
@@ -103,6 +109,10 @@ class PostViewModel @Inject constructor(
 
     fun setContent(content: String) {
         _content.value = content
+    }
+
+    fun toggleEditMode() {
+        _isEditMode.value = _isEditMode.value.not()
     }
 
     companion object {

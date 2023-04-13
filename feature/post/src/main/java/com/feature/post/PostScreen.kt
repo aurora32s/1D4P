@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.designsystem.components.BackAndRightButtonHeader
 import com.core.designsystem.components.HarooBottomDrawer
@@ -19,11 +18,13 @@ import com.core.designsystem.components.HarooTextField
 import com.core.designsystem.components.RemovableImage
 import com.core.designsystem.modifiers.onInteraction
 import com.core.designsystem.theme.HarooTheme
+import com.core.designsystem.util.getString
 import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
 import com.core.ui.tag.TagContainer
+import com.feature.post.ui.Dimens
 
 @Composable
 fun PostScreen(
@@ -56,7 +57,7 @@ fun PostScreen(
                 images = postStateHolder.images,
                 selectedImages = postStateHolder.selectedImages,
                 limit = PostViewModel.IMAGE_SELECT_LIMIT,
-                space = 2.dp,
+                space = Dimens.galleryContainerSpace,
                 onClose = postStateHolder::bottomDrawerHide,
                 onImageSelect = postStateHolder::addSelectedImage
             )
@@ -108,7 +109,7 @@ fun PostScreenHeader(
         onClick = postStateHolder::savePost
     ) {
         // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
-        Text(text = "저장")
+        Text(text = getString(id = R.string.save_btn))
     }
 }
 
@@ -121,17 +122,17 @@ fun PostContent(
 ) {
     // 날짜
     YearMonthDayText(
-        modifier = Modifier.padding(top = 26.dp, start = 16.dp),
+        modifier = Modifier.padding(Dimens.datePadding),
         date = postStateHolder.date
     )
     // 사용자 가 선택한 이미지 리스트
     AsyncImageLazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(210.dp),
+            .height(Dimens.selectedImageListHeight),
         images = postStateHolder.selectedImages,
-        space = 4.dp,
-        contentPadding = 12.dp,
+        space = Dimens.selectedImageListSpace,
+        contentPadding = Dimens.selectedImageListPadding,
         content = { image ->
             RemovableImage(
                 image = image,
@@ -142,16 +143,14 @@ fun PostContent(
     )
     // 게시글 의 내용을 입력 하는 TextField
     HarooTextField(
-        modifier = Modifier.padding(
-            horizontal = 12.dp, vertical = 8.dp
-        ),
+        modifier = Modifier.padding(Dimens.contentPadding),
         value = postStateHolder.content,
         onValueChange = postStateHolder::setContent,
         autoFocus = true,
-        alpha = 0.1f,
-        placeHolder = "내용을 입력해주세요...",
+        alpha = Dimens.contentAlpha,
+        placeHolder = getString(id = R.string.content_hint),
         singleLine = false,
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = Dimens.contentInnerPadding
     )
 }
 
@@ -163,7 +162,7 @@ fun PostScreenBottomAppBar(
     postStateHolder: PostScreenStateHolder
 ) {
     TagContainer(
-        modifier = Modifier.padding(horizontal = 12.dp),
+        modifier = Modifier.padding(Dimens.tagPadding),
         showTagTextFieldFlag = postStateHolder.showTagTextFieldFlag,
         tags = postStateHolder.tags,
         onAddTag = postStateHolder::addTag,
@@ -172,12 +171,12 @@ fun PostScreenBottomAppBar(
     )
     BottomAppBar(
         modifier = Modifier
-            .padding(vertical = 12.dp),
+            .padding(Dimens.bottomAppBarPadding),
         backgroundColor = Color.Transparent
     ) {
         GalleryListContainer(
             images = postStateHolder.images,
-            space = 8.dp,
+            space = Dimens.galleryListContainerSpace,
             selectedImages = postStateHolder.selectedImages,
             limit = PostViewModel.IMAGE_SELECT_LIMIT,
             onClickAddButton = postStateHolder::showBottomDrawer,

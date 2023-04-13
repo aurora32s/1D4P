@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.core.datastore.ImageDatastore
 import com.core.model.data.ImageSource
-import com.core.model.datastore.toImageSource
+import com.core.model.data.toSource
 import kotlinx.coroutines.coroutineScope
 
 class ImageDataStorePagingSource(
@@ -23,7 +23,7 @@ class ImageDataStorePagingSource(
 
             try {
                 val images =
-                    imageDatastore.getImages(PAGING_SIZE, offset).map { it.toImageSource() }
+                    imageDatastore.getImages(PAGING_SIZE, offset).map { it.toSource() }
 
                 LoadResult.Page(
                     prevKey = if (offset == INIT_OFFSET) null else offset - PAGING_SIZE,

@@ -4,8 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.core.database.dao.PostDao
 import com.core.model.data.PostSource
-import com.core.model.database.toImageSource
-import com.core.model.database.toTag
+import com.core.model.data.toSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -40,8 +39,8 @@ class PostLocalPagingSource(
                                     month = post.month,
                                     day = post.day,
                                     content = post.content,
-                                    images = images.await().map { image -> image.toImageSource() },
-                                    tags = tags.await().map { tag -> tag.toTag() }
+                                    images = images.await().map { image -> image.toSource() },
+                                    tags = tags.await().map { tag -> tag.toSource() }
                                 )
                             }
                         }

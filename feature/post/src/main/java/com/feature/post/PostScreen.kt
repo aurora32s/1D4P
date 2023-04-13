@@ -103,7 +103,7 @@ fun PostScreen(
                 BackAndRightButtonHeader(
                     title = "글 작성",
                     onBackPressed = { },
-                    onClick = { }
+                    onClick = postViewModel::savePost
                 ) {
                     // TODO 새 글 작성 시에는 저장, 기존 글인 경우 수정정
                     Text(text = "저장")

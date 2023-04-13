@@ -19,21 +19,24 @@ import java.time.LocalDate
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 fun rememberPostScreenState(
-    date: LocalDate = LocalDate.now(),
+    year: Int, month: Int, day: Int,
     postViewModel: PostViewModel,
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
     isImeVisible: Boolean = WindowInsets.isImeVisible,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ): PostScreenStateHolder {
+    LaunchedEffect(year, month, day) {
+        postViewModel.getPost(year, month, day)
+    }
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
     val tags = postViewModel.tags.collectAsState()
     val content = postViewModel.content.collectAsState()
     val pressFlag = interactionSource.collectIsPressedAsState()
-    return remember(postViewModel, bottomDrawerState) {
+    return remember(year, month, day, postViewModel, bottomDrawerState) {
         PostScreenStateHolder(
-            date = date,
+            year, month, day,
             postViewModel = postViewModel,
             images = images,
             _selectedImages = selectedImages,
@@ -50,7 +53,9 @@ fun rememberPostScreenState(
 }
 
 class PostScreenStateHolder(
-    val date: LocalDate,
+    private val year: Int,
+    private val month: Int,
+    private val day: Int,
     private val postViewModel: PostViewModel,
     val images: LazyPagingItems<ImageUiModel>,
     private val _selectedImages: State<List<ImageUiModel>>,
@@ -71,6 +76,8 @@ class PostScreenStateHolder(
         get() = _content.value
     val showTagTextFieldFlag: Boolean
         get() = _showTagTextFieldFlag.value
+    val date: LocalDate
+        get() = LocalDate.of(year, month, day)
 
     val isBottomDrawer: State<Boolean>
         get() = bottomDrawerState.isShow

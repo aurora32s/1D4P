@@ -1,7 +1,7 @@
 package com.core.model.data
 
 import com.core.model.database.ImageEntity
-import com.core.model.domain.Image
+import com.core.model.datastore.ImageData
 
 /**
  * datasource Image 정보
@@ -17,7 +17,12 @@ fun ImageSource.toImageEntity(postId: Long) = ImageEntity(
     imageUrl = imageUrl
 )
 
-fun ImageSource.toImage() = Image(
+fun ImageEntity.toSource() = ImageSource(
     id = id,
     imageUrl = imageUrl
+)
+
+fun ImageData.toSource() = ImageSource(
+    id = id,
+    imageUrl = imageUrl.toString()
 )

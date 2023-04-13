@@ -4,20 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.core.domain.post.AddPostUseCase
 import com.core.domain.post.GetImagesUseCase
-import com.core.model.feature.ImageUiModel
-import com.core.model.feature.TagUiModel
-import com.core.model.feature.toImageUiModel
+import com.core.model.domain.Post
+import com.core.model.feature.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    getImagesUseCase: GetImagesUseCase
+    getImagesUseCase: GetImagesUseCase,
+    private val addPostUseCase: AddPostUseCase
 ) : ViewModel() {
 
     val images = getImagesUseCase()
@@ -33,6 +35,28 @@ class PostViewModel @Inject constructor(
 
     private val _content = MutableStateFlow("")
     val content: StateFlow<String> = _content.asStateFlow()
+
+    /**
+     * 신규 post 저장
+     */
+    fun savePost() {
+        // 유효성 검사 1. 내용
+        if (_content.value.isBlank()) return
+        // 유효성 검사 2. 이미지 1개 이상
+        if (_selectedImages.value.isEmpty()) return
+
+        viewModelScope.launch {
+            addPostUseCase(
+                Post(
+                    id = null,
+                    year = 2023, month = 4, day = 13,
+                    content = _content.value,
+                    images = _selectedImages.value.map { it.toImage() },
+                    tags = _tags.value.map { it.toTag() }
+                )
+            )
+        }
+    }
 
     fun selectImage(imageUiModel: ImageUiModel) {
         if (imageUiModel in _selectedImages.value) {

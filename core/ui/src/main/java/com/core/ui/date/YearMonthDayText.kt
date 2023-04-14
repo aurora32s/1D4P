@@ -11,11 +11,13 @@ import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.core.common.ext.*
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
+import kotlin.math.max
 
 /**
  * 일, 요일 포함된 Component
@@ -24,6 +26,8 @@ import java.time.LocalDate
 fun RowMonthAndName(
     modifier: Modifier = Modifier,
     date: LocalDate,
+    monthTextStyle: TextStyle = MaterialTheme.typography.h2,
+    nameTextStyle: TextStyle = MaterialTheme.typography.h6,
     contentColor: Color = HarooTheme.colors.text
 ) {
     Layout(
@@ -36,27 +40,77 @@ fun RowMonthAndName(
                     modifier = Modifier
                         .layoutId("Month"),
                     text = date.monthValue.padStart(2),
-                    style = MaterialTheme.typography.h4
+                    style = monthTextStyle
                 )
                 Text(
                     modifier = Modifier
                         .layoutId("DisplayName"),
                     text = date.month.displayName(),
-                    style = MaterialTheme.typography.body1
+                    style = nameTextStyle
                 )
             }
         }
     ) { measureables, constraints ->
         val month = measureables.find { it.layoutId == "Month" }!!.measure(constraints)
         val displayName = measureables.find { it.layoutId == "DisplayName" }!!.measure(constraints)
+
+        val displayNameY = month[LastBaseline] - displayName[FirstBaseline]
         layout(
             width = constraints.maxWidth,
-            height = month[LastBaseline] + 10
+            height = displayNameY + displayName.measuredHeight
         ) {
             month.placeRelative(x = 0, y = 0)
             displayName.placeRelative(
                 x = month.measuredWidth,
                 y = month[LastBaseline] - displayName[FirstBaseline]
+            )
+        }
+    }
+}
+
+@Composable
+fun ColumnMonthAndName(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+    monthTextStyle: TextStyle = MaterialTheme.typography.h2,
+    nameTextStyle: TextStyle = MaterialTheme.typography.h6,
+    contentColor: Color = HarooTheme.colors.text
+) {
+    Layout(
+        modifier = modifier,
+        content = {
+            CompositionLocalProvider(
+                LocalContentColor provides contentColor
+            ) {
+                Text(
+                    modifier = Modifier
+                        .layoutId("Month"),
+                    text = date.monthValue.padStart(2),
+                    style = monthTextStyle
+                )
+                Text(
+                    modifier = Modifier
+                        .layoutId("DisplayName"),
+                    text = date.month.displayName(),
+                    style = nameTextStyle
+                )
+            }
+        }
+    ) { measureables, constraints ->
+        val month = measureables.find { it.layoutId == "Month" }!!.measure(constraints)
+        val displayName = measureables.find { it.layoutId == "DisplayName" }!!.measure(constraints)
+
+        val monthX = if (month.width <= displayName.width) (displayName.width - month.width) / 2 else 0
+        val displayNameX = if (month.width < displayName.width) 0 else (month.width - displayName.width) / 2
+        val displayNameY = month[LastBaseline] + 30
+        layout(
+            width = constraints.maxWidth,
+            height = displayNameY + displayName.measuredHeight
+        ) {
+            month.placeRelative(x = monthX, y = 0)
+            displayName.placeRelative(
+                x = displayNameX,
+                y = displayNameY
             )
         }
     }
@@ -134,6 +188,16 @@ fun RowDayAndDatePreview() {
     AllForMemoryTheme {
         RowMonthAndName(
             date = LocalDate.now()
+        )
+    }
+}
+
+@Composable
+@Preview(name = "vertically day preview")
+fun ColumnDayAndDatePreview() {
+    AllForMemoryTheme {
+        ColumnMonthAndName(
+            date = LocalDate.now().minusMonths(3)
         )
     }
 }

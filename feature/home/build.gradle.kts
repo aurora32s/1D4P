@@ -11,4 +11,6 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
+
+    implementation(libs.paging.compose)
 }

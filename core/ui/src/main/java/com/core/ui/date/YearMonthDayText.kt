@@ -12,12 +12,55 @@ import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
-import com.core.common.ext.dayOfWeek
-import com.core.common.ext.getDate
-import com.core.common.ext.getYearMonth
+import com.core.common.ext.*
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
+
+/**
+ * 일, 요일 포함된 Component
+ */
+@Composable
+fun RowMonthAndName(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+    contentColor: Color = HarooTheme.colors.text
+) {
+    Layout(
+        modifier = modifier,
+        content = {
+            CompositionLocalProvider(
+                LocalContentColor provides contentColor
+            ) {
+                Text(
+                    modifier = Modifier
+                        .layoutId("Month"),
+                    text = date.monthValue.padStart(2),
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    modifier = Modifier
+                        .layoutId("DisplayName"),
+                    text = date.month.displayName(),
+                    style = MaterialTheme.typography.body1
+                )
+            }
+        }
+    ) { measureables, constraints ->
+        val month = measureables.find { it.layoutId == "Month" }!!.measure(constraints)
+        val displayName = measureables.find { it.layoutId == "DisplayName" }!!.measure(constraints)
+        layout(
+            width = constraints.maxWidth,
+            height = month[LastBaseline] + 10
+        ) {
+            month.placeRelative(x = 0, y = 0)
+            displayName.placeRelative(
+                x = month.measuredWidth,
+                y = month[LastBaseline] - displayName[FirstBaseline]
+            )
+        }
+    }
+}
 
 /**
  * 연도, 월, 일이 포함된 Component
@@ -60,16 +103,16 @@ fun YearMonthDayText(
         val dayOfWeek = measurables.find { it.layoutId == "DayOfWeek" }!!.measure(constraints)
 
         val yearMonthHeight = yearMonth.height
-        val dayHeight = day[LastBaseline]
+        val dayHeight = day[FirstBaseline]
         layout(
             width = constraints.maxWidth,
-            height = yearMonthHeight + dayHeight
+            height = yearMonthHeight + dayHeight + 10
         ) {
             yearMonth.placeRelative(x = 0, y = 0)
             day.placeRelative(x = 0, y = yearMonth[LastBaseline])
             dayOfWeek.placeRelative(
                 x = day.measuredWidth,
-                y = day[FirstBaseline] + (dayOfWeek.height - dayOfWeek[FirstBaseline])
+                y = yearMonth[LastBaseline] + dayHeight - dayOfWeek[FirstBaseline]
             )
         }
     }
@@ -80,6 +123,16 @@ fun YearMonthDayText(
 fun YearMonthDayTextPreview() {
     AllForMemoryTheme {
         YearMonthDayText(
+            date = LocalDate.now()
+        )
+    }
+}
+
+@Composable
+@Preview(name = "horizontally day preview")
+fun RowDayAndDatePreview() {
+    AllForMemoryTheme {
+        RowMonthAndName(
             date = LocalDate.now()
         )
     }

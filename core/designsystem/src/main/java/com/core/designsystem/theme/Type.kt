@@ -36,7 +36,7 @@ val Typography = Typography(
     ),
     h5 = TextStyle(
         fontFamily = BM,
-        fontSize = 20.sp,
+        fontSize = 25.sp,
         fontWeight = FontWeight.Bold,
         platformStyle = PlatformTextStyle(
             includeFontPadding = false

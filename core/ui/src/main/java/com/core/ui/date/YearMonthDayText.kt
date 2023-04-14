@@ -17,6 +17,7 @@ import com.core.common.ext.*
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
+import kotlin.math.max
 
 @Composable
 fun ColumnDayAndDate(
@@ -24,27 +25,26 @@ fun ColumnDayAndDate(
     date: LocalDate,
     dayTextStyle: TextStyle = MaterialTheme.typography.h4,
     dateTextStyle: TextStyle = MaterialTheme.typography.h5,
-    contentColor: Color = HarooTheme.colors.text
+    dayTextColor: Color = HarooTheme.colors.text,
+    dateTextColor: Color = HarooTheme.colors.text
 ) {
     Layout(
         modifier = modifier,
         content = {
-            CompositionLocalProvider(
-                LocalContentColor provides contentColor
-            ) {
-                Text(
-                    modifier = Modifier
-                        .layoutId("Day"),
-                    text = date.dayOfMonth.padStart(2),
-                    style = dayTextStyle
-                )
-                Text(
-                    modifier = Modifier
-                        .layoutId("DayOfWeek"),
-                    text = date.dayOfWeek(java.time.format.TextStyle.SHORT),
-                    style = dateTextStyle
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .layoutId("Day"),
+                text = date.dayOfMonth.padStart(2),
+                style = dayTextStyle,
+                color = dayTextColor
+            )
+            Text(
+                modifier = Modifier
+                    .layoutId("DayOfWeek"),
+                text = date.dayOfWeek(java.time.format.TextStyle.SHORT),
+                style = dateTextStyle,
+                color = dateTextColor
+            )
         }
     ) { measureables, constraints ->
         val day = measureables.find { it.layoutId == "Day" }!!.measure(constraints)
@@ -54,7 +54,7 @@ fun ColumnDayAndDate(
         val dayOfWeekX = if (day.width < dayOfWeek.width) 0 else (day.width - dayOfWeek.width) / 2
         val dayOfWeekY = day[LastBaseline] + 30
         layout(
-            width = constraints.maxWidth,
+            width = max(day.width, dayOfWeek.width),
             height = dayOfWeekY + dayOfWeek.measuredHeight
         ) {
             day.placeRelative(x = dayX, y = 0)

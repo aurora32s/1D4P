@@ -34,24 +34,24 @@ fun HarooSurface(
     border: BorderStroke? = null, // 테두리 모양
     elevation: Dp = 0.dp, // 그림자 크기
     alpha: Float = 0.15f, // 배경 투명도
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .then(
-                if (elevation > 0.dp) Modifier.shadow(
-                    color = HarooTheme.colors.dim,
-                    elevation = elevation
-                ) else Modifier
-            )
-            .then(if (border != null) Modifier.border(border, shape) else Modifier)
-            .background(color.copy(alpha = alpha), shape)
-            .clip(shape)
-            .padding(contentPadding),
-        contentAlignment = contentAlignment
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor
     ) {
-        CompositionLocalProvider(
-            LocalContentColor provides contentColor,
+        Box(
+            modifier = modifier
+                .then(
+                    if (elevation > 0.dp) Modifier.shadow(
+                        color = HarooTheme.colors.dim,
+                        elevation = elevation
+                    ) else Modifier
+                )
+                .then(if (border != null) Modifier.border(border, shape) else Modifier)
+                .background(color.copy(alpha = alpha), shape)
+                .clip(shape)
+                .padding(contentPadding),
+            contentAlignment = contentAlignment,
             content = content
         )
     }

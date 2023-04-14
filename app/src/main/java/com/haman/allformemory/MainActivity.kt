@@ -9,9 +9,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.view.WindowCompat
 import com.core.designsystem.theme.AllForMemoryTheme
-import com.feature.post.PostScreen
+import com.feature.home.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -39,12 +38,7 @@ class MainActivity : ComponentActivity() {
                         requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
-                val date = LocalDate.now()
-                PostScreen(
-                    year = date.year,
-                    month = date.monthValue,
-                    day = date.dayOfMonth
-                )
+                HomeScreen()
             }
         }
     }

@@ -17,6 +17,7 @@ import com.core.common.ext.*
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
+import java.time.YearMonth
 import kotlin.math.max
 
 @Composable
@@ -72,7 +73,7 @@ fun ColumnDayAndDate(
 @Composable
 fun RowMonthAndName(
     modifier: Modifier = Modifier,
-    date: LocalDate,
+    date: YearMonth,
     monthTextStyle: TextStyle = MaterialTheme.typography.h2,
     nameTextStyle: TextStyle = MaterialTheme.typography.h5,
     contentColor: Color = HarooTheme.colors.text
@@ -234,7 +235,7 @@ fun YearMonthDayTextPreview() {
 fun RowMonthAndNamePreview() {
     AllForMemoryTheme {
         RowMonthAndName(
-            date = LocalDate.now()
+            date = YearMonth.now()
         )
     }
 }

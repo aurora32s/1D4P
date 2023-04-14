@@ -10,7 +10,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.core.designsystem.components.Image
+import com.core.designsystem.components.ImageType
 import com.core.model.feature.ImageUiModel
 
 @Composable
@@ -46,15 +46,15 @@ fun AsyncImageList(
     space: Dp = 0.dp,
     imageCount: Int = 1,
     contentPadding: Dp = 0.dp,
-    content: @Composable (Image.AsyncImage) -> Unit
+    content: @Composable (ImageType.AsyncImage) -> Unit
 ) {
     HarooImageList(
         modifier = modifier,
-        images = images.map { Image.AsyncImage(image = it) },
+        images = images.map { ImageType.AsyncImage(image = it) },
         space = space,
         imageCount = imageCount,
         contentPadding = contentPadding,
-        content = { content(it as Image.AsyncImage) }
+        content = { content(it as ImageType.AsyncImage) }
     )
 }
 
@@ -64,11 +64,11 @@ fun AsyncImageList(
 @Composable
 fun HarooImageList(
     modifier: Modifier = Modifier,
-    images: List<Image>, // 이미지 정보 리스트
+    images: List<ImageType>, // 이미지 정보 리스트
     space: Dp = 0.dp, // 이미지 사이 넓이
     imageCount: Int = 1, // 화면에 보여줄 이미지 개수
     contentPadding: Dp = 0.dp,
-    content: @Composable (Image) -> Unit
+    content: @Composable (ImageType) -> Unit
 ) {
     Layout(
         modifier = modifier.padding(contentPadding),

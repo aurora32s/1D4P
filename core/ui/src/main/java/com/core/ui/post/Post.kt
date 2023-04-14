@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooImage
 import com.core.designsystem.components.HarooSurface
+import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.ColumnDayAndDate
@@ -39,7 +40,8 @@ fun SimplePostItem(
                 modifier = Modifier
                     .padding(10.dp)
                     .size(20.dp)
-                    .align(Alignment.TopEnd),
+                    .align(Alignment.TopEnd)
+                    .noRippleClickable { onRemovePost(post) },
                 onClick = { }
             ) {
                 Icon(
@@ -63,6 +65,7 @@ fun SimplePostItem(
                 AsyncImageList(
                     modifier = Modifier
                         .weight(1f)
+                        .noRippleClickable { onClickPost(date) }
                         .padding(start = 20.dp, end = 8.dp),
                     images = post.images,
                     imageCount = 4,

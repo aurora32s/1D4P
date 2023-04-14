@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.semantics.Role
 
-internal fun Modifier.noRippleClickable(
+fun Modifier.noRippleClickable(
     enabled: Boolean = true,
     role: Role? = null,
     onClick: () -> Unit

@@ -17,7 +17,54 @@ import com.core.common.ext.*
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.core.designsystem.theme.HarooTheme
 import java.time.LocalDate
-import kotlin.math.max
+
+@Composable
+fun ColumnDayAndDate(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+    dayTextStyle: TextStyle = MaterialTheme.typography.h4,
+    dateTextStyle: TextStyle = MaterialTheme.typography.h5,
+    contentColor: Color = HarooTheme.colors.text
+) {
+    Layout(
+        modifier = modifier,
+        content = {
+            CompositionLocalProvider(
+                LocalContentColor provides contentColor
+            ) {
+                Text(
+                    modifier = Modifier
+                        .layoutId("Day"),
+                    text = date.dayOfMonth.padStart(2),
+                    style = dayTextStyle
+                )
+                Text(
+                    modifier = Modifier
+                        .layoutId("DayOfWeek"),
+                    text = date.dayOfWeek(java.time.format.TextStyle.SHORT),
+                    style = dateTextStyle
+                )
+            }
+        }
+    ) { measureables, constraints ->
+        val day = measureables.find { it.layoutId == "Day" }!!.measure(constraints)
+        val dayOfWeek = measureables.find { it.layoutId == "DayOfWeek" }!!.measure(constraints)
+
+        val dayX = if (day.width <= dayOfWeek.width) (dayOfWeek.width - day.width) / 2 else 0
+        val dayOfWeekX = if (day.width < dayOfWeek.width) 0 else (day.width - dayOfWeek.width) / 2
+        val dayOfWeekY = day[LastBaseline] + 30
+        layout(
+            width = constraints.maxWidth,
+            height = dayOfWeekY + dayOfWeek.measuredHeight
+        ) {
+            day.placeRelative(x = dayX, y = 0)
+            dayOfWeek.placeRelative(
+                x = dayOfWeekX,
+                y = dayOfWeekY
+            )
+        }
+    }
+}
 
 /**
  * 일, 요일 포함된 Component
@@ -27,7 +74,7 @@ fun RowMonthAndName(
     modifier: Modifier = Modifier,
     date: LocalDate,
     monthTextStyle: TextStyle = MaterialTheme.typography.h2,
-    nameTextStyle: TextStyle = MaterialTheme.typography.h6,
+    nameTextStyle: TextStyle = MaterialTheme.typography.h5,
     contentColor: Color = HarooTheme.colors.text
 ) {
     Layout(
@@ -73,7 +120,7 @@ fun ColumnMonthAndName(
     modifier: Modifier = Modifier,
     date: LocalDate,
     monthTextStyle: TextStyle = MaterialTheme.typography.h2,
-    nameTextStyle: TextStyle = MaterialTheme.typography.h6,
+    nameTextStyle: TextStyle = MaterialTheme.typography.h5,
     contentColor: Color = HarooTheme.colors.text
 ) {
     Layout(
@@ -184,7 +231,7 @@ fun YearMonthDayTextPreview() {
 
 @Composable
 @Preview(name = "horizontally day preview")
-fun RowDayAndDatePreview() {
+fun RowMonthAndNamePreview() {
     AllForMemoryTheme {
         RowMonthAndName(
             date = LocalDate.now()
@@ -194,10 +241,20 @@ fun RowDayAndDatePreview() {
 
 @Composable
 @Preview(name = "vertically day preview")
-fun ColumnDayAndDatePreview() {
+fun ColumnMonthAndNamePreview() {
     AllForMemoryTheme {
         ColumnMonthAndName(
-            date = LocalDate.now().minusMonths(3)
+            date = LocalDate.now()
+        )
+    }
+}
+
+@Composable
+@Preview(name = "vertically dayAndDate preview")
+fun ColumnDayAndDatePreview() {
+    AllForMemoryTheme {
+        ColumnDayAndDate(
+            date = LocalDate.now().minusDays(10)
         )
     }
 }

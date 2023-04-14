@@ -71,9 +71,7 @@ fun HarooImageList(
     content: @Composable (Image) -> Unit
 ) {
     Layout(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(contentPadding),
+        modifier = modifier.padding(contentPadding),
         content = {
             images.forEach { content(it) }
         }

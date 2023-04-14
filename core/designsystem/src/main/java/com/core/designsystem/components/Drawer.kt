@@ -29,7 +29,7 @@ private fun <T> drawerAnimationSpec() = tween<T>(durationMillis = 150, easing = 
 fun HarooBottomDrawer(
     modifier: Modifier = Modifier,
     drawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
-    drawerContent: @Composable () -> Unit,
+    drawerContent: @Composable BoxScope.() -> Unit,
     drawerShape: Shape = MaterialTheme.shapes.large,
     drawerElevation: Dp = DrawerDefaults.Elevation,
     enter: FiniteAnimationSpec<IntOffset> = drawerAnimationSpec(),

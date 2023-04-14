@@ -103,7 +103,7 @@ fun RowMonthAndName(
 
         val displayNameY = month[LastBaseline] - displayName[FirstBaseline]
         layout(
-            width = constraints.maxWidth,
+            width = month.width + displayName.width,
             height = displayNameY + displayName.measuredHeight
         ) {
             month.placeRelative(x = 0, y = 0)

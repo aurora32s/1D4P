@@ -49,7 +49,7 @@ fun RemovableImage(
         content = {
             HarooImage(
                 modifier = Modifier.layoutId("Image"),
-                imageType = Image.AsyncImage(image),
+                imageType = ImageType.AsyncImage(image),
                 shape = shape,
                 contentScale = contentScale,
                 elevation = elevation
@@ -145,7 +145,7 @@ fun SelectableImage(
             ) {}
         }
         HarooImage(
-            imageType = Image.AsyncImage(image),
+            imageType = ImageType.AsyncImage(image),
             shape = shape,
             elevation = 0.dp
         )
@@ -161,7 +161,7 @@ fun HarooImage(
     shape: Shape = MaterialTheme.shapes.medium, // 이미지 모양
     elevation: Dp = 2.dp, // 그림자 크기
     contentScale: ContentScale = ContentScale.Crop,
-    imageType: Image // 이미지 정보
+    imageType: ImageType // 이미지 정보
 ) {
     HarooSurface(
         modifier = modifier,
@@ -169,17 +169,17 @@ fun HarooImage(
         elevation = elevation
     ) {
         when (imageType) {
-            is Image.BitmapImage -> Image(
+            is ImageType.BitmapImage -> Image(
                 bitmap = imageType.bitmap,
                 contentDescription = imageType.contentDescription,
                 contentScale = contentScale
             )
-            is Image.ResourceImage -> Image(
+            is ImageType.ResourceImage -> Image(
                 painter = painterResource(id = imageType.resource),
                 contentDescription = imageType.contentDescription,
                 contentScale = contentScale
             )
-            is Image.AsyncImage -> AsyncImage(
+            is ImageType.AsyncImage -> AsyncImage(
                 model = imageType.image.imageUrl,
                 contentDescription = imageType.contentDescription,
                 contentScale = contentScale
@@ -188,21 +188,21 @@ fun HarooImage(
     }
 }
 
-sealed interface Image {
+sealed interface ImageType {
     data class BitmapImage(
         val bitmap: ImageBitmap,
         val contentDescription: String? = null
-    ) : Image
+    ) : ImageType
 
     data class ResourceImage(
         @DrawableRes val resource: Int,
         val contentDescription: String? = null
-    ) : Image
+    ) : ImageType
 
     data class AsyncImage(
         val image: ImageUiModel,
         val contentDescription: String? = null
-    ) : Image
+    ) : ImageType
 }
 
 @Preview
@@ -220,7 +220,7 @@ fun ImagePreview() {
                 modifier = Modifier
                     .padding(12.dp)
                     .size(120.dp),
-                imageType = Image.ResourceImage(R.drawable.test)
+                imageType = ImageType.ResourceImage(R.drawable.test)
             )
         }
     }

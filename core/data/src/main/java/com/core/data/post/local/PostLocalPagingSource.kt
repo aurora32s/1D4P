@@ -70,6 +70,6 @@ class PostLocalPagingSource(
     }
 
     companion object {
-        const val PAGING_SIZE = 3
+        const val PAGING_SIZE = 1
     }
 }

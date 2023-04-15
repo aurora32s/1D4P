@@ -101,8 +101,7 @@ class PostLocalRepositoryImpl @Inject constructor(
     ): Flow<PagingData<PostSources>> {
         return Pager(
             config = PagingConfig(
-                pageSize = PostLocalPagingSource.PAGING_SIZE,
-                maxSize = PostLocalPagingSource.PAGING_SIZE * 3
+                pageSize = PostLocalPagingSource.PAGING_SIZE
             ),
             pagingSourceFactory = {
                 PostLocalPagingSource(postDao)

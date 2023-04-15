@@ -17,9 +17,14 @@ import java.time.YearMonth
 class PostLocalPagingSource(
     private val postDao: PostDao
 ) : PagingSource<YearMonth, PostSources>() {
+
     override fun getRefreshKey(state: PagingState<YearMonth, PostSources>): YearMonth? {
-        return state.anchorPosition?.let { position ->
-            state.closestPageToPosition(position)?.prevKey?.plusMonths(1)
+        return state.anchorPosition?.let { page ->
+            val closedPage = state.closestPageToPosition(page)
+            return closedPage?.let {
+                // 최근에 로드한 정보가 현재 정보인 경우
+                YearMonth.of(it.data[1].year, it.data[1].month)
+            }
         }
     }
 
@@ -65,6 +70,6 @@ class PostLocalPagingSource(
     }
 
     companion object {
-        const val PAGING_SIZE = 1
+        const val PAGING_SIZE = 3
     }
 }

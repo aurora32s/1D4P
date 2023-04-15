@@ -102,7 +102,7 @@ class PostLocalRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = PostLocalPagingSource.PAGING_SIZE,
-                enablePlaceholders = true
+                maxSize = PostLocalPagingSource.PAGING_SIZE * 3
             ),
             pagingSourceFactory = {
                 PostLocalPagingSource(postDao)

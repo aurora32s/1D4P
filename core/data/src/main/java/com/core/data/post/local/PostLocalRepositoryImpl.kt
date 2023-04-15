@@ -109,4 +109,8 @@ class PostLocalRepositoryImpl @Inject constructor(
             }
         ).flow
     }
+
+    override suspend fun removePost(postId: Long) = coroutineScope {
+        postDao.deletePost(postId)
+    }
 }

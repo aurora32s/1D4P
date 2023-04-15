@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -24,6 +22,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.designsystem.components.HarooSurface
 import com.core.designsystem.components.HarooVerticalDivider
 import com.core.designsystem.components.calendar.Calendar
@@ -31,14 +30,24 @@ import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
+import com.core.ui.post.LinearPostItem
 import com.feature.monthly.ui.rememberToolbarState
 import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
-fun MonthlyScreen() {
+fun MonthlyScreen(
+    monthlyViewModel: MonthlyViewModel = hiltViewModel()
+) {
     val today = YearMonth.now()
     val dateCount = remember(today) { today.lengthOfMonth() }
+
+    LaunchedEffect(key1 = Unit) {
+        monthlyViewModel.init(today.year, today.monthValue)
+    }
+
+    val posts = monthlyViewModel.posts.collectAsState()
+    val groupedPost = remember(posts.value) { posts.value.associateBy { it.date } }
 
     // Toolbar 가능 높이
     val toolbarHeightRange = with(LocalDensity.current) {
@@ -74,9 +83,10 @@ fun MonthlyScreen() {
         ) {
             MonthlyHeader(
                 date = today,
-                posts = emptyMap(),
+                posts = groupedPost,
                 heightProvider = { toolbarState.height },
-                progressProvider = { toolbarState.progress })
+                progressProvider = { toolbarState.progress }
+            )
 
             HarooSurface(
                 modifier = Modifier.fillMaxWidth(),
@@ -84,10 +94,12 @@ fun MonthlyScreen() {
                 alpha = 0.08f
             ) {
                 LazyColumn(
-                    state = listState
+                    state = listState,
+                    contentPadding = PaddingValues(horizontal = 36.dp)
                 ) {
                     items(count = dateCount) {
-                        Text(text = "day $it", style = MaterialTheme.typography.h2)
+                        val day = today.atDay(it + 1)
+                        LinearPostItem(date = today.atDay(it + 1), post = groupedPost[day])
                     }
                 }
             }

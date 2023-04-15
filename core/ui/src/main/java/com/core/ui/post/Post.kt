@@ -1,15 +1,15 @@
 package com.core.ui.post
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooImage
 import com.core.designsystem.components.HarooSurface
@@ -59,7 +59,6 @@ fun SimplePostItem(
                 date = date,
                 dateTextColor = HarooTheme.colors.text.copy(alpha = 0.5f)
             )
-
             if (post != null) {
                 AsyncImageList(
                     modifier = Modifier
@@ -89,7 +88,55 @@ fun SimplePostItem(
  * @use MonthlyScreen
  */
 @Composable
-fun LinearPostItem() {
+fun LinearPostItem(
+    date: LocalDate,
+    modifier: Modifier = Modifier,
+    contentColor: Color = LocalContentColor.current,
+    post: PostUiModel?, // 해당 일의 Post 정보
+) {
+    ConstraintLayout(
+        modifier = modifier.fillMaxWidth().padding(bottom = 26.dp)
+    ) {
+        val (day, images, tags, addBtn, delBtn) = createRefs()
+        ColumnDayAndDate(
+            modifier = Modifier.constrainAs(day) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+            },
+            date = date,
+            dayTextStyle = MaterialTheme.typography.subtitle1,
+            dateTextStyle = MaterialTheme.typography.body1
+        )
+
+        // 게시글이 있는 경우
+        if (post != null) {
+            AsyncImageList(
+                modifier = Modifier
+                    .constrainAs(images) {
+                        top.linkTo(parent.top)
+                        start.linkTo(day.end)
+                    }
+                    .noRippleClickable {}
+                    .padding(start = 20.dp, end = 8.dp),
+                images = post.images,
+                imageCount = 4,
+                space = 4.dp
+            ) { image ->
+                HarooImage(imageType = image)
+            }
+        } else {
+            HarooButton(
+                modifier = Modifier.constrainAs(addBtn) {
+                    end.linkTo(parent.end)
+                    top.linkTo(day.top)
+                    bottom.linkTo(day.bottom)
+                },
+                onClick = { }
+            ) {
+                Text(text = "추가")
+            }
+        }
+    }
 }
 
 /**

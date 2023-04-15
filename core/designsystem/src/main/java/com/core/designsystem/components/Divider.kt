@@ -2,12 +2,10 @@ package com.core.designsystem.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -61,6 +59,26 @@ fun HarooDashLine(
 }
 
 @Composable
+fun HarooVerticalDivider(
+    modifier: Modifier = Modifier,
+    color: Color = HarooTheme.colors.uiBorder,
+    alpha: Float = 1f,
+    thickness: Float = 3f
+) {
+    Canvas(
+        modifier = modifier.fillMaxHeight()
+    ) {
+        drawLine(
+            color = color,
+            start = Offset(0f, 0f),
+            end = Offset(0f, size.height),
+            strokeWidth = thickness,
+            alpha = alpha
+        )
+    }
+}
+
+@Composable
 @Preview(name = "basic divider")
 fun HarooDividerPreview() {
     AllForMemoryTheme {
@@ -71,10 +89,12 @@ fun HarooDividerPreview() {
                 .background(
                     Brush.linearGradient(HarooTheme.colors.gradient4_1)
                 ),
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HarooDivider()
             HarooDashLine()
+            HarooVerticalDivider()
         }
     }
 }

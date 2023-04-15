@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import com.core.designsystem.components.HarooButton
@@ -28,6 +30,7 @@ import com.core.designsystem.components.calendar.Calendar
 import com.core.designsystem.modifiers.pagerHingeTransition
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.PostUiModel
+import com.core.model.feature.PostsUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
 import com.core.ui.post.SimplePostItem
@@ -49,13 +52,26 @@ fun HomeScreen(
         homeViewModel.homeUiEvent.collect {
             when (it) {
                 HomeUiEvent.Initialized -> {}
-                is HomeUiEvent.Success.RemovePost -> {
-                    postPagingItems.refresh()
-                }
+                is HomeUiEvent.Success.RemovePost -> postPagingItems.refresh()
             }
         }
     }
 
+    HomeScreen(
+        postPagingItems = postPagingItems,
+        scrollState = scrollState,
+        toPostScreen = {},
+        onRemovePost = homeViewModel::removePost
+    )
+}
+
+@Composable
+fun HomeScreen(
+    postPagingItems: LazyPagingItems<PostsUiModel>,
+    scrollState: LazyListState,
+    toPostScreen: (LocalDate)->Unit,
+    onRemovePost: (PostUiModel) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .statusBarsPadding()
@@ -71,9 +87,7 @@ fun HomeScreen(
                     date = postsUiModel.date,
                     posts = postsUiModel.posts,
                     onClickPost = {},
-                    onRemovePost = {
-                        homeViewModel.removePost(index, it)
-                    }
+                    onRemovePost = onRemovePost
                 )
             }
         }

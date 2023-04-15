@@ -15,6 +15,14 @@ data class PostSource(
     val tags: List<TagSource> // 태그
 )
 
+/**
+ * 하나의 PostSource page
+ */
+data class PostSources(
+    val year: Int, val month: Int,
+    val posts: List<PostSource>
+)
+
 fun PostSource.toPostEntity() = PostEntity(
     id = id,
     year = year,

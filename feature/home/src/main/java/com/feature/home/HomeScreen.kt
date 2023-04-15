@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooDashLine
 import com.core.designsystem.components.HarooDivider
@@ -28,16 +32,29 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
+    val posts = homeViewModel.posts.collectAsLazyPagingItems()
+    val scrollState = rememberLazyListState(1)
+
     LazyColumn(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
             .imePadding()
             .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground)),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        state = scrollState
     ) {
-        item { MonthlyContainer(date = YearMonth.now(), posts = emptyList()) }
+        items(items = posts, key = { it.date }) {
+            it?.let { postsUiModel ->
+                MonthlyContainer(
+                    date = postsUiModel.date,
+                    posts = emptyList()
+                )
+            }
+        }
     }
 }
 
@@ -50,9 +67,7 @@ fun MonthlyContainer(
     modifier: Modifier = Modifier,
     posts: List<PostUiModel>
 ) {
-    val groupedPosts = remember(posts.size) {
-        posts.associateBy { LocalDate.of(it.year, it.month, it.day) }
-    }
+    val groupedPosts = remember(posts.size) { posts.associateBy { it.date } }
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp),

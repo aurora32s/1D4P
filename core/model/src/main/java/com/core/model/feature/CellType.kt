@@ -5,6 +5,7 @@ package com.core.model.feature
  */
 enum class CellType {
     POST,
+    POSTS,
     IMAGE,
     TAG
 }

@@ -12,7 +12,7 @@ import javax.inject.Inject
 /**
  * 월별 기록 paging 요청 use case
  */
-class GetPostPageByMonth @Inject constructor(
+class GetPostPageByMonthUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
     operator fun invoke(year: Int, month: Int): Flow<PagingData<Post>> {

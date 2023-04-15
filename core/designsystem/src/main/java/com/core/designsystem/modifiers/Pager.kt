@@ -12,7 +12,7 @@ fun Modifier.pagerHingeTransition(page: Int, pagerState: PagerState) = graphicsL
     val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
 
     translationX = pageOffset * size.width
-    translationY = pageOffset * size.height
+    translationY = 1 - pageOffset * size.height
     transformOrigin = TransformOrigin(0f, 0f)
 
     when {

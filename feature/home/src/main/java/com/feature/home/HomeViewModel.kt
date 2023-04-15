@@ -32,11 +32,11 @@ class HomeViewModel @Inject constructor(
     ).map { it.map { post -> post.toPostsUiModel() } }
         .cachedIn(viewModelScope)
 
-    fun removePost(postId: Int, postUiModel: PostUiModel) {
+    fun removePost(postUiModel: PostUiModel) {
         viewModelScope.launch {
             postUiModel.id?.let {
                 removePostUseCase(it)
-                _homeUiEvent.value = HomeUiEvent.Success.RemovePost(postId, postUiModel)
+                _homeUiEvent.value = HomeUiEvent.Success.RemovePost
             }
         }
     }
@@ -45,9 +45,7 @@ class HomeViewModel @Inject constructor(
 sealed interface HomeUiEvent {
     object Initialized : HomeUiEvent
     sealed interface Success : HomeUiEvent {
-        data class RemovePost(
-            val postsId: Int,
-            val post: PostUiModel
-        ) : Success
+        // Post 제거 성공 event
+        object RemovePost: Success
     }
 }

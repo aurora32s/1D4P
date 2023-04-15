@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemsIndexed
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooDashLine
 import com.core.designsystem.components.HarooDivider
@@ -35,8 +36,19 @@ import java.time.YearMonth
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val posts = homeViewModel.posts.collectAsLazyPagingItems()
+    val postPagingItems = homeViewModel.posts.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState(1)
+
+    LaunchedEffect(key1 = Unit) {
+        homeViewModel.homeUiEvent.collect {
+            when (it) {
+                HomeUiEvent.Initialized -> {}
+                is HomeUiEvent.Success.RemovePost -> {
+                    postPagingItems.refresh()
+                }
+            }
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -47,11 +59,15 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState
     ) {
-        items(items = posts, key = { it.date }) {
-            it?.let { postsUiModel ->
+        itemsIndexed(items = postPagingItems, key = { index, posts -> posts.date }) { index, posts ->
+            posts?.let { postsUiModel ->
                 MonthlyContainer(
                     date = postsUiModel.date,
-                    posts = postsUiModel.posts
+                    posts = postsUiModel.posts,
+                    onClickPost = {},
+                    onRemovePost = {
+                        homeViewModel.removePost(index, it)
+                    }
                 )
             }
         }
@@ -65,9 +81,11 @@ fun HomeScreen(
 fun MonthlyContainer(
     date: YearMonth,
     modifier: Modifier = Modifier,
-    posts: List<PostUiModel>
+    posts: List<PostUiModel>,
+    onClickPost: (LocalDate) -> Unit,
+    onRemovePost: (PostUiModel) -> Unit
 ) {
-    val groupedPosts = remember(posts) {posts.associateBy { it.date }}
+    val groupedPosts = remember(posts) { posts.associateBy { it.date } }
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -79,7 +97,11 @@ fun MonthlyContainer(
             )
             MonthlyCalendar(date = date, posts = groupedPosts)
             HarooDashLine()
-            DailyContainer(date = date, posts = groupedPosts)
+            DailyContainer(
+                date = date, posts = groupedPosts,
+                onClickPost = onClickPost,
+                onRemovePost = onRemovePost
+            )
         }
         MonthlyDivider(date = date)
     }
@@ -116,7 +138,9 @@ fun MonthlyCalendar(
 fun DailyContainer(
     date: YearMonth,
     modifier: Modifier = Modifier,
-    posts: Map<LocalDate, PostUiModel>
+    posts: Map<LocalDate, PostUiModel>,
+    onClickPost: (LocalDate) -> Unit,
+    onRemovePost: (PostUiModel) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val dateCount = remember(date) { date.lengthOfMonth() }
@@ -131,8 +155,8 @@ fun DailyContainer(
             modifier = Modifier.pagerHingeTransition(it, pagerState),
             date = day,
             post = posts[day],
-            onClickPost = {},
-            onRemovePost = {}
+            onClickPost = onClickPost,
+            onRemovePost = onRemovePost
         )
     }
 }

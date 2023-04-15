@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.feature.monthly"
 }
+
+dependencies {
+    implementation(project(":core:ui"))
+}

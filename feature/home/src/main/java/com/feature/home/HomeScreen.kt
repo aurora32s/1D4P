@@ -51,7 +51,7 @@ fun HomeScreen(
             it?.let { postsUiModel ->
                 MonthlyContainer(
                     date = postsUiModel.date,
-                    posts = emptyList()
+                    posts = postsUiModel.posts
                 )
             }
         }
@@ -67,7 +67,7 @@ fun MonthlyContainer(
     modifier: Modifier = Modifier,
     posts: List<PostUiModel>
 ) {
-    val groupedPosts = remember(posts.size) { posts.associateBy { it.date } }
+    val groupedPosts = remember(posts) {posts.associateBy { it.date }}
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp),

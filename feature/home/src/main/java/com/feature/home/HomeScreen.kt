@@ -1,5 +1,6 @@
 package com.feature.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -34,10 +36,14 @@ import java.time.YearMonth
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    configuration: Configuration = LocalConfiguration.current
 ) {
     val postPagingItems = homeViewModel.posts.collectAsLazyPagingItems()
-    val scrollState = rememberLazyListState(1)
+    val scrollState = rememberLazyListState(
+        initialFirstVisibleItemIndex = 1,
+        initialFirstVisibleItemScrollOffset = -configuration.screenHeightDp / 3
+    )
 
     LaunchedEffect(key1 = Unit) {
         homeViewModel.homeUiEvent.collect {

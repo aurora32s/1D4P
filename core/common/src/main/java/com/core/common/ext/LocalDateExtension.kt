@@ -24,4 +24,5 @@ fun LocalDate.getDate(): String = dayOfMonth.padStart(2)
 /**
  * 요일 출력(영어로)
  */
-fun LocalDate.dayOfWeek(textStyle: TextStyle = TextStyle.FULL): String = dayOfWeek.getDisplayName(textStyle, Locale.US)
+fun LocalDate.dayOfWeek(textStyle: TextStyle = TextStyle.FULL): String =
+    dayOfWeek.getDisplayName(textStyle, Locale.US).uppercase()

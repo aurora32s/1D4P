@@ -18,11 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemsIndexed
+import androidx.paging.compose.items
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooDashLine
 import com.core.designsystem.components.HarooDivider
@@ -37,6 +38,8 @@ import com.core.ui.date.RowMonthAndName
 import com.core.ui.post.SimplePostItem
 import java.time.LocalDate
 import java.time.YearMonth
+
+private val componentVerticalSpacer = 16.dp
 
 @Composable
 fun HomeScreen(
@@ -82,7 +85,10 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState
     ) {
-        itemsIndexed(items = postPagingItems, key = { index, posts -> posts.date }) { index, posts ->
+        items(
+            items = postPagingItems,
+            key = { posts -> posts.date }
+        ) { posts ->
             posts?.let { postsUiModel ->
                 MonthlyContainer(
                     date = postsUiModel.date,
@@ -109,11 +115,11 @@ fun MonthlyContainer(
     val groupedPosts = remember(posts) { posts.associateBy { it.date } }
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = componentVerticalSpacer),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             RowMonthAndName(
-                modifier = Modifier.padding(vertical = 24.dp),
+                modifier = Modifier.padding(vertical = componentVerticalSpacer),
                 date = date
             )
             MonthlyCalendar(date = date, posts = groupedPosts)
@@ -135,15 +141,17 @@ fun MonthlyContainer(
 fun MonthlyCalendar(
     date: YearMonth,
     modifier: Modifier = Modifier,
+    verticalSpace: Dp = 10.dp,
+    horizontalSpace: Dp = 4.dp,
     posts: Map<LocalDate, PostUiModel>
 ) {
     Calendar(
-        modifier = modifier.padding(vertical = 16.dp),
-        space = 10.dp,
+        modifier = modifier.padding(vertical = componentVerticalSpacer),
+        space = verticalSpace,
         currentMonth = date,
         dayContent = {
             DateWithImage(
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier.padding(horizontal = horizontalSpace),
                 state = it,
                 image = posts[it.date]?.images?.firstOrNull()
             )
@@ -166,8 +174,9 @@ fun DailyContainer(
     val pagerState = rememberPagerState()
     val dateCount = remember(date) { date.lengthOfMonth() }
     HorizontalPager(
-        modifier = modifier.padding(vertical = 16.dp),
-        pageCount = dateCount, key = { it },
+        modifier = modifier.padding(vertical = componentVerticalSpacer),
+        pageCount = dateCount,
+        key = { it },
         beyondBoundsPageCount = 3,
         state = pagerState
     ) {

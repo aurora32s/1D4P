@@ -29,6 +29,7 @@ import com.core.designsystem.components.HarooDivider
 import com.core.designsystem.components.calendar.Calendar
 import com.core.designsystem.modifiers.pagerHingeTransition
 import com.core.designsystem.theme.HarooTheme
+import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
 import com.core.model.feature.PostsUiModel
 import com.core.ui.date.DateWithImage
@@ -69,7 +70,7 @@ fun HomeScreen(
 fun HomeScreen(
     postPagingItems: LazyPagingItems<PostsUiModel>,
     scrollState: LazyListState,
-    toPostScreen: (LocalDate)->Unit,
+    toPostScreen: (LocalDate) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
     LazyColumn(
@@ -123,7 +124,7 @@ fun MonthlyContainer(
                 onRemovePost = onRemovePost
             )
         }
-        MonthlyDivider(date = date)
+        MonthlyDivider(date = date, onClickMonthBtn = {})
     }
 }
 
@@ -184,20 +185,21 @@ fun DailyContainer(
 @Composable
 fun MonthlyDivider(
     date: YearMonth,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickMonthBtn: (YearMonth) -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        HarooDivider(
-            modifier = Modifier.weight(1f)
-        )
+        HarooDivider(modifier = Modifier.weight(1f))
         HarooButton(
-            shape = RoundedCornerShape(topStart = 100f, bottomStart = 100f),
-            onClick = { }
+            shape = RoundedCornerShape(
+                topStart = 100f, bottomStart = 100f
+            ),
+            onClick = { onClickMonthBtn(date) }
         ) {
-            Text(text = "${date.monthValue}월 보기")
+            Text(text = getString(id = R.string.btn_view_month, date.monthValue))
         }
     }
 }

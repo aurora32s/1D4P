@@ -63,8 +63,12 @@ fun HarooVerticalDivider(
     modifier: Modifier = Modifier,
     color: Color = HarooTheme.colors.uiBorder,
     alpha: Float = 1f,
-    thickness: Float = 3f
+    thickness: Float = 3f,
+    dash: Float = 10f
 ) {
+    val pathEffect = PathEffect.dashPathEffect(
+        floatArrayOf(dash, dash), 0f
+    )
     Canvas(
         modifier = modifier.fillMaxHeight()
     ) {
@@ -73,7 +77,8 @@ fun HarooVerticalDivider(
             start = Offset(0f, 0f),
             end = Offset(0f, size.height),
             strokeWidth = thickness,
-            alpha = alpha
+            alpha = alpha,
+            pathEffect = pathEffect
         )
     }
 }

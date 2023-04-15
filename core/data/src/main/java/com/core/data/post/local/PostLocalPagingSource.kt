@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.core.database.dao.PostDao
 import com.core.model.data.PostSource
+import com.core.model.data.PostSources
 import com.core.model.data.toSource
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -15,48 +16,55 @@ import java.time.YearMonth
  */
 class PostLocalPagingSource(
     private val postDao: PostDao
-) : PagingSource<YearMonth, PostSource>() {
-    override fun getRefreshKey(state: PagingState<YearMonth, PostSource>): YearMonth? {
+) : PagingSource<YearMonth, PostSources>() {
+    override fun getRefreshKey(state: PagingState<YearMonth, PostSources>): YearMonth? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plusMonths(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, PostSource> =
+    override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, PostSources> =
         coroutineScope {
             val date: YearMonth = params.key ?: YearMonth.now()
 
             try {
-                val posts =
-                    postDao.selectPostByMonth(date.year, date.monthValue).map { post ->
-                        async {
-                            post.id?.let {
-                                val images = async { postDao.selectImagesByPost(it) }
-                                val tags = async { postDao.selectTagsByPost(it) }
-                                PostSource(
-                                    id = it,
-                                    year = post.year,
-                                    month = post.month,
-                                    day = post.day,
-                                    content = post.content,
-                                    images = images.await().map { image -> image.toSource() },
-                                    tags = tags.await().map { tag -> tag.toSource() }
-                                )
-                            }
-                        }
-                    }.awaitAll()
-
+                val posts = listOf(
+                    getPostsByYearAndMonth(date.minusMonths(1)),
+                    getPostsByYearAndMonth(date),
+                    getPostsByYearAndMonth(date.plusMonths(1))
+                )
                 LoadResult.Page(
-                    prevKey = date.minusMonths(1),
-                    data = posts.filterNotNull(),
-                    nextKey = date.plusMonths(1)
+                    prevKey = date.minusMonths(3),
+                    data = posts,
+                    nextKey = date.plusMonths(3)
                 )
             } catch (exception: Exception) {
                 LoadResult.Error(exception)
             }
         }
 
+    private suspend fun getPostsByYearAndMonth(date: YearMonth): PostSources = coroutineScope {
+        val posts = postDao.selectPostByMonth(date.year, date.monthValue).map { post ->
+            async {
+                post.id?.let {
+                    val images = async { postDao.selectImagesByPost(it) }
+                    val tags = async { postDao.selectTagsByPost(it) }
+                    PostSource(
+                        id = it,
+                        year = post.year,
+                        month = post.month,
+                        day = post.day,
+                        content = post.content,
+                        images = images.await().map { image -> image.toSource() },
+                        tags = tags.await().map { tag -> tag.toSource() }
+                    )
+                }
+            }
+        }.awaitAll().filterNotNull()
+        PostSources(date.year, date.monthValue, posts)
+    }
+
     companion object {
-        const val PAGING_SIZE = 31
+        const val PAGING_SIZE = 1
     }
 }

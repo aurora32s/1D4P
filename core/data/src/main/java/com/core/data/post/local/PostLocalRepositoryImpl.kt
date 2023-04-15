@@ -98,12 +98,11 @@ class PostLocalRepositoryImpl @Inject constructor(
     override fun getPostPaging(
         year: Int,
         month: Int
-    ): Flow<PagingData<PostSource>> {
+    ): Flow<PagingData<PostSources>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PostLocalPagingSource.PAGING_SIZE,
-                enablePlaceholders = true,
-                maxSize = PostLocalPagingSource.PAGING_SIZE * 5
+                enablePlaceholders = true
             ),
             pagingSourceFactory = {
                 PostLocalPagingSource(postDao)

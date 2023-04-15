@@ -40,9 +40,8 @@ fun SimplePostItem(
                 modifier = Modifier
                     .padding(10.dp)
                     .size(20.dp)
-                    .align(Alignment.TopEnd)
-                    .noRippleClickable { onRemovePost(post) },
-                onClick = { }
+                    .align(Alignment.TopEnd),
+                onClick = { onRemovePost(post) }
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Close,

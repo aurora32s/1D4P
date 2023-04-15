@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -25,13 +24,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.core.designsystem.components.HarooSurface
 import com.core.designsystem.components.HarooVerticalDivider
 import com.core.designsystem.components.calendar.Calendar
 import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
-import com.feature.monthly.ui.ToolbarState
 import com.feature.monthly.ui.rememberToolbarState
 import java.time.LocalDate
 import java.time.YearMonth
@@ -78,11 +77,18 @@ fun MonthlyScreen() {
                 posts = emptyMap(),
                 heightProvider = { toolbarState.height },
                 progressProvider = { toolbarState.progress })
-            LazyColumn(
-                state = listState
+
+            HarooSurface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
+                alpha = 0.08f
             ) {
-                items(count = dateCount) {
-                    Text(text = "day $it", style = MaterialTheme.typography.h2)
+                LazyColumn(
+                    state = listState
+                ) {
+                    items(count = dateCount) {
+                        Text(text = "day $it", style = MaterialTheme.typography.h2)
+                    }
                 }
             }
         }

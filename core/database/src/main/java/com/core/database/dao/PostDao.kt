@@ -43,4 +43,7 @@ interface PostDao {
 
     @Delete
     suspend fun deleteTags(tags: List<TagEntity>)
+
+    @Query("DELETE FROM post WHERE id = :postId")
+    suspend fun deletePost(postId: Long)
 }

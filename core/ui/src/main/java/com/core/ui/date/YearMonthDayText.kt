@@ -74,6 +74,7 @@ fun ColumnDayAndDate(
 fun RowMonthAndName(
     modifier: Modifier = Modifier,
     date: YearMonth,
+    yearTextStyle: TextStyle = MaterialTheme.typography.h6,
     monthTextStyle: TextStyle = MaterialTheme.typography.h2,
     nameTextStyle: TextStyle = MaterialTheme.typography.h5,
     contentColor: Color = HarooTheme.colors.text
@@ -84,6 +85,12 @@ fun RowMonthAndName(
             CompositionLocalProvider(
                 LocalContentColor provides contentColor
             ) {
+                Text(
+                    modifier = Modifier
+                        .layoutId("Year"),
+                    text = date.year.toString(),
+                    style = yearTextStyle
+                )
                 Text(
                     modifier = Modifier
                         .layoutId("Month"),
@@ -99,18 +106,21 @@ fun RowMonthAndName(
             }
         }
     ) { measureables, constraints ->
+        val year = measureables.find { it.layoutId == "Year" }!!.measure(constraints)
         val month = measureables.find { it.layoutId == "Month" }!!.measure(constraints)
         val displayName = measureables.find { it.layoutId == "DisplayName" }!!.measure(constraints)
 
-        val displayNameY = month[LastBaseline] - displayName[FirstBaseline]
+        val monthY = year[LastBaseline] + 5
+        val displayNameY = monthY + month[LastBaseline] - displayName[FirstBaseline]
         layout(
             width = month.width + displayName.width,
             height = displayNameY + displayName.measuredHeight
         ) {
-            month.placeRelative(x = 0, y = 0)
+            year.placeRelative(x = 0, y = 0)
+            month.placeRelative(x = 0, y = monthY)
             displayName.placeRelative(
                 x = month.measuredWidth,
-                y = month[LastBaseline] - displayName[FirstBaseline]
+                y = displayNameY
             )
         }
     }

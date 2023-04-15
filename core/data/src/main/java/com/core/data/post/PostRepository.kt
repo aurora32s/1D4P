@@ -3,6 +3,7 @@ package com.core.data.post
 import androidx.paging.PagingData
 import com.core.model.data.ImageSource
 import com.core.model.data.PostSource
+import com.core.model.data.PostSources
 import com.core.model.data.TagSource
 import kotlinx.coroutines.flow.Flow
 
@@ -24,5 +25,5 @@ interface PostRepository {
     suspend fun getPosts(year: Int, month: Int): List<PostSource>
 
     // 특정 년도/월 post paging 요청
-    fun getPostPaging(year: Int, month: Int): Flow<PagingData<PostSource>>
+    fun getPostPaging(year: Int, month: Int): Flow<PagingData<PostSources>>
 }

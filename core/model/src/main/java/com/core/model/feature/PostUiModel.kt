@@ -1,24 +1,33 @@
 package com.core.model.feature
 
 import com.core.model.domain.Post
+import com.core.model.domain.Posts
+import java.time.LocalDate
+import java.time.YearMonth
 
 /**
  * Post Ui 정보
  */
 data class PostUiModel(
     override val id: Long?,
-    val year: Int,
-    val month: Int,
-    val day: Int,
+    val date: LocalDate,
     val content: String,
     val images: List<ImageUiModel>
 ) : Model(id, CellType.POST)
 
+data class PostsUiModel(
+    val date: YearMonth,
+    val posts: List<PostUiModel>
+) : Model(null, CellType.POSTS)
+
 fun Post.toPostUiModel() = PostUiModel(
     id = id,
-    year = year,
-    month = month,
-    day = day,
+    date = LocalDate.of(year, month, day),
     content = content ?: "",
     images = images.map { image -> image.toImageUiModel() }
+)
+
+fun Posts.toPostsUiModel() = PostsUiModel(
+    date = YearMonth.of(year, month),
+    posts = posts.map { it.toPostUiModel() }
 )

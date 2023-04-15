@@ -53,7 +53,7 @@ fun ColumnDayAndDate(
 
         val dayX = if (day.width <= dayOfWeek.width) (dayOfWeek.width - day.width) / 2 else 0
         val dayOfWeekX = if (day.width < dayOfWeek.width) 0 else (day.width - dayOfWeek.width) / 2
-        val dayOfWeekY = day[LastBaseline] + 30
+        val dayOfWeekY = day[LastBaseline] + 10
         layout(
             width = max(day.width, dayOfWeek.width),
             height = dayOfWeekY + dayOfWeek.measuredHeight

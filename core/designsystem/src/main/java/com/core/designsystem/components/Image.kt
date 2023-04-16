@@ -180,6 +180,7 @@ fun HarooImage(
                 contentScale = contentScale
             )
             is ImageType.AsyncImage -> AsyncImage(
+                modifier = Modifier.fillMaxSize(),
                 model = imageType.image.imageUrl,
                 contentDescription = imageType.contentDescription,
                 contentScale = contentScale

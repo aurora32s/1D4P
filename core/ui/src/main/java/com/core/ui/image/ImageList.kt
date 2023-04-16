@@ -116,15 +116,15 @@ fun HarooGridImages(
     images: List<ImageUiModel>, // 이미지 정보 리스트
     content: @Composable (ImageUiModel) -> Unit
 ) {
-    val imageCount = remember(images.size) { images.size }
-
     Layout(
         modifier = modifier.clip(shape),
         content = { images.forEach { content(it) } }
     ) { measureables, constraints ->
-        val imagesWidth = constraints.maxWidth / (if (imageCount >= 2) 2 else 1)
+        val imageCount = images.size
+        val imagesWidth = if (imageCount == 1) constraints.maxWidth else (constraints.maxWidth / 2)
         val firstImage = measureables.getOrNull(0)?.measure(
             constraints.copy(
+                minWidth = imagesWidth,
                 maxWidth = imagesWidth,
                 maxHeight = when (imageCount) {
                     1, 3, 4 -> imagesWidth / 2

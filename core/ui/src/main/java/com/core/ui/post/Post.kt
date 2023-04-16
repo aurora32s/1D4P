@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.*
@@ -296,6 +297,12 @@ fun GridPostItem(
                         onClick = {}
                     )
                 }
+                Text(
+                    modifier = Modifier.layoutId("Content"),
+                    text = post.content,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
             } else {
                 HarooButton(
                     modifier = Modifier.layoutId("AddBtn"),
@@ -311,6 +318,7 @@ fun GridPostItem(
         val paddingDayAndImages = 23
         val paddingImagesAndTags = 12
         val paddingTags = 4
+        val paddingTagsAndContent = 16
 
         val day = measureables.find { it.layoutId == "Day" }!!.measure(constraints)
         val delBtn = measureables.find { it.layoutId == "DelBtn" }?.measure(constraints)
@@ -321,10 +329,21 @@ fun GridPostItem(
         val images = measureables.find { it.layoutId == "Images" }?.measure(
             constraints.copy(maxWidth = imageWidth)
         )
+        val content = measureables.find { it.layoutId == "Content" }?.measure(
+            constraints.copy(maxWidth = images?.width ?: constraints.maxWidth)
+        )
 
         val tagHeight = tags.firstOrNull()?.height ?: 0
+        val dayX = paddingLineAndDay
+        val lineY = if (isFirstItem) day.height / 2 else 0
+        val imagesX = dayX + day.width + paddingDayAndImages
+        val imagesY = day.height
+        val tagsListEndX = imagesX + (images?.width ?: 0)
+        val tagsListY = imagesY + (images?.height ?: 0) + paddingImagesAndTags
+        val contentY = tagsListY + tagHeight + paddingTagsAndContent
+
         var height = day.height + 26.dp.roundToPx()
-        if (post != null) height += (images?.height ?: 0) + tagHeight + paddingImagesAndTags
+        if (post != null) height += contentY + (content?.measuredHeight ?: 0)
         val lineHeight = if (isFirstItem) height - day.height / 2 else if (isLastItem) day.height / 2 else height
         val line = measureables.find { it.layoutId == "Line" }?.measure(
             Constraints(minHeight = lineHeight, maxHeight = lineHeight)
@@ -337,12 +356,6 @@ fun GridPostItem(
         )
         val ellipse = measureables.find { it.layoutId == "Ellipse" }?.measure(constraints)
 
-        val dayX = paddingLineAndDay
-        val lineY = if (isFirstItem) day.height / 2 else 0
-        val imagesX = dayX + day.width + paddingDayAndImages
-        val imagesY = day.height
-        val tagsListEndX = imagesX + (images?.width ?: 0)
-        val tagsListY = imagesY + (images?.height ?: 0) + paddingImagesAndTags
         layout(
             constraints.maxWidth,
             height
@@ -375,6 +388,7 @@ fun GridPostItem(
                 x += it.width + paddingTags
             }
             if (isOver) ellipse?.placeRelative(x = x + paddingTags, y = tagsListY)
+            content?.placeRelative(x = imagesX, y = contentY)
         }
     }
 }

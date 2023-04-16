@@ -1,5 +1,6 @@
 package com.core.designsystem.components
 
+import android.app.ActionBar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,6 +12,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.theme.HarooTheme
+
+@Composable
+fun HarooHeader(
+    modifier: Modifier = Modifier,
+    title: String,
+    onBackPressed: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(AppBarDefaults.ContentPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides HarooTheme.colors.text
+        ) {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "back"
+                )
+            }
+            Text(
+                modifier = Modifier.weight(1f),
+                text = title,
+                style = MaterialTheme.typography.subtitle1
+            )
+        }
+    }
+}
 
 @Composable
 fun BackAndRightButtonHeader(

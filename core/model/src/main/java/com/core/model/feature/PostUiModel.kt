@@ -12,7 +12,8 @@ data class PostUiModel(
     override val id: Long?,
     val date: LocalDate,
     val content: String,
-    val images: List<ImageUiModel>
+    val images: List<ImageUiModel>,
+    val tags: List<TagUiModel>
 ) : Model(id, CellType.POST)
 
 data class PostsUiModel(
@@ -24,7 +25,8 @@ fun Post.toPostUiModel() = PostUiModel(
     id = id,
     date = LocalDate.of(year, month, day),
     content = content ?: "",
-    images = images.map { image -> image.toImageUiModel() }
+    images = images.map { image -> image.toImageUiModel() },
+    tags = tags.map { tag -> tag.toTagUiModel() }
 )
 
 fun Posts.toPostsUiModel() = PostsUiModel(

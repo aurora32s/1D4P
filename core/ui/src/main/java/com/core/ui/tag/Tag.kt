@@ -74,10 +74,12 @@ fun TagContainer(
 
 @Composable
 fun TagChip(
+    modifier: Modifier = Modifier,
     name: String,
     onClick: () -> Unit
 ) {
     HarooChip(
+        modifier = modifier,
         onClick = onClick,
         border = null,
         alpha = 0.25f

@@ -8,6 +8,7 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.core.designsystem.components.HarooRadioButton
 import com.core.designsystem.components.HarooSurface
 import com.core.designsystem.components.HarooVerticalDivider
 import com.core.designsystem.components.calendar.Calendar
@@ -30,6 +32,7 @@ import com.core.designsystem.theme.HarooTheme
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
+import com.core.ui.post.GridPostItem
 import com.core.ui.post.LinearPostItem
 import com.feature.monthly.ui.rememberToolbarState
 import java.time.LocalDate
@@ -68,6 +71,7 @@ fun MonthlyScreen(
             }
         }
     }
+    val listType = rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -82,6 +86,7 @@ fun MonthlyScreen(
             LocalContentColor provides HarooTheme.colors.text
         ) {
             MonthlyHeader(
+                modifier = Modifier.padding(bottom = 26.dp),
                 date = today,
                 posts = groupedPost,
                 heightProvider = { toolbarState.height },
@@ -93,13 +98,34 @@ fun MonthlyScreen(
                 shape = MaterialTheme.shapes.large,
                 alpha = 0.08f
             ) {
-                LazyColumn(
-                    state = listState,
-                    contentPadding = PaddingValues(horizontal = 36.dp)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(count = dateCount) {
-                        val day = today.atDay(it + 1)
-                        LinearPostItem(date = today.atDay(it + 1), post = groupedPost[day])
+                    HarooRadioButton(
+                        modifier = Modifier.padding(16.dp),
+                        selected = listType.value,
+                        onSelected = { listType.value = listType.value.not() }
+                    )
+                    LazyColumn(
+                        state = listState,
+                        contentPadding = PaddingValues(horizontal = 36.dp)
+                    ) {
+                        items(count = dateCount) {
+                            val day = today.atDay(it + 1)
+                            if (listType.value) {
+                                GridPostItem(
+                                    isFirstItem = it == 0,
+                                    isLastItem = it == dateCount - 1,
+                                    date = today.atDay(it + 1),
+                                    post = groupedPost[day]
+                                )
+                            } else {
+                                LinearPostItem(
+                                    date = today.atDay(it + 1),
+                                    post = groupedPost[day]
+                                )
+                            }
+                        }
                     }
                 }
             }

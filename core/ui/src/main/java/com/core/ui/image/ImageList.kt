@@ -4,8 +4,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
@@ -101,6 +105,72 @@ fun HarooImageList(
                 )
                 x += it.width + spaceBy
             }
+        }
+    }
+}
+
+@Composable
+fun HarooGridImages(
+    modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.medium,
+    images: List<ImageUiModel>, // 이미지 정보 리스트
+    content: @Composable (ImageUiModel) -> Unit
+) {
+    val imageCount = remember(images.size) { images.size }
+
+    Layout(
+        modifier = modifier.clip(shape),
+        content = { images.forEach { content(it) } }
+    ) { measureables, constraints ->
+        val imagesWidth = constraints.maxWidth / (if (imageCount >= 2) 2 else 1)
+        val firstImage = measureables.getOrNull(0)?.measure(
+            constraints.copy(
+                maxWidth = imagesWidth,
+                maxHeight = when (imageCount) {
+                    1, 3, 4 -> imagesWidth / 2
+                    else -> imagesWidth
+                }
+            )
+        )
+        val secondImage = measureables.getOrNull(1)?.measure(
+            constraints.copy(
+                maxWidth = imagesWidth,
+                maxHeight = when (imageCount) {
+                    3, 4 -> imagesWidth / 2
+                    else -> imagesWidth
+                }
+            )
+        )
+        val thirdImage = measureables.getOrNull(2)?.measure(
+            constraints.copy(
+                maxWidth = imagesWidth,
+                maxHeight = when (imageCount) {
+                    3 -> imagesWidth
+                    else -> imagesWidth / 2
+                }
+            )
+        )
+        val fourthImage = measureables.getOrNull(3)?.measure(
+            constraints.copy(maxWidth = imagesWidth, maxHeight = imagesWidth / 2)
+        )
+
+        layout(
+            width = constraints.maxWidth,
+            height = constraints.maxWidth * 2 / 3
+        ) {
+            firstImage?.placeRelative(x = 0, y = 0)
+            secondImage?.placeRelative(
+                x = when (imageCount) {
+                    3, 4 -> 0
+                    else -> imagesWidth
+                },
+                y = when (imageCount) {
+                    3, 4 -> imagesWidth / 2
+                    else -> 0
+                }
+            )
+            thirdImage?.placeRelative(x = imagesWidth, y = 0)
+            fourthImage?.placeRelative(x = imagesWidth, y = imagesWidth / 2)
         }
     }
 }

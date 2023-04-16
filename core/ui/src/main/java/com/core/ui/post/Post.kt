@@ -96,6 +96,8 @@ fun SimplePostItem(
 fun LinearPostItem(
     date: LocalDate,
     modifier: Modifier = Modifier,
+    isFirstItem: Boolean = false,
+    isLastItem: Boolean = false,
     contentColor: Color = LocalContentColor.current,
     post: PostUiModel?, // 해당 일의 Post 정보
 ) {
@@ -183,8 +185,9 @@ fun LinearPostItem(
         val height = (
                 if (post == null) day.height
                 else images!!.height + tagHeight + paddingImagesAndTags) + 26.dp.roundToPx()
+        val lineHeight = if (isFirstItem) height - day.height / 2 else if (isLastItem) day.height / 2 else height
         val line = measureables.find { it.layoutId == "Line" }!!.measure(
-            Constraints(minHeight = height, maxHeight = height)
+            Constraints(minHeight = lineHeight, maxHeight = lineHeight)
         )
         val dot = measureables.find { it.layoutId == "Dot" }!!.measure(
             Constraints(
@@ -195,6 +198,7 @@ fun LinearPostItem(
         val ellipse = measureables.find { it.layoutId == "Ellipse" }?.measure(constraints)
 
         val dayX = paddingLineAndDay
+        val lineY = if (isFirstItem) day.height / 2 else 0
         val imagesX = dayX + day.width + paddingDayAndImages
         val tagsListEndX = imagesX + (images?.width ?: 0)
         val tagsListY = (images?.height ?: 0) + paddingImagesAndTags
@@ -202,7 +206,7 @@ fun LinearPostItem(
             constraints.maxWidth,
             height
         ) {
-            line.placeRelative(x = 0, y = 0)
+            line.placeRelative(x = 0, y = lineY)
             dot.placeRelative(
                 x = -dot.width / 2,
                 y = (day.height / 2) - dot.height / 2

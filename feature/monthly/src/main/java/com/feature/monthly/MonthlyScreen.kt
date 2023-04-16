@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.core.designsystem.components.HarooHeader
 import com.core.designsystem.components.HarooRadioButton
 import com.core.designsystem.components.HarooSurface
 import com.core.designsystem.components.HarooVerticalDivider
@@ -85,11 +86,11 @@ fun MonthlyScreen(
         CompositionLocalProvider(
             LocalContentColor provides HarooTheme.colors.text
         ) {
+            HarooHeader(title = "하루네컷", onBackPressed = {})
             MonthlyHeader(
                 modifier = Modifier.padding(bottom = 26.dp),
                 date = today,
                 posts = groupedPost,
-                heightProvider = { toolbarState.height },
                 progressProvider = { toolbarState.progress }
             )
 
@@ -121,6 +122,8 @@ fun MonthlyScreen(
                                 )
                             } else {
                                 LinearPostItem(
+                                    isFirstItem = it == 0,
+                                    isLastItem = it == dateCount - 1,
                                     date = today.atDay(it + 1),
                                     post = groupedPost[day]
                                 )
@@ -137,10 +140,9 @@ fun MonthlyScreen(
 fun MonthlyHeader(
     date: YearMonth,
     modifier: Modifier = Modifier,
-    verticalSpace: Dp = 4.dp,
-    horizontalSpace: Dp = 4.dp,
+    verticalSpace: Dp = 8.dp,
+    horizontalSpace: Dp = 8.dp,
     posts: Map<LocalDate, PostUiModel>,
-    heightProvider: () -> Float,
     progressProvider: () -> Float
 ) {
     Layout(

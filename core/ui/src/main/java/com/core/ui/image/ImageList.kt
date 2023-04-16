@@ -156,7 +156,7 @@ fun HarooGridImages(
 
         layout(
             width = constraints.maxWidth,
-            height = constraints.maxWidth * 2 / 3
+            height = constraints.maxWidth / 2
         ) {
             firstImage?.placeRelative(x = 0, y = 0)
             secondImage?.placeRelative(

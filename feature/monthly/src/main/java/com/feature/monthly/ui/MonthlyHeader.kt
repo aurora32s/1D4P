@@ -14,11 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.core.designsystem.components.HarooVerticalDivider
 import com.core.designsystem.components.calendar.Calendar
+import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
 import java.time.LocalDate
 import java.time.YearMonth
+import com.feature.monthly.R
 
 @Composable
 fun MonthlyHeader(
@@ -66,12 +68,13 @@ fun MonthlyHeader(
 fun MonthlyHeaderContent(
     date: YearMonth,
     posts: Map<LocalDate, PostUiModel>,
+    monthAndNamePadding: Dp = Dimens.monthAndNameDefaultPadding,
     progressProvider: () -> Float
 ) {
     RowMonthAndName(
         modifier = Modifier
             .layoutId("Date")
-            .padding(16.dp),
+            .padding(monthAndNamePadding),
         date = date
     )
     MonthlyCalendar(
@@ -93,8 +96,8 @@ fun MonthlyCalendar(
     modifier: Modifier = Modifier,
     posts: Map<LocalDate, PostUiModel>,
     date: YearMonth,
-    verticalSpace: Dp = 8.dp,
-    horizontalSpace: Dp = 8.dp,
+    verticalSpace: Dp = Dimens.monthlyCalendarVerticalSpace,
+    horizontalSpace: Dp = Dimens.monthlyCalendarHorizontalSpace,
     progressProvider: () -> Float
 ) {
     Calendar(
@@ -122,7 +125,7 @@ fun MonthlyInfosContainer(
     modifier: Modifier = Modifier,
     posts: Map<LocalDate, PostUiModel>,
     date: YearMonth,
-    space: Dp = 30.dp,
+    space: Dp = Dimens.monthlyInfoHorizontalSpace,
     progressProvider: () -> Float
 ) {
     Row(
@@ -132,22 +135,31 @@ fun MonthlyInfosContainer(
             .graphicsLayer { alpha = 1 - progressProvider() },
         horizontalArrangement = Arrangement.Center
     ) {
-        MonthlyCountContainer(name = "전체일수", count = date.lengthOfMonth())
+        MonthlyCountContainer(
+            name = getString(id = R.string.total_date),
+            count = date.lengthOfMonth()
+        )
         HarooVerticalDivider(modifier = Modifier.padding(horizontal = space))
-        MonthlyCountContainer(name = "기록일수", count = posts.size)
+        MonthlyCountContainer(
+            name = getString(id = R.string.post_count),
+            count = posts.size
+        )
         HarooVerticalDivider(modifier = Modifier.padding(horizontal = space))
-        MonthlyCountContainer(name = "이미지", count = posts.values.sumOf { it.images.size })
+        MonthlyCountContainer(
+            name = getString(id = R.string.image_count),
+            count = posts.values.sumOf { it.images.size })
     }
 }
 
 @Composable
 fun MonthlyCountContainer(
     name: String, // info name
-    count: Int // info 개수
+    count: Int, // info 개수
+    verticalSpace: Dp = Dimens.monthlyInfoVerticalSpace
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(verticalSpace)
     ) {
         Text(text = name, style = MaterialTheme.typography.body1)
         Text(text = count.toString(), style = MaterialTheme.typography.body1)

@@ -118,14 +118,16 @@ fun MonthlyScreen(
                                     isFirstItem = it == 0,
                                     isLastItem = it == dateCount - 1,
                                     date = today.atDay(it + 1),
-                                    post = groupedPost[day]
+                                    post = groupedPost[day],
+                                    onRemovePost = monthlyViewModel::removePost
                                 )
                             } else {
                                 LinearPostItem(
                                     isFirstItem = it == 0,
                                     isLastItem = it == dateCount - 1,
                                     date = today.atDay(it + 1),
-                                    post = groupedPost[day]
+                                    post = groupedPost[day],
+                                    onRemovePost = monthlyViewModel::removePost
                                 )
                             }
                         }

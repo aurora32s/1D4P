@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.core.model.feature.PostUiModel
 import com.core.ui.toolbar.ToolbarState
 import com.core.ui.toolbar.rememberToolbarState
+import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
@@ -27,11 +28,14 @@ fun rememberMonthlyScreenState(
         toolbarMinHeight.roundToPx()..toolbarMaxHeight.roundToPx()
     }
     val toolbarState: ToolbarState = rememberToolbarState(toolbarHeightRange)
+    val groupedPost = remember {
+        derivedStateOf { posts.value.associateBy { it.date } }
+    }
 
     return remember(year, month) {
         MonthlyScreenStateHolder(
             date = YearMonth.of(year, month),
-            posts = posts,
+            posts = groupedPost,
             toolbarState = toolbarState,
             lazyListState = lazyListState,
             listType = listType,
@@ -42,7 +46,7 @@ fun rememberMonthlyScreenState(
 
 class MonthlyScreenStateHolder(
     val date: YearMonth,
-    val posts: State<List<PostUiModel>>,
+    val posts: State<Map<LocalDate,PostUiModel>>,
     val toolbarState: ToolbarState,
     val lazyListState: LazyListState,
     val listType: MutableState<Boolean>,
@@ -50,8 +54,6 @@ class MonthlyScreenStateHolder(
 ) {
     val dateCount: Int
         get() = date.lengthOfMonth()
-
-    val groupedPost = posts.value.associateBy { it.date }
 
     fun toggleListType() {
         listType.value = listType.value.not()

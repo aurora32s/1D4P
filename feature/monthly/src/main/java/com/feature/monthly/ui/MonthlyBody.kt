@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import com.core.designsystem.components.HarooRadioButton
 import com.core.designsystem.components.HarooSurface
 import com.core.model.feature.PostUiModel
-import com.core.ui.post.GridPostItem
-import com.core.ui.post.LinearPostItem
+import com.core.ui.post.PostItemByType
+import com.core.ui.post.PostItemType
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -52,7 +52,7 @@ fun MonthlyBody(
                         isLastItem = it == dateCount - 1,
                         date = day,
                         post = groupedPosts[day],
-                        listType = listType,
+                        postItemType = if (listType) PostItemType.GRID else PostItemType.LINEAR,
                         onRemovePost = onRemovePost
                     )
                 }
@@ -67,24 +67,15 @@ fun MonthlyPostItem(
     isLastItem: Boolean,
     date: LocalDate,
     post: PostUiModel?,
-    listType: Boolean,
+    postItemType: PostItemType,
     onRemovePost: (PostUiModel) -> Unit
 ) {
-    if (listType) {
-        GridPostItem(
-            isFirstItem = isFirstItem,
-            isLastItem = isLastItem,
-            date = date,
-            post = post,
-            onRemovePost = onRemovePost
-        )
-    } else {
-        LinearPostItem(
-            isFirstItem = isFirstItem,
-            isLastItem = isLastItem,
-            date = date,
-            post = post,
-            onRemovePost = onRemovePost
-        )
-    }
+    PostItemByType(
+        date = date,
+        isFirstItem = isFirstItem,
+        isLastItem = isLastItem,
+        post = post,
+        postItemType = postItemType,
+        onRemovePost = onRemovePost
+    )
 }

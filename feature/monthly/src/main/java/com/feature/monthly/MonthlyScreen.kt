@@ -12,19 +12,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.designsystem.components.HarooHeader
 import com.core.designsystem.components.HarooRadioButton
 import com.core.designsystem.components.HarooSurface
 import com.core.designsystem.theme.HarooTheme
+import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
 import com.core.ui.post.GridPostItem
 import com.core.ui.post.LinearPostItem
 import com.core.ui.toolbar.CollapsingToolbar
+import com.feature.monthly.ui.Dimens
 import com.feature.monthly.ui.MonthlyHeader
 import java.time.LocalDate
 import java.time.YearMonth
+import com.core.designsystem.R
 
 @Composable
 fun MonthlyScreen(
@@ -59,9 +61,9 @@ fun MonthlyScreen(
         CompositionLocalProvider(
             LocalContentColor provides HarooTheme.colors.text
         ) {
-            HarooHeader(title = "하루네컷", onBackPressed = {})
+            HarooHeader(title = getString(id = R.string.app_name), onBackPressed = {})
             MonthlyHeader(
-                modifier = Modifier.padding(bottom = 26.dp),
+                modifier = Modifier.padding(bottom = Dimens.spaceBetweenHeaderAndBody),
                 date = monthlyScreenStateHolder.date,
                 posts = monthlyScreenStateHolder.groupedPost,
                 progressProvider = { monthlyScreenStateHolder.toolbarState.progress }
@@ -98,13 +100,13 @@ fun MonthlyBody(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HarooRadioButton(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(Dimens.paddingRadioBtn),
                 selected = listType,
                 onSelected = onChangeListType
             )
             LazyColumn(
                 state = lazyListState,
-                contentPadding = PaddingValues(horizontal = 36.dp)
+                contentPadding = PaddingValues(horizontal = Dimens.postListHorizontalPadding)
             ) {
                 items(count = dateCount) {
                     val day = date.atDay(it + 1)

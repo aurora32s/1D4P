@@ -9,4 +9,9 @@ internal object Dimens {
 
     val monthlyCalendarVerticalSpace = 8.dp
     val monthlyCalendarHorizontalSpace = 8.dp
+
+    val spaceBetweenHeaderAndBody = 26.dp
+    val paddingRadioBtn = 16.dp
+
+    val postListHorizontalPadding = 36.dp
 }

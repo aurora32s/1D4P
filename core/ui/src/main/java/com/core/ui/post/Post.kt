@@ -100,6 +100,7 @@ fun LinearPostItem(
     isLastItem: Boolean = false,
     contentColor: Color = LocalContentColor.current,
     post: PostUiModel?, // 해당 일의 Post 정보
+    onRemovePost: (PostUiModel) -> Unit
 ) {
     Layout(
         modifier = modifier,
@@ -129,7 +130,7 @@ fun LinearPostItem(
                     modifier = Modifier
                         .layoutId("DelBtn")
                         .size(20.dp),
-                    onClick = { }
+                    onClick = { onRemovePost(post) }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
@@ -248,6 +249,7 @@ fun GridPostItem(
     modifier: Modifier = Modifier,
     contentColor: Color = LocalContentColor.current,
     post: PostUiModel?, // 해당 일의 Post 정보
+    onRemovePost: (PostUiModel) -> Unit
 ) {
     Layout(
         modifier = modifier,
@@ -280,7 +282,7 @@ fun GridPostItem(
                     modifier = Modifier
                         .layoutId("DelBtn")
                         .size(20.dp),
-                    onClick = { }
+                    onClick = { onRemovePost(post) }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,

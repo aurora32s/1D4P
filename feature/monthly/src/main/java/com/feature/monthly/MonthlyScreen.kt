@@ -55,12 +55,12 @@ fun MonthlyScreen(
             MonthlyHeader(
                 modifier = Modifier.padding(bottom = Dimens.spaceBetweenHeaderAndBody),
                 date = monthlyScreenStateHolder.date,
-                posts = monthlyScreenStateHolder.groupedPost,
+                posts = monthlyScreenStateHolder.posts.value,
                 progressProvider = { monthlyScreenStateHolder.toolbarState.progress }
             )
             MonthlyBody(
                 lazyListState = monthlyScreenStateHolder.lazyListState,
-                groupedPosts = monthlyScreenStateHolder.groupedPost,
+                groupedPosts = monthlyScreenStateHolder.posts.value,
                 listType = monthlyScreenStateHolder.listType.value,
                 date = monthlyScreenStateHolder.date,
                 dateCount = monthlyScreenStateHolder.dateCount,

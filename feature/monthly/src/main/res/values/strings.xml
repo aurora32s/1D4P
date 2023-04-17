@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Monthly header Info -->
+    <string name="total_date">전체 일수</string>
+    <string name="post_count">기록 일수</string>
+    <string name="image_count">이미지</string>
+</resources>

@@ -134,6 +134,7 @@ fun HarooGridImages(
         )
         val secondImage = measureables.getOrNull(1)?.measure(
             constraints.copy(
+                minWidth = imagesWidth,
                 maxWidth = imagesWidth,
                 maxHeight = when (imageCount) {
                     3, 4 -> imagesWidth / 2
@@ -143,6 +144,7 @@ fun HarooGridImages(
         )
         val thirdImage = measureables.getOrNull(2)?.measure(
             constraints.copy(
+                minWidth = imagesWidth,
                 maxWidth = imagesWidth,
                 maxHeight = when (imageCount) {
                     3 -> imagesWidth
@@ -151,7 +153,9 @@ fun HarooGridImages(
             )
         )
         val fourthImage = measureables.getOrNull(3)?.measure(
-            constraints.copy(maxWidth = imagesWidth, maxHeight = imagesWidth / 2)
+            constraints.copy(
+                minWidth = imagesWidth, maxWidth = imagesWidth, maxHeight = imagesWidth / 2
+            )
         )
 
         layout(

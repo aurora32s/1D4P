@@ -12,12 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.core.designsystem.components.*
 import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.theme.HarooTheme
+import com.core.model.feature.ImageUiModel
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.ColumnDayAndDate
 import com.core.ui.image.AsyncImageList
@@ -88,313 +87,169 @@ fun SimplePostItem(
     }
 }
 
+@Composable
+fun BasePostItem(
+    isShowContent: Boolean,
+    post: PostUiModel?,
+    date: LocalDate,
+    contentColor: Color,
+    imageContainer: @Composable (Modifier, List<ImageUiModel>) -> Unit,
+    onRemovePost: (PostUiModel) -> Unit
+) {
+    HarooVerticalDivider(modifier = Modifier.layoutId("Line"), dash = 0f)
+    Canvas(modifier = Modifier.layoutId("Dot")) { drawCircle(contentColor) }
+    ColumnDayAndDate(
+        modifier = Modifier.layoutId("Day"),
+        date = date,
+        dayTextStyle = MaterialTheme.typography.subtitle1,
+        dateTextStyle = MaterialTheme.typography.body1
+    )
+    if (post != null) {
+        imageContainer(Modifier.layoutId("Images"), post.images)
+        IconButton(modifier = Modifier
+            .layoutId("DelBtn")
+            .size(20.dp), onClick = { onRemovePost(post) }
+        ) {
+            Icon(imageVector = Icons.Outlined.Close, contentDescription = "back")
+        }
+        if (post.tags.isNotEmpty()) {
+            post.tags.forEach { tag ->
+                TagChip(
+                    modifier = Modifier.layoutId("Tag"),
+                    name = "#${tag.name}",
+                    onClick = {}
+                )
+            }
+            TagChip(
+                modifier = Modifier.layoutId("Ellipse"),
+                name = "...",
+                onClick = {}
+            )
+        }
+        if (isShowContent) {
+            Text(
+                modifier = Modifier.layoutId("Content"),
+                text = post.content, style = MaterialTheme.typography.body1
+            )
+        }
+    } else {
+        HarooButton(
+            modifier = Modifier.layoutId("AddBtn"),
+            onClick = { }
+        ) { Text(text = "추가") }
+    }
+}
+
+@Composable
+fun ImageContainerByType(
+    modifier: Modifier = Modifier,
+    postItemType: PostItemType,
+    images: List<ImageUiModel>
+) {
+    when (postItemType) {
+        PostItemType.LINEAR -> AsyncImageList(
+            modifier = modifier,
+            images = images,
+            imageCount = 4,
+            space = 8.dp,
+            content = { HarooImage(imageType = it) })
+        PostItemType.GRID -> HarooGridImages(
+            modifier = Modifier.layoutId("Images"),
+            images = images,
+            content = {
+                HarooImage(
+                    shape = RectangleShape,
+                    imageType = ImageType.AsyncImage(image = it)
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun PostItemByType(
+    date: LocalDate,
+    modifier: Modifier = Modifier,
+    isFirstItem: Boolean,
+    isLastItem: Boolean,
+    contentColor: Color = LocalContentColor.current,
+    post: PostUiModel?, // 해당 일의 Post 정보
+    postItemType: PostItemType,
+    onRemovePost: (PostUiModel) -> Unit
+) {
+    PostItem(
+        modifier = modifier,
+        postItem = PostItem.providePostItem(
+            post != null, isFirstItem, isLastItem, postItemType
+        ),
+        content = {
+            BasePostItem(
+                isShowContent = postItemType.isShowContent,
+                post = post,
+                date = date,
+                contentColor = contentColor,
+                imageContainer = { modifier, images ->
+                    ImageContainerByType(
+                        modifier = modifier,
+                        postItemType = postItemType,
+                        images = images
+                    )
+                },
+                onRemovePost = onRemovePost
+            )
+        }
+    )
+}
+
 /**
  * 일별 기록 리스트 item - 일렬로 이미지 view
  * @use MonthlyScreen
  */
 @Composable
-fun LinearPostItem(
-    date: LocalDate,
+fun PostItem(
     modifier: Modifier = Modifier,
-    isFirstItem: Boolean = false,
-    isLastItem: Boolean = false,
-    contentColor: Color = LocalContentColor.current,
-    post: PostUiModel?, // 해당 일의 Post 정보
-    onRemovePost: (PostUiModel) -> Unit
+    postItem: PostItem,
+    content: @Composable () -> Unit
 ) {
     Layout(
         modifier = modifier,
-        content = {
-            HarooVerticalDivider(
-                modifier = Modifier.layoutId("Line"),
-                dash = 0f
-            )
-            Canvas(modifier = Modifier.layoutId("Dot")) {
-                drawCircle(contentColor)
-            }
-            ColumnDayAndDate(
-                modifier = Modifier.layoutId("Day"),
-                date = date,
-                dayTextStyle = MaterialTheme.typography.subtitle1,
-                dateTextStyle = MaterialTheme.typography.body1
-            )
-            if (post != null) {
-                AsyncImageList(
-                    modifier = Modifier.layoutId("Images"),
-                    images = post.images,
-                    imageCount = 4,
-                    space = 8.dp,
-                    content = { HarooImage(imageType = it) }
-                )
-                IconButton(
-                    modifier = Modifier
-                        .layoutId("DelBtn")
-                        .size(20.dp),
-                    onClick = { onRemovePost(post) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "back"
-                    )
-                }
-                if (post.tags.isNotEmpty()) {
-                    post.tags.forEach { tag ->
-                        TagChip(
-                            modifier = Modifier.layoutId("Tag"),
-                            name = "#${tag.name}",
-                            onClick = {}
-                        )
-                    }
-                    TagChip(
-                        modifier = Modifier.layoutId("Ellipse"),
-                        name = "...",
-                        onClick = {}
-                    )
-                }
-            } else {
-                HarooButton(
-                    modifier = Modifier.layoutId("AddBtn"),
-                    onClick = { }
-                ) {
-                    Text(text = "추가")
-                }
-            }
-        },
+        content = content,
     ) { measureables, constraints ->
-        val dotSize = 15
-        val paddingLineAndDay = 20
-        val paddingDayAndImages = 23
-        val paddingImagesAndDelBtn = 23
-        val paddingImagesAndTags = 12
-        val paddingTags = 4
+        postItem.measurePolicy(measureables, constraints, 26.dp.roundToPx())
 
-        val day = measureables.find { it.layoutId == "Day" }!!.measure(constraints)
-
-        val delBtn = measureables.find { it.layoutId == "DelBtn" }?.measure(constraints)
-        val addBtn = measureables.find { it.layoutId == "AddBtn" }?.measure(constraints)
-
-        val imageWidth = constraints.maxWidth - (paddingLineAndDay + day.width +
-                paddingDayAndImages + paddingImagesAndDelBtn + (delBtn?.width ?: 0))
-        val images = measureables.find { it.layoutId == "Images" }?.measure(
-            constraints.copy(maxWidth = imageWidth)
-        )
-        val tags = measureables.filter { it.layoutId == "Tag" }.map {
-            it.measure(constraints)
+        val lineHeight = when {
+            postItem.isFirstItem -> postItem.postHeight - postItem.day.height / 2
+            postItem.isLastItem -> postItem.day.height / 2
+            else -> postItem.postHeight
         }
-
-        val tagHeight = tags.firstOrNull()?.height ?: 0
-        val height = (
-                if (post == null) day.height
-                else images!!.height + tagHeight + paddingImagesAndTags) + 26.dp.roundToPx()
-        val lineHeight = if (isFirstItem) height - day.height / 2 else if (isLastItem) day.height / 2 else height
         val line = measureables.find { it.layoutId == "Line" }!!.measure(
-            Constraints(minHeight = lineHeight, maxHeight = lineHeight)
+            constraints.copy(minHeight = lineHeight, maxHeight = lineHeight)
         )
-        val dot = measureables.find { it.layoutId == "Dot" }!!.measure(
-            Constraints(
-                minWidth = dotSize, maxWidth = dotSize,
-                minHeight = dotSize, maxHeight = dotSize
-            )
-        )
-        val ellipse = measureables.find { it.layoutId == "Ellipse" }?.measure(constraints)
-
-        val dayX = paddingLineAndDay
-        val lineY = if (isFirstItem) day.height / 2 else 0
-        val imagesX = dayX + day.width + paddingDayAndImages
-        val tagsListEndX = imagesX + (images?.width ?: 0)
-        val tagsListY = (images?.height ?: 0) + paddingImagesAndTags
         layout(
-            constraints.maxWidth,
-            height
+            width = constraints.maxWidth,
+            height = postItem.postHeight
         ) {
-            line.placeRelative(x = 0, y = lineY)
-            dot.placeRelative(
-                x = -dot.width / 2,
-                y = (day.height / 2) - dot.height / 2
-            )
-            day.placeRelative(x = dayX, y = 0)
-            images?.placeRelative(x = imagesX, y = 0)
-            delBtn?.placeRelative(
-                x = constraints.maxWidth - delBtn.width,
-                y = (images?.height ?: 0) / 2 - delBtn.height / 2
-            )
-            addBtn?.placeRelative(
-                x = constraints.maxWidth - addBtn.width,
-                y = (day.height / 2) - addBtn.height / 2
-            )
-            var x = imagesX
+            line.placeRelative(x = 0, y = postItem.lineX)
+            postItem.dot.placeRelative(x = postItem.dotX, y = postItem.dotY)
+            postItem.day.placeRelative(x = postItem.dayX, y = 0)
+            postItem.images?.placeRelative(x = postItem.imageX, y = postItem.imageY)
+            postItem.addBtn?.placeRelative(x = postItem.addBtnX, y = postItem.addBtnY)
+            postItem.delBtn?.placeRelative(x = postItem.delBtnX, y = postItem.delBtnY)
+
+            var x = postItem.imageX
             var isOver = false
-            tags.forEach {
-                if (x + it.width >= tagsListEndX) {
+            postItem.tags.forEach {
+                if (x + it.width >= postItem.tagsListEndX) {
                     isOver = true
                     return@forEach
                 }
-                it.placeRelative(x = x, y = tagsListY)
-                x += it.width + paddingTags
+                it.placeRelative(x = x, y = postItem.tagsY)
+                x += it.width + PostItem.paddingTags
             }
-            if (isOver) ellipse?.placeRelative(x = x + paddingTags, y = tagsListY)
-        }
-    }
-}
-
-/**
- * 일별 기록 리스트 item - grid 형태로 이미지 view
- * @use MonthlyScreen
- */
-@Composable
-fun GridPostItem(
-    date: LocalDate,
-    isFirstItem: Boolean = false,
-    isLastItem: Boolean = false,
-    modifier: Modifier = Modifier,
-    contentColor: Color = LocalContentColor.current,
-    post: PostUiModel?, // 해당 일의 Post 정보
-    onRemovePost: (PostUiModel) -> Unit
-) {
-    Layout(
-        modifier = modifier,
-        content = {
-            HarooVerticalDivider(
-                modifier = Modifier.layoutId("Line"),
-                dash = 0f
+            if (isOver) postItem.ellipse?.placeRelative(
+                x = x + PostItem.paddingTags, y = postItem.tagsY
             )
-            Canvas(modifier = Modifier.layoutId("Dot")) {
-                drawCircle(contentColor)
-            }
-            ColumnDayAndDate(
-                modifier = Modifier.layoutId("Day"),
-                date = date,
-                dayTextStyle = MaterialTheme.typography.subtitle1,
-                dateTextStyle = MaterialTheme.typography.body1
-            )
-            if (post != null) {
-                HarooGridImages(
-                    modifier = Modifier.layoutId("Images"),
-                    images = post.images,
-                    content = {
-                        HarooImage(
-                            shape = RectangleShape,
-                            imageType = ImageType.AsyncImage(image = it)
-                        )
-                    }
-                )
-                IconButton(
-                    modifier = Modifier
-                        .layoutId("DelBtn")
-                        .size(20.dp),
-                    onClick = { onRemovePost(post) }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "back"
-                    )
-                }
-                if (post.tags.isNotEmpty()) {
-                    post.tags.forEach { tag ->
-                        TagChip(
-                            modifier = Modifier.layoutId("Tag"),
-                            name = "#${tag.name}",
-                            onClick = {}
-                        )
-                    }
-                    TagChip(
-                        modifier = Modifier.layoutId("Ellipse"),
-                        name = "...",
-                        onClick = {}
-                    )
-                }
-                Text(
-                    modifier = Modifier.layoutId("Content"),
-                    text = post.content,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-            } else {
-                HarooButton(
-                    modifier = Modifier.layoutId("AddBtn"),
-                    onClick = { }
-                ) {
-                    Text(text = "추가")
-                }
-            }
-        },
-    ) { measureables, constraints ->
-        val dotSize = 15
-        val paddingLineAndDay = 20
-        val paddingDayAndImages = 23
-        val paddingImagesAndTags = 12
-        val paddingTags = 4
-        val paddingTagsAndContent = 16
-
-        val day = measureables.find { it.layoutId == "Day" }!!.measure(constraints)
-        val delBtn = measureables.find { it.layoutId == "DelBtn" }?.measure(constraints)
-        val addBtn = measureables.find { it.layoutId == "AddBtn" }?.measure(constraints)
-        val tags = measureables.filter { it.layoutId == "Tag" }.map { it.measure(constraints) }
-
-        val imageWidth = constraints.maxWidth - (paddingLineAndDay + day.width + paddingDayAndImages)
-        val images = measureables.find { it.layoutId == "Images" }?.measure(
-            constraints.copy(maxWidth = imageWidth)
-        )
-        val content = measureables.find { it.layoutId == "Content" }?.measure(
-            constraints.copy(maxWidth = images?.width ?: constraints.maxWidth)
-        )
-
-        val tagHeight = tags.firstOrNull()?.height ?: 0
-        val dayX = paddingLineAndDay
-        val lineY = if (isFirstItem) day.height / 2 else 0
-        val imagesX = dayX + day.width + paddingDayAndImages
-        val imagesY = day.height
-        val tagsListEndX = imagesX + (images?.width ?: 0)
-        val tagsListY = imagesY + (images?.height ?: 0) + paddingImagesAndTags
-        val contentY = tagsListY + tagHeight + paddingTagsAndContent
-
-        var height = day.height + 26.dp.roundToPx()
-        if (post != null) height += contentY + (content?.measuredHeight ?: 0)
-        val lineHeight = if (isFirstItem) height - day.height / 2 else if (isLastItem) day.height / 2 else height
-        val line = measureables.find { it.layoutId == "Line" }?.measure(
-            Constraints(minHeight = lineHeight, maxHeight = lineHeight)
-        )
-        val dot = measureables.find { it.layoutId == "Dot" }!!.measure(
-            Constraints(
-                minWidth = dotSize, maxWidth = dotSize,
-                minHeight = dotSize, maxHeight = dotSize
-            )
-        )
-        val ellipse = measureables.find { it.layoutId == "Ellipse" }?.measure(constraints)
-
-        layout(
-            constraints.maxWidth,
-            height
-        ) {
-            line?.placeRelative(x = 0, y = lineY)
-            dot.placeRelative(
-                x = -dot.width / 2,
-                y = (day.height / 2) - dot.height / 2
-            )
-            day.placeRelative(x = dayX, y = 0)
-            images?.placeRelative(
-                x = imagesX, y = imagesY
-            )
-            delBtn?.placeRelative(
-                x = constraints.maxWidth - delBtn.width,
-                y = day.height / 2 - delBtn.height / 2
-            )
-            addBtn?.placeRelative(
-                x = constraints.maxWidth - addBtn.width,
-                y = (day.height / 2) - addBtn.height / 2
-            )
-            var x = imagesX
-            var isOver = false
-            tags.forEach {
-                if (x + it.width >= tagsListEndX) {
-                    isOver = true
-                    return@forEach
-                }
-                it.placeRelative(x = x, y = tagsListY)
-                x += it.width + paddingTags
-            }
-            if (isOver) ellipse?.placeRelative(x = x + paddingTags, y = tagsListY)
-            content?.placeRelative(x = imagesX, y = contentY)
+            postItem.placeExtraComponent(this)
         }
     }
 }

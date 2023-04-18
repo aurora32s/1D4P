@@ -8,6 +8,7 @@ activityCompose = '1.6.1'
 coil = '2.2.2'
 composeUi = '1.4.0'
 compose-kotlin-compiler = '1.4.0'
+compose-navigation = '2.5.3'
 coroutine = '1.6.4'
 espresso = '3.5.1'
 hamcrest = "1.1"
@@ -37,6 +38,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 androidx-activitiy-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
 androidx-compose-ui-util = { group = "androidx.compose.ui", name = "ui-util", version.ref = "composeUi" }
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeUi" }
 androidx-compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "composeUi" }
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeUi" }
@@ -88,6 +90,7 @@ compose = [
     'androidx-activitiy-compose',
     'androidx-lifecycle-runtime-compose',
     'hilt-navigation-compose',
+    'androidx-compose-navigation',
     'androidx-compose-ui-util',
     'androidx-compose-material',
     'androidx-compose-animation',

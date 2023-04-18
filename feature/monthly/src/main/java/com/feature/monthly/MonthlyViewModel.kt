@@ -24,7 +24,10 @@ class MonthlyViewModel @Inject constructor(
 
     internal val date = YearMonthArg(savedStateHandle)
 
-    init {
+    private val _posts = MutableStateFlow<List<PostUiModel>>(emptyList())
+    val posts: StateFlow<List<PostUiModel>> = _posts.asStateFlow()
+
+    fun getPost() {
         viewModelScope.launch {
             val result = getPostByMonthUseCase(
                 date.currentYearMonth.year,
@@ -33,9 +36,6 @@ class MonthlyViewModel @Inject constructor(
             _posts.value = result
         }
     }
-
-    private val _posts = MutableStateFlow<List<PostUiModel>>(emptyList())
-    val posts: StateFlow<List<PostUiModel>> = _posts.asStateFlow()
 
     fun removePost(postUiModel: PostUiModel) {
         viewModelScope.launch {

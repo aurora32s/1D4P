@@ -34,6 +34,7 @@ android {
 dependencies {
     implementation(project(":feature:post"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:monthly"))
     implementation(project(":core:designsystem"))
 
     testImplementation(libs.junit4)

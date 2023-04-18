@@ -72,11 +72,6 @@ fun PostScreen(
     postStateHolder.CollectPressFlag()
 
     HarooBottomDrawer(
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding()
-            .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground)),
         drawerState = postStateHolder.bottomDrawerState,
         drawerContent = {
             DrawerGalleryContainer(

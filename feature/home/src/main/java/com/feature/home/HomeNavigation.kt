@@ -5,7 +5,7 @@ import androidx.navigation.compose.composable
 import java.time.LocalDate
 import java.time.YearMonth
 
-private const val HOME_SCREEN_ROUTE = "home"
+const val HOME_SCREEN_ROUTE = "home"
 
 fun NavGraphBuilder.homeScreen(
     onDailyClick: (LocalDate) -> Unit,

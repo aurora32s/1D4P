@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.view.WindowCompat
 import com.core.designsystem.theme.AllForMemoryTheme
-import com.feature.home.HomeScreen
+import com.haman.allformemory.ui.HarooApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                         requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                     }
                 }
-                HomeScreen()
+                HarooApp()
             }
         }
     }

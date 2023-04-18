@@ -35,7 +35,7 @@ fun NavGraphBuilder.monthlyScreen(
     onDailyClick: (LocalDate) -> Unit
 ) {
     composable(
-        route = "$MONTHLY_SCREEN_ROUTE/$YEAR_ARG/$MONTH_ARG",
+        route = "$MONTHLY_SCREEN_ROUTE/{${YEAR_ARG}}/{${MONTH_ARG}}",
         arguments = listOf(
             navArgument(YEAR_ARG) { type = NavType.IntType },
             navArgument(MONTH_ARG) { type = NavType.IntType }

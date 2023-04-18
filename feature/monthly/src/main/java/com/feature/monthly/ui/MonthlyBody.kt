@@ -26,7 +26,8 @@ fun MonthlyBody(
     date: YearMonth,
     dateCount: Int,
     onChangeListType: () -> Unit,
-    onRemovePost: (PostUiModel) -> Unit
+    onRemovePost: (PostUiModel) -> Unit,
+    onClickPost: (LocalDate) -> Unit
 ) {
     HarooSurface(
         modifier = Modifier.fillMaxWidth(),
@@ -53,7 +54,8 @@ fun MonthlyBody(
                         date = day,
                         post = groupedPosts[day],
                         postItemType = if (listType) PostItemType.GRID else PostItemType.LINEAR,
-                        onRemovePost = onRemovePost
+                        onRemovePost = onRemovePost,
+                        onClickPost = onClickPost
                     )
                 }
             }
@@ -68,7 +70,8 @@ fun MonthlyPostItem(
     date: LocalDate,
     post: PostUiModel?,
     postItemType: PostItemType,
-    onRemovePost: (PostUiModel) -> Unit
+    onRemovePost: (PostUiModel) -> Unit,
+    onClickPost: (LocalDate) -> Unit
 ) {
     PostItemByType(
         date = date,
@@ -76,6 +79,7 @@ fun MonthlyPostItem(
         isLastItem = isLastItem,
         post = post,
         postItemType = postItemType,
-        onRemovePost = onRemovePost
+        onRemovePost = onRemovePost,
+        onClickPost = onClickPost
     )
 }

@@ -15,7 +15,7 @@ import java.time.YearMonth
 
 @Composable
 fun rememberMonthlyScreenState(
-    year: Int, month: Int,
+    yearMonth: YearMonth,
     monthlyViewModel: MonthlyViewModel,
     toolbarMinHeight: Dp = 60.dp,
     toolbarMaxHeight: Dp = 150.dp,
@@ -32,9 +32,9 @@ fun rememberMonthlyScreenState(
         derivedStateOf { posts.value.associateBy { it.date } }
     }
 
-    return remember(year, month) {
+    return remember(yearMonth) {
         MonthlyScreenStateHolder(
-            date = YearMonth.of(year, month),
+            date = yearMonth,
             posts = groupedPost,
             toolbarState = toolbarState,
             lazyListState = lazyListState,

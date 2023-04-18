@@ -94,7 +94,8 @@ fun BasePostItem(
     date: LocalDate,
     contentColor: Color,
     imageContainer: @Composable (Modifier, List<ImageUiModel>) -> Unit,
-    onRemovePost: (PostUiModel) -> Unit
+    onRemovePost: (PostUiModel) -> Unit,
+    onClickPost: (LocalDate) -> Unit
 ) {
     HarooVerticalDivider(modifier = Modifier.layoutId("Line"), dash = 0f)
     Canvas(modifier = Modifier.layoutId("Dot")) { drawCircle(contentColor) }
@@ -105,7 +106,11 @@ fun BasePostItem(
         dateTextStyle = MaterialTheme.typography.body1
     )
     if (post != null) {
-        imageContainer(Modifier.layoutId("Images"), post.images)
+        imageContainer(
+            Modifier
+                .layoutId("Images")
+                .noRippleClickable { onClickPost(date) }, post.images
+        )
         IconButton(modifier = Modifier
             .layoutId("DelBtn")
             .size(20.dp), onClick = { onRemovePost(post) }
@@ -175,7 +180,8 @@ fun PostItemByType(
     contentColor: Color = LocalContentColor.current,
     post: PostUiModel?, // 해당 일의 Post 정보
     postItemType: PostItemType,
-    onRemovePost: (PostUiModel) -> Unit
+    onRemovePost: (PostUiModel) -> Unit,
+    onClickPost: (LocalDate) -> Unit
 ) {
     PostItem(
         modifier = modifier,
@@ -195,7 +201,8 @@ fun PostItemByType(
                         images = images
                     )
                 },
-                onRemovePost = onRemovePost
+                onRemovePost = onRemovePost,
+                onClickPost = onClickPost
             )
         }
     )

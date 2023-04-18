@@ -81,11 +81,6 @@ fun HomeScreen(
     onRemovePost: (PostUiModel) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding()
-            .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground)),
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState
     ) {

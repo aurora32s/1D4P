@@ -140,7 +140,7 @@ fun BasePostItem(
     } else {
         HarooButton(
             modifier = Modifier.layoutId("AddBtn"),
-            onClick = { }
+            onClick = { onClickPost(date) }
         ) { Text(text = "추가") }
     }
 }

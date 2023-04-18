@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import com.core.designsystem.components.HarooVerticalDivider
 import com.core.designsystem.components.calendar.Calendar
+import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
 import com.core.ui.date.DateWithImage
@@ -27,6 +28,7 @@ fun MonthlyHeader(
     modifier: Modifier = Modifier,
     posts: Map<LocalDate, PostUiModel>,
     date: YearMonth,
+    toPostScreen: (LocalDate) -> Unit,
     progressProvider: () -> Float
 ) {
     Layout(
@@ -35,6 +37,7 @@ fun MonthlyHeader(
             MonthlyHeaderContent(
                 date = date,
                 posts = posts,
+                toPostScreen = toPostScreen,
                 progressProvider = progressProvider
             )
         }
@@ -69,6 +72,7 @@ fun MonthlyHeaderContent(
     date: YearMonth,
     posts: Map<LocalDate, PostUiModel>,
     monthAndNamePadding: Dp = Dimens.monthAndNameDefaultPadding,
+    toPostScreen: (LocalDate) -> Unit,
     progressProvider: () -> Float
 ) {
     RowMonthAndName(
@@ -81,6 +85,7 @@ fun MonthlyHeaderContent(
         modifier = Modifier.layoutId("Calendar"),
         posts = posts,
         date = date,
+        onClickPost = toPostScreen,
         progressProvider = progressProvider
     )
     MonthlyInfosContainer(
@@ -98,6 +103,7 @@ fun MonthlyCalendar(
     date: YearMonth,
     verticalSpace: Dp = Dimens.monthlyCalendarVerticalSpace,
     horizontalSpace: Dp = Dimens.monthlyCalendarHorizontalSpace,
+    onClickPost: (LocalDate) -> Unit,
     progressProvider: () -> Float
 ) {
     Calendar(
@@ -112,7 +118,9 @@ fun MonthlyCalendar(
             },
         dayContent = {
             DateWithImage(
-                modifier = Modifier.padding(horizontal = horizontalSpace),
+                modifier = Modifier
+                    .padding(horizontal = horizontalSpace)
+                    .noRippleClickable { onClickPost(it.date) },
                 state = it,
                 image = posts[it.date]?.images?.firstOrNull()
             )

@@ -42,7 +42,9 @@ import java.time.YearMonth
 private val componentVerticalSpacer = 16.dp
 
 @Composable
-fun HomeScreen(
+fun HomeRoute(
+    onDailyClick: (LocalDate) -> Unit,
+    onMonthlyClick: (YearMonth) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
     configuration: Configuration = LocalConfiguration.current
 ) {
@@ -64,7 +66,8 @@ fun HomeScreen(
     HomeScreen(
         postPagingItems = postPagingItems,
         scrollState = scrollState,
-        toPostScreen = {},
+        toPostScreen = onDailyClick,
+        toMonthlyScreen = onMonthlyClick,
         onRemovePost = homeViewModel::removePost
     )
 }
@@ -74,6 +77,7 @@ fun HomeScreen(
     postPagingItems: LazyPagingItems<PostsUiModel>,
     scrollState: LazyListState,
     toPostScreen: (LocalDate) -> Unit,
+    toMonthlyScreen: (YearMonth) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
     LazyColumn(
@@ -93,7 +97,8 @@ fun HomeScreen(
                 MonthlyContainer(
                     date = postsUiModel.date,
                     posts = postsUiModel.posts,
-                    onClickPost = {},
+                    onClickPost = toPostScreen,
+                    onClickMonth = toMonthlyScreen,
                     onRemovePost = onRemovePost
                 )
             }
@@ -110,6 +115,7 @@ fun MonthlyContainer(
     modifier: Modifier = Modifier,
     posts: List<PostUiModel>,
     onClickPost: (LocalDate) -> Unit,
+    onClickMonth: (YearMonth) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
     val groupedPosts = remember(posts) { posts.associateBy { it.date } }
@@ -130,7 +136,7 @@ fun MonthlyContainer(
                 onRemovePost = onRemovePost
             )
         }
-        MonthlyDivider(date = date, onClickMonthBtn = {})
+        MonthlyDivider(date = date, onClickMonthBtn = onClickMonth)
     }
 }
 

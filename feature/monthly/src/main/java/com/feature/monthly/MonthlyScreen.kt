@@ -28,10 +28,7 @@ fun MonthlyRoute(
     MonthlyScreen(
         onBackPressed = onBackPressed,
         onDailyClick = onDailyClick,
-        monthlyScreenStateHolder = rememberMonthlyScreenState(
-            monthlyViewModel.date.currentYearMonth,
-            monthlyViewModel = monthlyViewModel
-        )
+        monthlyScreenStateHolder = rememberMonthlyScreenState(monthlyViewModel = monthlyViewModel)
     )
 }
 

@@ -20,7 +20,7 @@ internal class YearMonthArg(savedStateHandle: SavedStateHandle) {
         val year: Int? = savedStateHandle[YEAR_ARG]
         val month: Int? = savedStateHandle[MONTH_ARG]
         currentYearMonth = if (year == null || month == null)
-            YearMonth.of(year!!, month!!) else YearMonth.now()
+            YearMonth.now() else YearMonth.of(year, month)
     }
 }
 

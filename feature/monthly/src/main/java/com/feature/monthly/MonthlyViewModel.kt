@@ -1,5 +1,6 @@
 package com.feature.monthly
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.domain.post.GetPostByMonthUseCase
@@ -11,23 +12,29 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
 class MonthlyViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getPostByMonthUseCase: GetPostByMonthUseCase,
     private val removePostUseCase: RemovePostUseCase
 ) : ViewModel() {
 
-    private val _posts = MutableStateFlow<List<PostUiModel>>(emptyList())
-    val posts: StateFlow<List<PostUiModel>> = _posts.asStateFlow()
+    internal val date = YearMonthArg(savedStateHandle)
 
-    fun init(year: Int, month: Int) {
+    init {
         viewModelScope.launch {
-            _posts.value = getPostByMonthUseCase(year, month).map { it.toPostUiModel() }
-            println(_posts.value)
+            _posts.value = getPostByMonthUseCase(
+                date.currentYearMonth.year,
+                date.currentYearMonth.monthValue
+            ).map { it.toPostUiModel() }
         }
     }
+
+    private val _posts = MutableStateFlow<List<PostUiModel>>(emptyList())
+    val posts: StateFlow<List<PostUiModel>> = _posts.asStateFlow()
 
     fun removePost(postUiModel: PostUiModel) {
         viewModelScope.launch {

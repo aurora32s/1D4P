@@ -17,18 +17,19 @@ import com.core.ui.toolbar.CollapsingToolbar
 import com.feature.monthly.ui.Dimens
 import com.feature.monthly.ui.MonthlyBody
 import com.feature.monthly.ui.MonthlyHeader
+import java.time.LocalDate
 
 @Composable
-fun MonthlyScreen(
-    year: Int, month: Int,
+fun MonthlyRoute(
+    onBackPressed: () -> Unit,
+    onDailyClick: (LocalDate) -> Unit,
     monthlyViewModel: MonthlyViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(key1 = Unit) { monthlyViewModel.init(year, month) }
-
     MonthlyScreen(
+        onBackPressed = onBackPressed,
+        onDailyClick = onDailyClick,
         monthlyScreenStateHolder = rememberMonthlyScreenState(
-            year = year,
-            month = month,
+            monthlyViewModel.date.currentYearMonth,
             monthlyViewModel = monthlyViewModel
         )
     )
@@ -36,6 +37,8 @@ fun MonthlyScreen(
 
 @Composable
 fun MonthlyScreen(
+    onBackPressed: () -> Unit,
+    onDailyClick: (LocalDate) -> Unit,
     monthlyScreenStateHolder: MonthlyScreenStateHolder
 ) {
     CollapsingToolbar(
@@ -51,11 +54,12 @@ fun MonthlyScreen(
         CompositionLocalProvider(
             LocalContentColor provides HarooTheme.colors.text
         ) {
-            HarooHeader(title = getString(id = R.string.app_name), onBackPressed = {})
+            HarooHeader(title = getString(id = R.string.app_name), onBackPressed = onBackPressed)
             MonthlyHeader(
                 modifier = Modifier.padding(bottom = Dimens.spaceBetweenHeaderAndBody),
                 date = monthlyScreenStateHolder.date,
                 posts = monthlyScreenStateHolder.posts.value,
+                toPostScreen = onDailyClick,
                 progressProvider = { monthlyScreenStateHolder.toolbarState.progress }
             )
             MonthlyBody(
@@ -65,7 +69,8 @@ fun MonthlyScreen(
                 date = monthlyScreenStateHolder.date,
                 dateCount = monthlyScreenStateHolder.dateCount,
                 onChangeListType = monthlyScreenStateHolder::toggleListType,
-                onRemovePost = monthlyScreenStateHolder::removePost
+                onRemovePost = monthlyScreenStateHolder::removePost,
+                onClickPost = onDailyClick
             )
         }
     }

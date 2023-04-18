@@ -26,10 +26,11 @@ class MonthlyViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _posts.value = getPostByMonthUseCase(
+            val result = getPostByMonthUseCase(
                 date.currentYearMonth.year,
                 date.currentYearMonth.monthValue
             ).map { it.toPostUiModel() }
+            _posts.value = result
         }
     }
 

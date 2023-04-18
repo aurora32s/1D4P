@@ -1,5 +1,6 @@
 package com.feature.post
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -19,10 +20,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     getImagesUseCase: GetImagesUseCase,
     private val addPostUseCase: AddPostUseCase,
     private val getPostByDateUseCase: GetPostByDateUseCase
 ) : ViewModel() {
+    internal val date = DateArg(savedStateHandle)
+
     private val _postUiEvent = MutableStateFlow<PostUiEvent>(PostUiEvent.Initialized)
     val postUiEvent: StateFlow<PostUiEvent> = _postUiEvent.asStateFlow()
 
@@ -50,9 +54,13 @@ class PostViewModel @Inject constructor(
     /**
      * 기존 Post 요청
      */
-    fun getPost(year: Int, month: Int, day: Int) {
+    init {
+        getPost()
+    }
+
+    fun getPost() {
         viewModelScope.launch {
-            getPostByDateUseCase(year, month, day)?.let { post ->
+            getPostByDateUseCase(date.year, date.month, date.day)?.let { post ->
                 _content.value = post.content ?: ""
                 _selectedImages.value = post.images.map { it.toImageUiModel() }
                 _tags.value = post.tags.map { it.toTagUiModel() }
@@ -66,7 +74,7 @@ class PostViewModel @Inject constructor(
     /**
      * 신규 post 저장
      */
-    fun savePost(year: Int, month: Int, day: Int) {
+    fun savePost() {
         // 유효성 검사 1. 내용
         if (_content.value.isBlank()) return
         // 유효성 검사 2. 이미지 1개 이상
@@ -76,7 +84,7 @@ class PostViewModel @Inject constructor(
             val newPostId = addPostUseCase(
                 Post(
                     id = _postId.value,
-                    year = year, month = month, day = day,
+                    year = date.year, month = date.month, day = date.day,
                     content = _content.value,
                     images = _selectedImages.value.map { it.toImage() },
                     tags = _tags.value.map { it.toTag() }

@@ -18,7 +18,6 @@ import java.time.LocalDate
 
 @Composable
 fun rememberPostScreenState(
-    year: Int, month: Int, day: Int,
     postViewModel: PostViewModel,
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
@@ -34,9 +33,9 @@ fun rememberPostScreenState(
     val postId = postViewModel.postId.collectAsState()
     val isEditMode = postViewModel.isEditMode.collectAsState()
 
-    return remember(year, month, day, postViewModel, bottomDrawerState) {
+    return remember(postViewModel, bottomDrawerState) {
         PostScreenStateHolder(
-            year, month, day,
+            date = postViewModel.date.currentDate,
             postViewModel = postViewModel,
             images = images,
             _selectedImages = selectedImages,
@@ -55,9 +54,7 @@ fun rememberPostScreenState(
 }
 
 class PostScreenStateHolder(
-    private val year: Int,
-    private val month: Int,
-    private val day: Int,
+    val date: LocalDate,
     private val postViewModel: PostViewModel,
     val images: LazyPagingItems<ImageUiModel>,
     private val _selectedImages: State<List<ImageUiModel>>,
@@ -80,8 +77,6 @@ class PostScreenStateHolder(
         get() = _content.value
     val showTagTextFieldFlag: Boolean
         get() = _showTagTextFieldFlag.value
-    val date: LocalDate
-        get() = LocalDate.of(year, month, day)
 
     val isBottomDrawer: State<Boolean>
         get() = bottomDrawerState.isShow
@@ -174,7 +169,7 @@ class PostScreenStateHolder(
         when (postType) {
             PostType.SHOW -> postViewModel.toggleEditMode()
             PostType.NEW,
-            PostType.EDIT -> postViewModel.savePost(year, month, day)
+            PostType.EDIT -> postViewModel.savePost()
         }
     }
 
@@ -184,7 +179,7 @@ class PostScreenStateHolder(
     fun onBackPressed() {
         when (postType) {
             PostType.EDIT -> {
-                postViewModel.getPost(year, month, day)
+                postViewModel.getPost()
                 postViewModel.toggleEditMode()
             }
             PostType.NEW,

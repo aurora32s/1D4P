@@ -36,17 +36,19 @@ import com.feature.post.ui.Dimens
 import java.time.LocalDate
 
 @Composable
-fun PostScreen(
-    year: Int, month: Int, day: Int,
+fun PostRoute(
+    onBackPressed: () -> Unit,
     postViewModel: PostViewModel = hiltViewModel()
 ) {
-    val postStateHolder =
-        rememberPostScreenState(year, month, day, postViewModel = postViewModel, onBackPressed = {})
+    val postStateHolder = rememberPostScreenState(
+        postViewModel = postViewModel,
+        onBackPressed = onBackPressed
+    )
 
     LaunchedEffect(Unit) {
         postViewModel.postUiEvent.collect {
             when (it) {
-                PostUiEvent.Initialized -> postViewModel.getPost(year, month, day)
+                PostUiEvent.Initialized -> {}
                 PostUiEvent.EndLoadInitDate -> {}
                 PostUiEvent.FailSaveOrEditPost -> {}
                 PostUiEvent.SuccessSaveOrEditPost -> {}

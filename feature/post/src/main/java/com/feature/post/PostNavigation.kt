@@ -40,7 +40,7 @@ fun NavGraphBuilder.postScreen(
     onBackPressed: () -> Unit
 ) {
     composable(
-        route = "$POST_SCREEN_ROUTE/$YEAR_ARG/$MONTH_ARG/${DAY_ARG}",
+        route = "$POST_SCREEN_ROUTE/{$YEAR_ARG}/{$MONTH_ARG}/{${DAY_ARG}}",
         arguments = listOf(
             navArgument(YEAR_ARG) { type = NavType.IntType },
             navArgument(MONTH_ARG) { type = NavType.IntType },

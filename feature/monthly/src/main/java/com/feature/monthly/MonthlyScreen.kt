@@ -1,13 +1,10 @@
 package com.feature.monthly
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.designsystem.R
 import com.core.designsystem.components.HarooHeader
@@ -39,12 +36,6 @@ fun MonthlyScreen(
     monthlyScreenStateHolder: MonthlyScreenStateHolder
 ) {
     CollapsingToolbar(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding()
-            .background(Brush.linearGradient(HarooTheme.colors.interactiveBackground)),
         listState = monthlyScreenStateHolder.lazyListState,
         toolbarState = monthlyScreenStateHolder.toolbarState
     ) {

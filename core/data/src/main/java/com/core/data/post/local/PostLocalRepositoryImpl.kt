@@ -5,7 +5,14 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.core.data.post.PostRepository
 import com.core.database.dao.PostDao
-import com.core.model.data.*
+import com.core.model.data.ImageSource
+import com.core.model.data.PostSource
+import com.core.model.data.PostSources
+import com.core.model.data.TagSource
+import com.core.model.data.toImageEntity
+import com.core.model.data.toPostEntity
+import com.core.model.data.toSource
+import com.core.model.data.toTagEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -95,10 +102,7 @@ class PostLocalRepositoryImpl @Inject constructor(
             }.awaitAll().filterNotNull()
         }
 
-    override fun getPostPaging(
-        year: Int,
-        month: Int
-    ): Flow<PagingData<PostSources>> {
+    override fun getPostPaging(): Flow<PagingData<PostSources>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PostLocalPagingSource.PAGING_SIZE

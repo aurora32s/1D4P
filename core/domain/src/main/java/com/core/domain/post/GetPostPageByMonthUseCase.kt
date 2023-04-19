@@ -15,7 +15,7 @@ import javax.inject.Inject
 class GetPostPageByMonthUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    operator fun invoke(year: Int, month: Int): Flow<PagingData<Posts>> {
-        return postRepository.getPostPaging(year, month).map { it.map { post -> post.toPosts() } }
+    operator fun invoke(): Flow<PagingData<Posts>> {
+        return postRepository.getPostPaging().map { it.map { post -> post.toPosts() } }
     }
 }

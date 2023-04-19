@@ -2,7 +2,6 @@ package com.feature.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -16,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,7 +27,6 @@ import com.core.designsystem.components.HarooDashLine
 import com.core.designsystem.components.HarooDivider
 import com.core.designsystem.components.calendar.Calendar
 import com.core.designsystem.modifiers.pagerHingeTransition
-import com.core.designsystem.theme.HarooTheme
 import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
 import com.core.model.feature.PostsUiModel
@@ -54,10 +51,11 @@ fun HomeRoute(
         initialFirstVisibleItemScrollOffset = -configuration.screenHeightDp / 3
     )
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = Unit){
         homeViewModel.homeUiEvent.collect {
             when (it) {
                 HomeUiEvent.Initialized -> {}
+                HomeUiEvent.Loading -> {}
                 is HomeUiEvent.Success.RemovePost -> postPagingItems.refresh()
             }
         }

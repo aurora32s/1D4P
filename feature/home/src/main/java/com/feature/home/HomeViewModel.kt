@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,14 +21,10 @@ class HomeViewModel @Inject constructor(
     getPostPageByMonthUseCase: GetPostPageByMonthUseCase,
     private val removePostUseCase: RemovePostUseCase
 ) : ViewModel() {
-
     private val _homeUiEvent = MutableStateFlow<HomeUiEvent>(HomeUiEvent.Initialized)
     val homeUiEvent: StateFlow<HomeUiEvent> = _homeUiEvent.asStateFlow()
 
-    private val initDay = YearMonth.now()
-    val posts = getPostPageByMonthUseCase(
-        initDay.year, initDay.monthValue
-    ).map { it.map { post -> post.toPostsUiModel() } }
+    val posts = getPostPageByMonthUseCase().map { it.map { post -> post.toPostsUiModel() } }
         .cachedIn(viewModelScope)
 
     fun removePost(postUiModel: PostUiModel) {

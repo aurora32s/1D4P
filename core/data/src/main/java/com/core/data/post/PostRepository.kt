@@ -25,7 +25,7 @@ interface PostRepository {
     suspend fun getPosts(year: Int, month: Int): List<PostSource>
 
     // 특정 년도/월 post paging 요청
-    fun getPostPaging(year: Int, month: Int): Flow<PagingData<PostSources>>
+    fun getPostPaging(): Flow<PagingData<PostSources>>
 
     // 특정 날짜의 게시글 제거
     suspend fun removePost(postId: Long)

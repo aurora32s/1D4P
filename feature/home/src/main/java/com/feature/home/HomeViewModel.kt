@@ -34,6 +34,7 @@ class HomeViewModel @Inject constructor(
 
     fun removePost(postUiModel: PostUiModel) {
         viewModelScope.launch {
+            _homeUiEvent.value = HomeUiEvent.Loading
             postUiModel.id?.let {
                 removePostUseCase(it)
                 _homeUiEvent.value = HomeUiEvent.Success.RemovePost
@@ -44,8 +45,9 @@ class HomeViewModel @Inject constructor(
 
 sealed interface HomeUiEvent {
     object Initialized : HomeUiEvent
+    object Loading : HomeUiEvent
     sealed interface Success : HomeUiEvent {
         // Post 제거 성공 event
-        object RemovePost: Success
+        object RemovePost : Success
     }
 }

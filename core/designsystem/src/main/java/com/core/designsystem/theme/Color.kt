@@ -9,3 +9,4 @@ val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 
 val Dim = Color(0x80000000)
+val SnackBarBackground = Color(0xED000000)

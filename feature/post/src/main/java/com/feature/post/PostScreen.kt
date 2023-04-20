@@ -1,10 +1,21 @@
 package com.feature.post
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
@@ -13,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +41,7 @@ import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
+import com.core.ui.manager.SnackbarManager
 import com.core.ui.tag.TagContainer
 import com.feature.post.ui.Dimens
 import java.time.LocalDate
@@ -38,20 +49,18 @@ import java.time.LocalDate
 @Composable
 fun PostRoute(
     onBackPressed: () -> Unit,
-    postViewModel: PostViewModel = hiltViewModel()
+    postViewModel: PostViewModel = hiltViewModel(),
+    snackbarManager: SnackbarManager = SnackbarManager
 ) {
     val postStateHolder = rememberPostScreenState(
         postViewModel = postViewModel,
         onBackPressed = onBackPressed
     )
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = Unit) {
         postViewModel.postUiEvent.collect {
             when (it) {
-                PostUiEvent.Initialized -> {}
-                PostUiEvent.EndLoadInitDate -> {}
-                PostUiEvent.FailSaveOrEditPost -> {}
-                PostUiEvent.SuccessSaveOrEditPost -> {}
+                is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
             }
         }
     }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 class RemovePostUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(postId: Long) {
-        postRepository.removePost(postId)
+    suspend operator fun invoke(postId: Long): Result<Unit> {
+        return postRepository.removePost(postId)
     }
 }

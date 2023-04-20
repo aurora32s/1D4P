@@ -128,7 +128,13 @@ class PostLocalRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun removePost(postId: Long) = coroutineScope {
-        postDao.deletePost(postId)
-    }
+    override suspend fun removePost(postId: Long): Result<Unit> =
+        withContext(ioDispatcher) {
+            try {
+                postDao.deletePost(postId)
+                Result.success(Unit)
+            } catch (exception: Exception) {
+                Result.failure(exception)
+            }
+        }
 }

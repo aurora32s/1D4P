@@ -22,7 +22,7 @@ interface PostRepository {
     suspend fun getPost(year: Int, month: Int, day: Int): Result<PostSource?>
 
     // 특정 년도/월 post 요창
-    suspend fun getPosts(year: Int, month: Int): List<PostSource>
+    suspend fun getPosts(year: Int, month: Int): Result<List<PostSource>>
 
     // 특정 년도/월 post paging 요청
     fun getPostPaging(): Flow<PagingData<PostSources>>

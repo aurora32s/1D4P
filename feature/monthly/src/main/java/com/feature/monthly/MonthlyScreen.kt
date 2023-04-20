@@ -11,6 +11,7 @@ import com.core.designsystem.R
 import com.core.designsystem.components.HarooHeader
 import com.core.designsystem.theme.HarooTheme
 import com.core.designsystem.util.getString
+import com.core.ui.manager.SnackbarManager
 import com.core.ui.toolbar.CollapsingToolbar
 import com.feature.monthly.ui.Dimens
 import com.feature.monthly.ui.MonthlyBody
@@ -21,10 +22,22 @@ import java.time.LocalDate
 fun MonthlyRoute(
     onBackPressed: () -> Unit,
     onDailyClick: (LocalDate) -> Unit,
-    monthlyViewModel: MonthlyViewModel = hiltViewModel()
+    monthlyViewModel: MonthlyViewModel = hiltViewModel(),
+    snackBarManager: SnackbarManager = SnackbarManager
 ) {
     LaunchedEffect(key1 = Unit) {
         monthlyViewModel.getPost()
+        monthlyViewModel.monthlyUiEvent.collect {
+            when (it) {
+                is MonthlyUiEvent.Fail.GetPost -> {
+                    snackBarManager.showMessage(it.messageId)
+                    onBackPressed()
+                }
+
+                is MonthlyUiEvent.Fail.RemovePost -> snackBarManager.showMessage(it.messageId)
+                is MonthlyUiEvent.Success.RemovePost -> snackBarManager.showMessage(it.messageId)
+            }
+        }
     }
 
     MonthlyScreen(

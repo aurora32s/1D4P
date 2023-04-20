@@ -12,7 +12,7 @@ data class Message(val id: Long, @StringRes val messageId: Int)
 /**
  * Class responsible for managing Snackbar messages to show on the screen
  */
-class SnackbarManager {
+object SnackbarManager {
     private val _messages = MutableStateFlow<List<Message>>(emptyList())
     val messages: StateFlow<List<Message>> = _messages.asStateFlow()
 

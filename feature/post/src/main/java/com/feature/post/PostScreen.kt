@@ -67,9 +67,12 @@ fun PostRoute(
                 is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Fail.GetPost -> {
-                    onBackPressed()
                     snackbarManager.showMessage(it.messageId)
+                    onBackPressed()
                 }
+
+                is PostUiEvent.Fail.RemovePost -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Success.RemovePost -> snackbarManager.showMessage(it.messageId)
             }
         }
     }

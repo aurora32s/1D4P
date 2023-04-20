@@ -32,6 +32,7 @@ import com.core.model.feature.PostUiModel
 import com.core.model.feature.PostsUiModel
 import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
+import com.core.ui.manager.SnackbarManager
 import com.core.ui.post.SimplePostItem
 import java.time.LocalDate
 import java.time.YearMonth
@@ -43,7 +44,8 @@ fun HomeRoute(
     onDailyClick: (LocalDate) -> Unit,
     onMonthlyClick: (YearMonth) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    configuration: Configuration = LocalConfiguration.current
+    configuration: Configuration = LocalConfiguration.current,
+    snackBarManager: SnackbarManager = SnackbarManager
 ) {
     val postPagingItems = homeViewModel.posts.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState(
@@ -51,12 +53,11 @@ fun HomeRoute(
         initialFirstVisibleItemScrollOffset = -configuration.screenHeightDp / 3
     )
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         homeViewModel.homeUiEvent.collect {
             when (it) {
-                HomeUiEvent.Initialized -> {}
-                HomeUiEvent.Loading -> {}
-                is HomeUiEvent.Success.RemovePost -> postPagingItems.refresh()
+                is HomeUiEvent.Fail.RemovePost -> snackBarManager.showMessage(it.messageId)
+                is HomeUiEvent.Success.RemovePost -> snackBarManager.showMessage(it.messageId)
             }
         }
     }

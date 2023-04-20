@@ -95,10 +95,10 @@ class PostLocalRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPosts(year: Int, month: Int): List<PostSource> =
-        coroutineScope {
+    override suspend fun getPosts(year: Int, month: Int): Result<List<PostSource>> = withContext(ioDispatcher) {
+        try {
             val posts = postDao.selectPostByMonth(year, month)
-            posts.map { post ->
+            Result.success(posts.map { post ->
                 async {
                     post.id?.let {
                         val images = async { postDao.selectImagesByPost(it) }
@@ -114,8 +114,11 @@ class PostLocalRepositoryImpl @Inject constructor(
                         )
                     }
                 }
-            }.awaitAll().filterNotNull()
+            }.awaitAll().filterNotNull())
+        } catch (exception: Exception) {
+            Result.failure(exception)
         }
+    }
 
     override fun getPostPaging(): Flow<PagingData<PostSources>> {
         return Pager(

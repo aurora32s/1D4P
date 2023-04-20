@@ -12,7 +12,10 @@ import javax.inject.Inject
 class GetPostByMonthUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(year: Int, month: Int): List<Post> {
-        return postRepository.getPosts(year, month).map { posts -> posts.toPost() }
+    suspend operator fun invoke(year: Int, month: Int): Result<List<Post>> = try {
+        val result = postRepository.getPosts(year, month).getOrThrow()
+        Result.success(result.map { it.toPost() })
+    } catch (exception: Exception) {
+        Result.failure(exception)
     }
 }

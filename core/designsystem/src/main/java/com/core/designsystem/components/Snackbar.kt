@@ -17,7 +17,7 @@ fun HarooSnackbar(
     snackbarData: SnackbarData,
     actionOnNewLine: Boolean = false,
     shape: Shape = MaterialTheme.shapes.medium,
-    backgroundColor: Color = HarooTheme.colors.uiBackground,
+    backgroundColor: Color = HarooTheme.colors.snackBarBackground,
     contentColor: Color = HarooTheme.colors.text,
     actionColor: Color = HarooTheme.colors.brand,
     elevation: Dp = 6.dp

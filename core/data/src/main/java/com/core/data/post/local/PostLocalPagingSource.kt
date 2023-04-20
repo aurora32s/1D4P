@@ -6,15 +6,18 @@ import com.core.database.dao.PostDao
 import com.core.model.data.PostSource
 import com.core.model.data.PostSources
 import com.core.model.data.toSource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import java.time.YearMonth
 
 /**
  * 특정 연도 / 월에 대한 게시글(post) 정보를 paging 으로 요청
  */
 class PostLocalPagingSource(
+    private val ioDispatcher: CoroutineDispatcher,
     private val postDao: PostDao
 ) : PagingSource<YearMonth, PostSources>() {
 
@@ -29,15 +32,15 @@ class PostLocalPagingSource(
     }
 
     override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, PostSources> =
-        coroutineScope {
+        withContext(ioDispatcher) {
             val date: YearMonth = params.key ?: YearMonth.now()
 
             try {
                 val posts = listOf(
-                    getPostsByYearAndMonth(date.minusMonths(1)),
-                    getPostsByYearAndMonth(date),
-                    getPostsByYearAndMonth(date.plusMonths(1))
-                )
+                    async { getPostsByYearAndMonth(date.minusMonths(1)) },
+                    async { getPostsByYearAndMonth(date) },
+                    async { getPostsByYearAndMonth(date.plusMonths(1)) }
+                ).awaitAll()
                 LoadResult.Page(
                     prevKey = date.minusMonths(3),
                     data = posts,

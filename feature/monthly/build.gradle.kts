@@ -1,5 +1,5 @@
 plugins {
-    id ("haroo.android.library")
+    id("haroo.android.library")
     id("haroo.android.library.compose")
     id("haroo.android.hilt")
 }

@@ -1,5 +1,6 @@
 package com.feature.post
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -82,12 +83,18 @@ class PostViewModel @Inject constructor(
      * 신규 post 저장
      */
     fun savePost() {
-        // 유효성 검사 1. 내용
-        if (_content.value.isBlank()) return
-        // 유효성 검사 2. 이미지 1개 이상
-        if (_selectedImages.value.isEmpty()) return
-
         viewModelScope.launch {
+            // 유효성 검사 1. 이미지 1개 이상
+            if (_selectedImages.value.isEmpty()) {
+                _postUiEvent.emit(PostUiEvent.Fail.NeedImageMoreOne())
+                return@launch
+            }
+            // 유효성 검사 2. 내용
+            if (_content.value.isBlank()) {
+                _postUiEvent.emit(PostUiEvent.Fail.NeedContent())
+                return@launch
+            }
+
             val newPostId = addPostUseCase(
                 Post(
                     id = _postId.value,
@@ -155,7 +162,18 @@ class PostViewModel @Inject constructor(
 sealed interface PostUiEvent {
     sealed interface Fail : PostUiEvent {
         data class DuplicateTagName(
+            @StringRes
             val messageId: Int = R.string.duplicate_tag_name
+        ) : Fail
+
+        data class NeedImageMoreOne(
+            @StringRes
+            val messageId: Int = R.string.need_image_one_more
+        ) : Fail
+
+        data class NeedContent(
+            @StringRes
+            val messageId: Int = R.string.need_content
         ) : Fail
     }
 }

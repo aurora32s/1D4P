@@ -61,6 +61,8 @@ fun PostRoute(
         postViewModel.postUiEvent.collect {
             when (it) {
                 is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Fail.NeedImageMoreOne -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
             }
         }
     }

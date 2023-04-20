@@ -3,7 +3,14 @@ package com.core.designsystem.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = HarooColors(
@@ -71,6 +78,7 @@ class HarooColors(
     interactiveBackground: List<Color> = gradient4_1,
     text: Color,
     iconPrimary: Color = brand,
+    snackBarBackground: Color = SnackBarBackground,
     dim: Color = Dim,
     isDark: Boolean
 ) {
@@ -88,6 +96,8 @@ class HarooColors(
         private set
     var iconPrimary by mutableStateOf(iconPrimary)
         private set
+    var snackBarBackground by mutableStateOf(snackBarBackground)
+        private set
     var dim by mutableStateOf(dim)
         private set
     var isDark by mutableStateOf(isDark)
@@ -101,6 +111,7 @@ class HarooColors(
         this.interactiveBackground = other.interactiveBackground
         this.text = other.text
         this.iconPrimary = other.iconPrimary
+        this.snackBarBackground = other.snackBarBackground
         this.dim = other.dim
         this.isDark = other.isDark
     }
@@ -113,6 +124,7 @@ class HarooColors(
         interactiveBackground = interactiveBackground,
         text = text,
         iconPrimary = iconPrimary,
+        snackBarBackground = snackBarBackground,
         dim = dim,
         isDark = isDark
     )

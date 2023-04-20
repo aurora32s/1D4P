@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -67,7 +68,8 @@ fun HomeRoute(
         scrollState = scrollState,
         toPostScreen = onDailyClick,
         toMonthlyScreen = onMonthlyClick,
-        onRemovePost = homeViewModel::removePost
+        onRemovePost = homeViewModel::removePost,
+        snackBarManager = snackBarManager
     )
 }
 
@@ -77,8 +79,42 @@ fun HomeScreen(
     scrollState: LazyListState,
     toPostScreen: (LocalDate) -> Unit,
     toMonthlyScreen: (YearMonth) -> Unit,
+    onRemovePost: (PostUiModel) -> Unit,
+    snackBarManager: SnackbarManager
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (postPagingItems.loadState.refresh) {
+            LoadState.Loading -> {}
+            is LoadState.Error -> snackBarManager.showMessage(R.string.fail_to_refresh_posts)
+            else -> MonthlyList(
+                postPagingItems = postPagingItems,
+                scrollState = scrollState,
+                toPostScreen = toPostScreen,
+                toMonthlyScreen = toMonthlyScreen,
+                onRemovePost = onRemovePost
+            )
+        }
+        if (postPagingItems.loadState.append is LoadState.Error) {
+            snackBarManager.showMessage(R.string.fail_to_append_posts)
+        } else if (postPagingItems.loadState.prepend is LoadState.Error) {
+            snackBarManager.showMessage(R.string.fail_to_prepend_posts)
+        }
+    }
+}
+
+@Composable
+fun MonthlyList(
+    postPagingItems: LazyPagingItems<PostsUiModel>,
+    scrollState: LazyListState,
+    toPostScreen: (LocalDate) -> Unit,
+    toMonthlyScreen: (YearMonth) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+    }
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState

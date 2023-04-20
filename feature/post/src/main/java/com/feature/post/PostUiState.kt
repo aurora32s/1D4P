@@ -55,7 +55,7 @@ fun rememberPostScreenState(
 
 class PostScreenStateHolder(
     val date: LocalDate,
-    private val postViewModel: PostViewModel,
+    val postViewModel: PostViewModel,
     val images: LazyPagingItems<ImageUiModel>,
     private val _selectedImages: State<List<ImageUiModel>>,
     private val _tags: State<List<TagUiModel>>,
@@ -142,22 +142,6 @@ class PostScreenStateHolder(
         postViewModel.selectImage(imageUiModel)
     }
 
-    fun removeImage(imageUiModel: ImageUiModel) {
-        postViewModel.removeImage(imageUiModel)
-    }
-
-    fun setContent(content: String) {
-        postViewModel.setContent(content)
-    }
-
-    fun addTag(tag: String) {
-        postViewModel.addTag(tag)
-    }
-
-    fun removeTag(tagUiModel: TagUiModel) {
-        postViewModel.removeTag(tagUiModel)
-    }
-
     fun showTagTextField() {
         _showTagTextFieldFlag.value = true
     }
@@ -182,6 +166,7 @@ class PostScreenStateHolder(
                 postViewModel.getPost()
                 postViewModel.toggleEditMode()
             }
+
             PostType.NEW,
             PostType.SHOW -> _onBackPressed()
         }

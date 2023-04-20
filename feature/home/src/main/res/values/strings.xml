@@ -3,8 +3,10 @@
     <string name="btn_view_month">%2d월 보기</string>
 
     <!-- Error Message -->
-    <string name="fail_to_get_post">기록을 가져오는 중 문제가 발생했어요.😭다시 한번 시도해보세요.</string>
     <string name="fail_to_remove_post">😳 헠! 기록을 삭제하지 못했어요. 다시 한번 시도해보세요.</string>
+    <string name="fail_to_refresh_posts">기록을 가져오는 중 문제가 발생했어요.😭다시 한번 시도해보세요.</string>
+    <string name="fail_to_append_posts">이후 기록들을 가져오는 중에 문제가 발생했어요.😭</string>
+    <string name="fail_to_prepend_posts">이전 기록들을 가져오는 중에 문제가 발생했어요.😭</string>
 
     <!-- Success Message -->
     <string name="success_to_remove_post">😌기록이 제거되었습니다....</string>

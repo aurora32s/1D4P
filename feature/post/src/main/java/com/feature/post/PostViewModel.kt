@@ -76,6 +76,12 @@ class PostViewModel @Inject constructor(
                     _tags.value = post.tags.map { it.toTagUiModel() }
 
                     _postId.value = post.id ?: -1
+                } ?: kotlin.run {
+                    _content.value = ""
+                    _selectedImages.value = emptyList()
+                    _tags.value = emptyList()
+                    _postId.value = null
+                    _isEditMode.value = true
                 }
             }.onFailure {
                 _postUiEvent.emit(PostUiEvent.Fail.GetPost)
@@ -166,6 +172,12 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             _postId.value?.let {
                 removePostUseCase(it)
+                    .onSuccess {
+                        _postUiEvent.emit(PostUiEvent.Success.RemovePost)
+                        // 삭제에 성공한 경우에는 다시 입력할 수 있도록 기존 내용 제거
+                        getPost()
+                    }
+                    .onFailure { _postUiEvent.emit(PostUiEvent.Fail.RemovePost) }
             }
         }
     }
@@ -184,11 +196,13 @@ sealed interface PostUiEvent {
         object NeedContent : Fail(R.string.need_content)
         object SavePost : Fail(R.string.fail_to_save_post)
         object GetPost : Fail(R.string.fail_to_get_post)
+        object RemovePost : Fail(R.string.fail_to_remove_post)
     }
 
     sealed class Success(
         @StringRes val messageId: Int
     ) : PostUiEvent {
         object SavePost : Success(R.string.success_to_save_post)
+        object RemovePost : Success(R.string.success_to_remove_post)
     }
 }

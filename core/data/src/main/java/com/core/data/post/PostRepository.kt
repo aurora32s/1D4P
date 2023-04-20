@@ -28,5 +28,5 @@ interface PostRepository {
     fun getPostPaging(): Flow<PagingData<PostSources>>
 
     // 특정 날짜의 게시글 제거
-    suspend fun removePost(postId: Long)
+    suspend fun removePost(postId: Long): Result<Unit>
 }

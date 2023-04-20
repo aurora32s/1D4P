@@ -19,7 +19,7 @@ interface PostRepository {
     ): Result<Long>
 
     // 특정 년도/월/일 post 요청
-    suspend fun getPost(year: Int, month: Int, day: Int): PostSource?
+    suspend fun getPost(year: Int, month: Int, day: Int): Result<PostSource?>
 
     // 특정 년도/월 post 요창
     suspend fun getPosts(year: Int, month: Int): List<PostSource>

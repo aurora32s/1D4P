@@ -11,7 +11,10 @@ import javax.inject.Inject
 class GetPostByDateUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(year: Int, month: Int, day: Int): Post? {
-        return postRepository.getPost(year, month, day)?.toPost()
+    suspend operator fun invoke(year: Int, month: Int, day: Int): Result<Post?> = try {
+        val result = postRepository.getPost(year, month, day).getOrThrow()
+        Result.success(result?.toPost())
+    } catch (exception: Exception) {
+        Result.failure(exception)
     }
 }

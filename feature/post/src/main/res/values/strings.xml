@@ -9,4 +9,7 @@
     <string name="del_btn">삭제</string>
 
     <string name="content_hint">내용을 입력해주세요…</string>
+
+    <!-- Error Message -->
+    <string name="duplicate_tag_name">동일한 태그가 있어요. :-)</string>
 </resources>

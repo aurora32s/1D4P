@@ -12,4 +12,6 @@
 
     <!-- Error Message -->
     <string name="duplicate_tag_name">동일한 태그가 있어요. :-)</string>
+    <string name="need_image_one_more">오늘을 기억할 수 있는 이미지를 선택해주세요.~ 🤗</string>
+    <string name="need_content">오늘은 어떤 날이었나요? 글로 남겨주세요.~ 🤗</string>
 </resources>

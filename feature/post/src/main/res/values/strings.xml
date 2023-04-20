@@ -14,4 +14,8 @@
     <string name="duplicate_tag_name">동일한 태그가 있어요. :-)</string>
     <string name="need_image_one_more">오늘을 기억할 수 있는 이미지를 선택해주세요.~ 🤗</string>
     <string name="need_content">오늘은 어떤 날이었나요? 글로 남겨주세요.~ 🤗</string>
+    <string name="fail_to_save_post">😳기록을 저장하지 못했어요…ㅠㅠ</string>
+
+    <!-- Success Message -->
+    <string name="success_to_save_post">😳오늘도 멋진 하루였어요. :-)</string>
 </resources>

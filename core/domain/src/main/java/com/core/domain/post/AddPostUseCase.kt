@@ -17,7 +17,7 @@ class AddPostUseCase @Inject constructor(
         post: Post,
         removeImages: List<Image>,
         removeTags: List<Tag>
-    ): Long {
+    ): Result<Long> {
         return postRepository.addPost(
             post.toSource(),
             removeImages.map { it.toSource() },

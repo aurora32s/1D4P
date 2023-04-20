@@ -63,18 +63,20 @@ class PostViewModel @Inject constructor(
     /**
      * 기존 Post 요청
      */
-    init {
-        getPost()
-    }
-
     fun getPost() {
         viewModelScope.launch {
-            getPostByDateUseCase(date.year, date.month, date.day)?.let { post ->
-                _content.value = post.content ?: ""
-                _selectedImages.value = post.images.map { it.toImageUiModel() }
-                _tags.value = post.tags.map { it.toTagUiModel() }
+            getPostByDateUseCase(
+                date.year, date.month, date.day
+            ).onSuccess {
+                it?.let { post ->
+                    _content.value = post.content ?: ""
+                    _selectedImages.value = post.images.map { it.toImageUiModel() }
+                    _tags.value = post.tags.map { it.toTagUiModel() }
 
-                _postId.value = post.id ?: -1
+                    _postId.value = post.id ?: -1
+                }
+            }.onFailure {
+                _postUiEvent.emit(PostUiEvent.Fail.GetPost)
             }
         }
     }
@@ -95,7 +97,7 @@ class PostViewModel @Inject constructor(
                 return@launch
             }
 
-            val newPostId = addPostUseCase(
+            addPostUseCase(
                 Post(
                     id = _postId.value,
                     year = date.year, month = date.month, day = date.day,
@@ -171,11 +173,12 @@ sealed interface PostUiEvent {
         object NeedImageMoreOne : Fail(R.string.need_image_one_more)
         object NeedContent : Fail(R.string.need_content)
         object SavePost : Fail(R.string.fail_to_save_post)
+        object GetPost : Fail(R.string.fail_to_get_post)
     }
 
     sealed class Success(
         @StringRes val messageId: Int
-    ): PostUiEvent {
-        object SavePost: Success(R.string.success_to_save_post)
+    ) : PostUiEvent {
+        object SavePost : Success(R.string.success_to_save_post)
     }
 }

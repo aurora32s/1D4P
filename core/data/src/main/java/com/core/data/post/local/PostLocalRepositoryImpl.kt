@@ -74,20 +74,24 @@ class PostLocalRepositoryImpl @Inject constructor(
         year: Int,
         month: Int,
         day: Int
-    ): PostSource? = coroutineScope {
-        val post = postDao.selectPostByDate(year, month, day)
-        post?.id?.let {
-            val images = async { postDao.selectImagesByPost(it) }
-            val tags = async { postDao.selectTagsByPost(it) }
-            PostSource(
-                id = it,
-                year = post.year,
-                month = post.month,
-                day = post.day,
-                content = post.content,
-                images = images.await().map { image -> image.toSource() },
-                tags = tags.await().map { tag -> tag.toSource() }
-            )
+    ): Result<PostSource?> = withContext(ioDispatcher) {
+        try {
+            val post = postDao.selectPostByDate(year, month, day)
+            Result.success(post?.id?.let {
+                val images = async { postDao.selectImagesByPost(it) }
+                val tags = async { postDao.selectTagsByPost(it) }
+                PostSource(
+                    id = it,
+                    year = post.year,
+                    month = post.month,
+                    day = post.day,
+                    content = post.content,
+                    images = images.await().map { image -> image.toSource() },
+                    tags = tags.await().map { tag -> tag.toSource() }
+                )
+            })
+        } catch (exception: Exception) {
+            Result.failure(exception)
         }
     }
 

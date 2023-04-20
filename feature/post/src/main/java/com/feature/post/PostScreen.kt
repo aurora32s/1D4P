@@ -58,6 +58,7 @@ fun PostRoute(
     )
 
     LaunchedEffect(key1 = Unit) {
+        postViewModel.getPost()
         postViewModel.postUiEvent.collect {
             when (it) {
                 is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
@@ -65,6 +66,10 @@ fun PostRoute(
                 is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Fail.GetPost -> {
+                    onBackPressed()
+                    snackbarManager.showMessage(it.messageId)
+                }
             }
         }
     }

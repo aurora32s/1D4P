@@ -86,12 +86,12 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             // 유효성 검사 1. 이미지 1개 이상
             if (_selectedImages.value.isEmpty()) {
-                _postUiEvent.emit(PostUiEvent.Fail.NeedImageMoreOne())
+                _postUiEvent.emit(PostUiEvent.Fail.NeedImageMoreOne)
                 return@launch
             }
             // 유효성 검사 2. 내용
             if (_content.value.isBlank()) {
-                _postUiEvent.emit(PostUiEvent.Fail.NeedContent())
+                _postUiEvent.emit(PostUiEvent.Fail.NeedContent)
                 return@launch
             }
 
@@ -105,9 +105,13 @@ class PostViewModel @Inject constructor(
                 ),
                 removeImages = removeImages.map { it.toImage() },
                 removeTags = removeTags.map { it.toTag() }
-            )
-            _postId.value = newPostId
-            _isEditMode.value = false
+            ).onSuccess {
+                _postId.value = it
+                _isEditMode.value = false
+                _postUiEvent.emit(PostUiEvent.Success.SavePost)
+            }.onFailure {
+                _postUiEvent.emit(PostUiEvent.Fail.SavePost)
+            }
         }
     }
 
@@ -134,7 +138,7 @@ class PostViewModel @Inject constructor(
             if (name.isBlank()) return@launch
             // 동일한 이름의 tag 가 이미 존재 하는 경우
             if (_tags.value.any { it.name == name }) {
-                _postUiEvent.emit(PostUiEvent.Fail.DuplicateTagName())
+                _postUiEvent.emit(PostUiEvent.Fail.DuplicateTagName)
                 return@launch
             }
             _tags.value += TagUiModel(name = name)
@@ -160,20 +164,18 @@ class PostViewModel @Inject constructor(
 }
 
 sealed interface PostUiEvent {
-    sealed interface Fail : PostUiEvent {
-        data class DuplicateTagName(
-            @StringRes
-            val messageId: Int = R.string.duplicate_tag_name
-        ) : Fail
+    sealed class Fail(
+        @StringRes val messageId: Int
+    ) : PostUiEvent {
+        object DuplicateTagName : Fail(R.string.duplicate_tag_name)
+        object NeedImageMoreOne : Fail(R.string.need_image_one_more)
+        object NeedContent : Fail(R.string.need_content)
+        object SavePost : Fail(R.string.fail_to_save_post)
+    }
 
-        data class NeedImageMoreOne(
-            @StringRes
-            val messageId: Int = R.string.need_image_one_more
-        ) : Fail
-
-        data class NeedContent(
-            @StringRes
-            val messageId: Int = R.string.need_content
-        ) : Fail
+    sealed class Success(
+        @StringRes val messageId: Int
+    ): PostUiEvent {
+        object SavePost: Success(R.string.success_to_save_post)
     }
 }

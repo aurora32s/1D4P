@@ -16,7 +16,7 @@ interface PostRepository {
         post: PostSource,
         removeImages: List<ImageSource>,
         removeTags: List<TagSource>
-    ): Long
+    ): Result<Long>
 
     // 특정 년도/월/일 post 요청
     suspend fun getPost(year: Int, month: Int, day: Int): PostSource?

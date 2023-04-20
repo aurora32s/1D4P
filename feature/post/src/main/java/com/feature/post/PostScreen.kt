@@ -63,6 +63,8 @@ fun PostRoute(
                 is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Fail.NeedImageMoreOne -> snackbarManager.showMessage(it.messageId)
                 is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
+                is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
             }
         }
     }

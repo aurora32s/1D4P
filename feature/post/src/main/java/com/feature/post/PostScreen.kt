@@ -114,9 +114,9 @@ fun PostScreen(
                 isEditMode = postStateHolder.editable,
                 date = postStateHolder.date,
                 selectedImages = postStateHolder.selectedImages,
-                onRemoveSelectedImage = postStateHolder::removeImage,
+                onRemoveSelectedImage = postStateHolder.postViewModel::removeImage,
                 content = postStateHolder.content,
-                setContent = postStateHolder::setContent
+                setContent = postStateHolder.postViewModel::setContent
             )
             PostScreenBottomAppBar(
                 isEditMode = postStateHolder.editable,
@@ -124,8 +124,8 @@ fun PostScreen(
                 tags = postStateHolder.tags,
                 images = postStateHolder.images,
                 selectedImages = postStateHolder.selectedImages,
-                onAddTags = postStateHolder::addTag,
-                onRemoveTag = postStateHolder::removeTag,
+                onAddTags = postStateHolder.postViewModel::addTag,
+                onRemoveTag = postStateHolder.postViewModel::removeTag,
                 showTagTextField = postStateHolder::showTagTextField,
                 showBottomDrawer = postStateHolder::showBottomDrawer,
                 onImageSelect = postStateHolder::setSelectedImage

@@ -9,6 +9,7 @@ import androidx.paging.map
 import com.core.domain.post.AddPostUseCase
 import com.core.domain.post.GetImagesUseCase
 import com.core.domain.post.GetPostByDateUseCase
+import com.core.domain.post.RemovePostUseCase
 import com.core.model.domain.Post
 import com.core.model.feature.ImageUiModel
 import com.core.model.feature.TagUiModel
@@ -32,7 +33,8 @@ class PostViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getImagesUseCase: GetImagesUseCase,
     private val addPostUseCase: AddPostUseCase,
-    private val getPostByDateUseCase: GetPostByDateUseCase
+    private val getPostByDateUseCase: GetPostByDateUseCase,
+    private val removePostUseCase: RemovePostUseCase
 ) : ViewModel() {
     internal val date = DateArg(savedStateHandle)
 
@@ -158,6 +160,14 @@ class PostViewModel @Inject constructor(
 
     fun toggleEditMode() {
         _isEditMode.value = _isEditMode.value.not()
+    }
+
+    fun removePost() {
+        viewModelScope.launch {
+            _postId.value?.let {
+                removePostUseCase(it)
+            }
+        }
     }
 
     companion object {

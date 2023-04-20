@@ -110,6 +110,7 @@ fun PostScreen(
                 closeTegTextField = postStateHolder::closeTagTextField,
                 onBaseClick = postStateHolder::onBaseBtnClick,
                 onBackPressed = postStateHolder::onBackPressed,
+                onRemovePost = postStateHolder.postViewModel::removePost,
                 postType = postStateHolder.postType,
                 isEditMode = postStateHolder.editable,
                 date = postStateHolder.date,
@@ -143,6 +144,7 @@ fun ColumnScope.PostBody(
     closeTegTextField: () -> Unit,
     onBaseClick: () -> Unit,
     onBackPressed: () -> Unit,
+    onRemovePost: () -> Unit,
     postType: PostType,
     isEditMode: Boolean,
     date: LocalDate,
@@ -164,6 +166,7 @@ fun ColumnScope.PostBody(
             postType = postType,
             onBackPressed = onBackPressed,
             onBaseClick = onBaseClick,
+            onRemovePost = onRemovePost
         )
         PostContent(
             date = date,
@@ -184,6 +187,7 @@ fun PostScreenHeader(
     modifier: Modifier = Modifier,
     postType: PostType,
     onBaseClick: () -> Unit,
+    onRemovePost: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     Row(
@@ -225,7 +229,7 @@ fun PostScreenHeader(
                 // 기본 button
                 HarooButton(
                     modifier = Modifier.padding(Dimens.headerExtraBtnPadding),
-                    onClick = onBaseClick,
+                    onClick = onRemovePost,
                 ) {
                     Text(text = getString(id = R.string.del_btn))
                 }

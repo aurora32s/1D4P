@@ -9,10 +9,18 @@ import com.core.domain.post.AddPostUseCase
 import com.core.domain.post.GetImagesUseCase
 import com.core.domain.post.GetPostByDateUseCase
 import com.core.model.domain.Post
-import com.core.model.feature.*
+import com.core.model.feature.ImageUiModel
+import com.core.model.feature.TagUiModel
+import com.core.model.feature.toImage
+import com.core.model.feature.toImageUiModel
+import com.core.model.feature.toTag
+import com.core.model.feature.toTagUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -27,8 +35,8 @@ class PostViewModel @Inject constructor(
 ) : ViewModel() {
     internal val date = DateArg(savedStateHandle)
 
-    private val _postUiEvent = MutableStateFlow<PostUiEvent>(PostUiEvent.Initialized)
-    val postUiEvent: StateFlow<PostUiEvent> = _postUiEvent.asStateFlow()
+    private val _postUiEvent = MutableSharedFlow<PostUiEvent>()
+    val postUiEvent: SharedFlow<PostUiEvent> = _postUiEvent.asSharedFlow()
 
     private val _postId = MutableStateFlow<Long?>(null)
     val postId: StateFlow<Long?> = _postId.asStateFlow()
@@ -67,7 +75,6 @@ class PostViewModel @Inject constructor(
 
                 _postId.value = post.id ?: -1
             }
-            _postUiEvent.value = PostUiEvent.EndLoadInitDate
         }
     }
 
@@ -115,11 +122,16 @@ class PostViewModel @Inject constructor(
     }
 
     fun addTag(name: String) {
-        // 빈칸을 입력한 경우
-        if (name.isBlank()) return
-        // 동일한 이름의 tag 가 이미 존재 하는 경우
-        if (_tags.value.any { it.name == name }) return
-        _tags.value += TagUiModel(name = name)
+        viewModelScope.launch {
+            // 빈칸을 입력한 경우
+            if (name.isBlank()) return@launch
+            // 동일한 이름의 tag 가 이미 존재 하는 경우
+            if (_tags.value.any { it.name == name }) {
+                _postUiEvent.emit(PostUiEvent.Fail.DuplicateTagName())
+                return@launch
+            }
+            _tags.value += TagUiModel(name = name)
+        }
     }
 
     fun removeTag(tagUiModel: TagUiModel) {
@@ -141,8 +153,9 @@ class PostViewModel @Inject constructor(
 }
 
 sealed interface PostUiEvent {
-    object Initialized : PostUiEvent
-    object EndLoadInitDate : PostUiEvent
-    object SuccessSaveOrEditPost : PostUiEvent
-    object FailSaveOrEditPost : PostUiEvent
+    sealed interface Fail : PostUiEvent {
+        data class DuplicateTagName(
+            val messageId: Int = R.string.duplicate_tag_name
+        ) : Fail
+    }
 }

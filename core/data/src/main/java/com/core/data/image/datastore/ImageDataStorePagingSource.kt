@@ -5,9 +5,11 @@ import androidx.paging.PagingState
 import com.core.datastore.ImageDatastore
 import com.core.model.data.ImageSource
 import com.core.model.data.toSource
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 class ImageDataStorePagingSource(
+    private val ioDispatcher: CoroutineDispatcher,
     private val imageDatastore: ImageDatastore
 ) : PagingSource<Int, ImageSource>() {
     override fun getRefreshKey(state: PagingState<Int, ImageSource>): Int? {
@@ -18,12 +20,11 @@ class ImageDataStorePagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ImageSource> =
-        coroutineScope {
+        withContext(ioDispatcher) {
             val offset: Int = params.key ?: INIT_OFFSET
 
             try {
-                val images =
-                    imageDatastore.getImages(PAGING_SIZE, offset).map { it.toSource() }
+                val images = imageDatastore.getImages(PAGING_SIZE, offset).map { it.toSource() }
 
                 LoadResult.Page(
                     prevKey = if (offset == INIT_OFFSET) null else offset - PAGING_SIZE,

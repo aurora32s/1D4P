@@ -125,7 +125,7 @@ class PostLocalRepositoryImpl @Inject constructor(
                 pageSize = PostLocalPagingSource.PAGING_SIZE
             ),
             pagingSourceFactory = {
-                PostLocalPagingSource(postDao)
+                PostLocalPagingSource(ioDispatcher, postDao)
             }
         ).flow
     }

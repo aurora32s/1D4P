@@ -26,12 +26,12 @@ fun HarooApp(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .imePadding()
             .drawBehind {
                 drawRect(brush = Brush.linearGradient(backgroundColor))
-            },
+            }
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .imePadding(),
         backgroundColor = Color.Transparent,
         scaffoldState = appState.scaffoldState,
         snackbarHost = {

@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -20,6 +22,8 @@ import com.haman.allformemory.navigation.HarooNavHost
 @Composable
 fun HarooApp(
     externalStoragePermissionGranted: Boolean,
+    isNeedPermissionRationale: Boolean,
+    onGrantPermission: () -> Unit,
     backgroundColor: List<Color> = HarooTheme.colors.interactiveBackground,
     harooAppState: HarooAppState = rememberHarooAppState()
 ) {
@@ -43,11 +47,16 @@ fun HarooApp(
             )
         }
     ) {
-        if (externalStoragePermissionGranted) {
-            HarooNavHost(
-                modifier = Modifier.padding(it),
-                navController = harooAppState.navController
-            )
+        when {
+            externalStoragePermissionGranted ->
+                HarooNavHost(
+                    modifier = Modifier.padding(it),
+                    navController = harooAppState.navController
+                )
+
+            isNeedPermissionRationale -> Button(onClick = { onGrantPermission() }) {
+                Text(text = "권한 요청")
+            }
         }
     }
 }

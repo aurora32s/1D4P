@@ -46,19 +46,27 @@ class PostViewModel @Inject constructor(
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode: StateFlow<Boolean> = _isEditMode.asStateFlow()
 
+    // 갤러리 이미지
     val images = getImagesUseCase()
         .map { images ->
             images.map { it.toImageUiModel() }
         }.cachedIn(viewModelScope)
 
+    // 선택한 이미지
     private val _selectedImages = MutableStateFlow<List<ImageUiModel>>(emptyList())
     val selectedImages: StateFlow<List<ImageUiModel>> = _selectedImages.asStateFlow()
+
+    // 기존 이미지 중, 제거한 이미지
     private val removeImages = mutableListOf<ImageUiModel>()
 
+    // 추가한 태그
     private val _tags = MutableStateFlow<List<TagUiModel>>(emptyList())
     val tags: StateFlow<List<TagUiModel>> = _tags.asStateFlow()
+
+    // 기존 태그 중, 제거한 태그
     private val removeTags = mutableListOf<TagUiModel>()
 
+    // 내용
     private val _content = MutableStateFlow("")
     val content: StateFlow<String> = _content.asStateFlow()
 
@@ -69,20 +77,12 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             getPostByDateUseCase(
                 date.year, date.month, date.day
-            ).onSuccess {
-                it?.let { post ->
-                    _content.value = post.content ?: ""
-                    _selectedImages.value = post.images.map { it.toImageUiModel() }
-                    _tags.value = post.tags.map { it.toTagUiModel() }
-
-                    _postId.value = post.id ?: -1
-                } ?: kotlin.run {
-                    _content.value = ""
-                    _selectedImages.value = emptyList()
-                    _tags.value = emptyList()
-                    _postId.value = null
-                    _isEditMode.value = true
-                }
+            ).onSuccess { post ->
+                _content.value = post?.content ?: ""
+                _selectedImages.value = post?.images?.map { it.toImageUiModel() } ?: emptyList()
+                _tags.value = post?.tags?.map { it.toTagUiModel() } ?: emptyList()
+                _postId.value = post?.id
+                _isEditMode.value = post == null
             }.onFailure {
                 _postUiEvent.emit(PostUiEvent.Fail.GetPost)
             }

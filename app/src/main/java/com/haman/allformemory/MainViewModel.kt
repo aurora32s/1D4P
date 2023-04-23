@@ -16,6 +16,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
     val isNeedPermissionRationale: StateFlow<Boolean> = _isNeedPermissionRationale.asStateFlow()
 
     fun externalStoragePermissionGrant() {
+        _isNeedPermissionRationale.value = false
         _isExternalStoragePermissionGranted.value = true
     }
 

@@ -2,6 +2,7 @@ package com.haman.allformemory
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,12 +25,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
+        checkPermission()
         setContent {
             AllForMemoryTheme {
                 val externalStoragePermissionGranted = mainViewModel.isExternalStoragePermissionGranted.collectAsState()
+                val isNeedPermissionRationale = mainViewModel.isNeedPermissionRationale.collectAsState()
                 HarooApp(
-                    externalStoragePermissionGranted = externalStoragePermissionGranted.value
+                    externalStoragePermissionGranted = externalStoragePermissionGranted.value,
+                    isNeedPermissionRationale = isNeedPermissionRationale.value,
+                    onGrantPermission = ::requestPermission
                 )
             }
         }
@@ -44,26 +48,30 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    private val externalStoragePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        Manifest.permission.READ_MEDIA_IMAGES
+    else Manifest.permission.READ_EXTERNAL_STORAGE
+
     private fun requestPermission() {
+        requestPermissionLauncher.launch(externalStoragePermission)
+    }
+
+    private fun checkPermission() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                mainViewModel.externalStoragePermissionGrant()
-            }
+                externalStoragePermission
+            ) == PackageManager.PERMISSION_GRANTED -> mainViewModel.externalStoragePermissionGrant()
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                externalStoragePermission
             ) -> {
                 mainViewModel.needPermissionRationale()
             }
 
             else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
+                requestPermission()
             }
         }
     }

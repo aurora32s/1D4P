@@ -88,6 +88,10 @@ fun PostScreen(
     BackHandler(enabled = postStateHolder.isBottomDrawer.value) {
         postStateHolder.bottomDrawerHide()
     }
+    // BottomDrawer 가 닫혀 있다면
+    BackHandler(enabled = postStateHolder.isBottomDrawer.value.not()) {
+        postStateHolder.onBackPressed()
+    }
 
     postStateHolder.CollectImeVisible()
     postStateHolder.CollectPressFlag()

@@ -19,6 +19,7 @@ import com.haman.allformemory.navigation.HarooNavHost
 
 @Composable
 fun HarooApp(
+    externalStoragePermissionGranted: Boolean,
     backgroundColor: List<Color> = HarooTheme.colors.interactiveBackground,
     harooAppState: HarooAppState = rememberHarooAppState()
 ) {
@@ -42,9 +43,11 @@ fun HarooApp(
             )
         }
     ) {
-        HarooNavHost(
-            modifier = Modifier.padding(it),
-            navController = harooAppState.navController
-        )
+        if (externalStoragePermissionGranted) {
+            HarooNavHost(
+                modifier = Modifier.padding(it),
+                navController = harooAppState.navController
+            )
+        }
     }
 }

@@ -1,12 +1,15 @@
 package com.haman.allformemory
 
 import android.Manifest
-import android.os.Build
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.LaunchedEffect
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.core.designsystem.theme.AllForMemoryTheme
 import com.haman.allformemory.ui.HarooApp
@@ -14,15 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (it.values.all { it }) {
-                // all permission is granted.
-            } else {
-                // Explain to the user that the feature is unavailable because the
-                // feature requires a permission that the user has denied.
-            }
-        }
+
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +27,43 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AllForMemoryTheme {
-                LaunchedEffect(key1 = Unit) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
-                    } else {
-                        requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
-                    }
-                }
-                HarooApp()
+                val externalStoragePermissionGranted = mainViewModel.isExternalStoragePermissionGranted.collectAsState()
+                HarooApp(
+                    externalStoragePermissionGranted = externalStoragePermissionGranted.value
+                )
+            }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) { // 권한 승인
+                mainViewModel.externalStoragePermissionGrant()
+            } else { // 권한 거부
+                // TODO 권한 거부 시, 동작
+            }
+        }
+
+    private fun requestPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                mainViewModel.externalStoragePermissionGrant()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) -> {
+                mainViewModel.needPermissionRationale()
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
             }
         }
     }

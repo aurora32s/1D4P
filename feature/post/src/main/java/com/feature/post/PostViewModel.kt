@@ -82,11 +82,17 @@ class PostViewModel @Inject constructor(
                 _selectedImages.value = post?.images?.map { it.toImageUiModel() } ?: emptyList()
                 _tags.value = post?.tags?.map { it.toTagUiModel() } ?: emptyList()
                 _postId.value = post?.id
-                _isEditMode.value = post == null
+                toShowOrEditMode()
             }.onFailure {
                 _postUiEvent.emit(PostUiEvent.Fail.GetPost)
             }
         }
+    }
+
+    private fun toShowOrEditMode() {
+        _isEditMode.value = _postId.value == null
+        removeImages.clear()
+        removeTags.clear()
     }
 
     /**
@@ -117,7 +123,7 @@ class PostViewModel @Inject constructor(
                 removeTags = removeTags.map { it.toTag() }
             ).onSuccess {
                 _postId.value = it
-                _isEditMode.value = false
+                toShowOrEditMode()
                 _postUiEvent.emit(PostUiEvent.Success.SavePost)
             }.onFailure {
                 _postUiEvent.emit(PostUiEvent.Fail.SavePost)

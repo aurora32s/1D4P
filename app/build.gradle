@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:monthly"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)

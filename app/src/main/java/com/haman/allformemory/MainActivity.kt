@@ -18,7 +18,10 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             AllForMemoryTheme {
-                HarooApp(permissionManager)
+                HarooApp(
+                    permissionManager = permissionManager,
+                    onFinishApp = { finish() }
+                )
             }
         }
     }

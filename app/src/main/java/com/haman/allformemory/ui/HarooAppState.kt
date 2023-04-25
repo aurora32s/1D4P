@@ -26,8 +26,20 @@ fun rememberHarooAppState(
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()
 ): HarooAppState {
-    return remember(scaffoldState, navController, snackbarManager, resources, coroutineScope) {
-        HarooAppState(scaffoldState, navController, snackbarManager, resources, coroutineScope)
+    return remember(
+        scaffoldState,
+        navController,
+        snackbarManager,
+        resources,
+        coroutineScope
+    ) {
+        HarooAppState(
+            scaffoldState,
+            navController,
+            snackbarManager,
+            resources,
+            coroutineScope
+        )
     }
 }
 

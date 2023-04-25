@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
@@ -21,18 +21,26 @@ import com.core.designsystem.components.HarooSnackbar
 import com.core.designsystem.theme.HarooTheme
 import com.core.ui.manager.PermissionManager
 import com.core.ui.manager.externalStoragePermission
+import com.core.ui.setting.PermissionRational
 import com.haman.allformemory.navigation.HarooNavHost
 
 @Composable
 fun HarooApp(
     permissionManager: PermissionManager,
     backgroundColor: List<Color> = HarooTheme.colors.interactiveBackground,
-    appState: HarooAppState = rememberHarooAppState()
+    appState: HarooAppState = rememberHarooAppState(),
+    onFinishApp: () -> Unit
 ) {
     val isNeedPermissionRational = permissionManager.isNeedPermissionRationale.collectAsState()
+    val ableBasePermission = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
-        permissionManager.requestPermission(listOf(externalStoragePermission), {})
+        permissionManager.requestPermission(
+            listOf(externalStoragePermission)
+        ) { isGranted ->
+            if (isGranted) ableBasePermission.value = true
+            else onFinishApp()
+        }
     }
 
     Scaffold(
@@ -54,14 +62,19 @@ fun HarooApp(
             )
         }
     ) {
-        HarooNavHost(
-            modifier = Modifier.padding(it),
-            navController = appState.navController
-        )
+        if (ableBasePermission.value) {
+            HarooNavHost(
+                modifier = Modifier.padding(it),
+                navController = appState.navController
+            )
+        }
         if (isNeedPermissionRational.value.isNotEmpty()) {
-            Button(onClick = {  }) {
-                Text(text = "Hello World")
-            }
+            PermissionRational(
+                modifier = Modifier.fillMaxSize(),
+                permissions = isNeedPermissionRational.value,
+                onClickGrant = permissionManager::responseGrantRational,
+                onClickDeny = permissionManager::responseDenyRational
+            )
         }
     }
 }

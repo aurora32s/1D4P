@@ -3,7 +3,7 @@ package com.core.model.domain
 import com.core.model.data.ImageSource
 
 data class Image(
-    val id: Long?,
+    val id: Long,
     val imageUrl: String
 )
 

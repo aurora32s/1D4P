@@ -7,7 +7,7 @@ import com.core.model.datastore.ImageData
  * datasource Image 정보
  */
 data class ImageSource(
-    val id: Long?, // 이미지 id
+    val id: Long, // 이미지 id
     val imageUrl: String // 이지미 url
 )
 

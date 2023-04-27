@@ -18,33 +18,35 @@ import java.time.YearMonth
  */
 class PostLocalPagingSource(
     private val ioDispatcher: CoroutineDispatcher,
-    private val postDao: PostDao
+    private val postDao: PostDao,
+    private val pageSize: Int = PAGING_SIZE
 ) : PagingSource<YearMonth, PostSources>() {
 
     override fun getRefreshKey(state: PagingState<YearMonth, PostSources>): YearMonth? {
-        return state.anchorPosition?.let { page ->
-            val closedPage = state.closestPageToPosition(page)
-            return closedPage?.let {
-                // 최근에 로드한 정보가 현재 정보인 경우
-                YearMonth.of(it.data[1].year, it.data[1].month)
+        return state.anchorPosition?.let { anchorPosition ->
+            val pageIndex = anchorPosition / pageSize
+            val index = anchorPosition % pageSize
+            val stand = state.pages[pageIndex].data[index].let { YearMonth.of(it.year, it.month) }
+            return if (index < pageSize / 2) {
+                stand?.minusMonths(pageSize / 2L)
+            } else {
+                stand
             }
         }
     }
 
     override suspend fun load(params: LoadParams<YearMonth>): LoadResult<YearMonth, PostSources> =
         withContext(ioDispatcher) {
-            val date: YearMonth = params.key ?: YearMonth.now()
+            val date: YearMonth = params.key ?: YearMonth.now().minusMonths(1)
 
             try {
-                val posts = listOf(
-                    async { getPostsByYearAndMonth(date.minusMonths(1)) },
-                    async { getPostsByYearAndMonth(date) },
-                    async { getPostsByYearAndMonth(date.plusMonths(1)) }
-                ).awaitAll()
+                val posts = List(pageSize) { offset ->
+                    getPostsByYearAndMonth(date.plusMonths(offset.toLong()))
+                }
                 LoadResult.Page(
-                    prevKey = date.minusMonths(3),
+                    prevKey = date.minusMonths(pageSize.toLong()),
                     data = posts,
-                    nextKey = date.plusMonths(3)
+                    nextKey = date.plusMonths(pageSize.toLong())
                 )
             } catch (exception: Exception) {
                 LoadResult.Error(exception)
@@ -73,6 +75,6 @@ class PostLocalPagingSource(
     }
 
     companion object {
-        const val PAGING_SIZE = 1
+        const val PAGING_SIZE = 10
     }
 }

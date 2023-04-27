@@ -25,7 +25,8 @@ class HomeViewModel @Inject constructor(
     private val _homeUiEvent = MutableSharedFlow<HomeUiEvent>()
     val homeUiEvent: SharedFlow<HomeUiEvent> = _homeUiEvent.asSharedFlow()
 
-    val posts = getPostPageByMonthUseCase().map { it.map { post -> post.toPostsUiModel() } }
+    val posts = getPostPageByMonthUseCase()
+        .map { it.map { post -> post.toPostsUiModel() } }
         .cachedIn(viewModelScope)
 
     fun removePost(postUiModel: PostUiModel) {

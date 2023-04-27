@@ -52,9 +52,9 @@ class ImageDatastore @Inject constructor(
             val bundle = Bundle().apply {
                 putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
                 putInt(ContentResolver.QUERY_ARG_OFFSET, offset)
-                putString(
+                putStringArray(
                     ContentResolver.QUERY_ARG_SORT_COLUMNS,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN
+                    arrayOf(MediaStore.Images.ImageColumns.DATE_TAKEN)
                 )
                 putInt(
                     ContentResolver.QUERY_ARG_SORT_DIRECTION,

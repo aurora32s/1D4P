@@ -27,6 +27,9 @@ class PostLocalRepositoryImpl @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
     private val postDao: PostDao
 ) : PostRepository {
+
+    private var pagingInvalidate: (() -> Unit)? = null
+
     override suspend fun addPost(
         post: PostSource,
         removeImages: List<ImageSource>,
@@ -41,12 +44,8 @@ class PostLocalRepositoryImpl @Inject constructor(
                 // 기존 이미지 제거
                 if (removeImages.isNotEmpty())
                     launch {
-                        postDao.deleteImages(removeImages.mapNotNull { image ->
-                            image.id?.let {
-                                image.toImageEntity(
-                                    it
-                                )
-                            }
+                        postDao.deleteImages(removeImages.map { image ->
+                            image.toImageEntity(postId)
                         })
                     }
                 // 기존 태그 제거
@@ -60,6 +59,7 @@ class PostLocalRepositoryImpl @Inject constructor(
                             }
                         })
                     }
+                pagingInvalidate?.invoke()
                 Result.success(postId)
             } else {
                 Result.failure(PostIdIsNegativeException())
@@ -125,7 +125,9 @@ class PostLocalRepositoryImpl @Inject constructor(
                 pageSize = PostLocalPagingSource.PAGING_SIZE
             ),
             pagingSourceFactory = {
-                PostLocalPagingSource(ioDispatcher, postDao)
+                val source = PostLocalPagingSource(ioDispatcher, postDao)
+                pagingInvalidate = { source.invalidate() }
+                source
             }
         ).flow
     }
@@ -134,6 +136,7 @@ class PostLocalRepositoryImpl @Inject constructor(
         withContext(ioDispatcher) {
             try {
                 postDao.deletePost(postId)
+                pagingInvalidate?.invoke()
                 Result.success(Unit)
             } catch (exception: Exception) {
                 Result.failure(exception)

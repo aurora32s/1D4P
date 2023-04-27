@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.PrimaryKey
 
 /**
  * Image Table
@@ -18,11 +17,12 @@ import androidx.room.PrimaryKey
             childColumns = ["post_id"],
             onDelete = CASCADE
         )
-    ]
+    ],
+    primaryKeys = ["image_id","post_id"]
 )
 data class ImageEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long?,
+    @ColumnInfo(name = "image_id", index = true)
+    val id: Long,
     @ColumnInfo(name = "post_id", index = true)
     val postId: Long,
     @ColumnInfo(name = "image_url")

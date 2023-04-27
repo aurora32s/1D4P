@@ -11,7 +11,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +55,7 @@ fun HomeRoute(
         initialFirstVisibleItemIndex = 1,
         initialFirstVisibleItemScrollOffset = -configuration.screenHeightDp / 3
     )
+    val isItem = remember { derivedStateOf { postPagingItems.itemCount == HomeViewModel.PAGE_SIZE } }
 
     LaunchedEffect(key1 = Unit) {
         homeViewModel.homeUiEvent.collect {
@@ -60,6 +63,21 @@ fun HomeRoute(
                 is HomeUiEvent.Fail.RemovePost -> snackBarManager.showMessage(it.messageId)
                 is HomeUiEvent.Success.RemovePost -> snackBarManager.showMessage(it.messageId)
             }
+        }
+    }
+    LaunchedEffect(key1 = isItem.value) {
+        if (isItem.value && homeViewModel.recentVisibleItemOffset != null) {
+            val index = postPagingItems.itemSnapshotList.indexOfFirst { it?.date == homeViewModel.recentVisibleItem }
+            if (index >= 0) scrollState.animateScrollToItem(
+                index = index,
+                scrollOffset = homeViewModel.recentVisibleItemOffset!!
+            )
+        }
+    }
+    DisposableEffect(key1 = Unit) {
+        onDispose {
+            homeViewModel.recentVisibleItem = postPagingItems.get(scrollState.firstVisibleItemIndex)?.date
+            homeViewModel.recentVisibleItemOffset = scrollState.firstVisibleItemScrollOffset
         }
     }
 
@@ -83,22 +101,22 @@ fun HomeScreen(
     snackBarManager: SnackbarManager
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        when (postPagingItems.loadState.refresh) {
-            LoadState.Loading -> {}
-            is LoadState.Error -> snackBarManager.showMessage(R.string.fail_to_refresh_posts)
-            else -> MonthlyList(
-                postPagingItems = postPagingItems,
-                scrollState = scrollState,
-                toPostScreen = toPostScreen,
-                toMonthlyScreen = toMonthlyScreen,
-                onRemovePost = onRemovePost
-            )
-        }
-        if (postPagingItems.loadState.append is LoadState.Error) {
+        if (postPagingItems.loadState.refresh is LoadState.Error) {
+            snackBarManager.showMessage(R.string.fail_to_refresh_posts)
+        } else if (postPagingItems.loadState.append is LoadState.Error) {
             snackBarManager.showMessage(R.string.fail_to_append_posts)
         } else if (postPagingItems.loadState.prepend is LoadState.Error) {
             snackBarManager.showMessage(R.string.fail_to_prepend_posts)
         }
+//        if (postPagingItems.itemCount != 0) {
+        MonthlyList(
+            postPagingItems = postPagingItems,
+            scrollState = scrollState,
+            toPostScreen = toPostScreen,
+            toMonthlyScreen = toMonthlyScreen,
+            onRemovePost = onRemovePost
+        )
+//        }
     }
 }
 
@@ -110,11 +128,6 @@ fun MonthlyList(
     toMonthlyScreen: (YearMonth) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-    }
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         state = scrollState

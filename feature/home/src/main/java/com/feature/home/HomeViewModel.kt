@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val _homeUiEvent = MutableSharedFlow<HomeUiEvent>()
     val homeUiEvent: SharedFlow<HomeUiEvent> = _homeUiEvent.asSharedFlow()
 
-    val posts = getPostPageByMonthUseCase()
+    val posts = getPostPageByMonthUseCase(PAGE_SIZE)
         .map { it.map { post -> post.toPostsUiModel() } }
         .cachedIn(viewModelScope)
 
@@ -37,6 +39,13 @@ class HomeViewModel @Inject constructor(
                     .onFailure { _homeUiEvent.emit(HomeUiEvent.Fail.RemovePost) }
             }
         }
+    }
+
+    var recentVisibleItem = YearMonth.now()
+    var recentVisibleItemOffset: Int? = null
+
+    companion object {
+        const val PAGE_SIZE = 10
     }
 }
 

@@ -119,13 +119,16 @@ class PostLocalRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPostPaging(): Flow<PagingData<PostSources>> {
+    override fun getPostPaging(pageSize: Int): Flow<PagingData<PostSources>> {
         return Pager(
             config = PagingConfig(
-                pageSize = PostLocalPagingSource.PAGING_SIZE
+                pageSize = pageSize
             ),
             pagingSourceFactory = {
-                val source = PostLocalPagingSource(ioDispatcher, postDao)
+                val source = PostLocalPagingSource(
+                    ioDispatcher, postDao,
+                    pageSize
+                )
                 pagingInvalidate = { source.invalidate() }
                 source
             }

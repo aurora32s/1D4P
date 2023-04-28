@@ -68,7 +68,7 @@ fun HomeRoute(
     LaunchedEffect(key1 = isItem.value) {
         if (isItem.value && homeViewModel.recentVisibleItemOffset != null) {
             val index = postPagingItems.itemSnapshotList.indexOfFirst { it?.date == homeViewModel.recentVisibleItem }
-            if (index >= 0) scrollState.animateScrollToItem(
+            if (index >= 0) scrollState.scrollToItem(
                 index = index,
                 scrollOffset = homeViewModel.recentVisibleItemOffset!!
             )

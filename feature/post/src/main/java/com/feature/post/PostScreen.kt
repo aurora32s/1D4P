@@ -233,7 +233,6 @@ fun PostScreenHeader(
                 )
             }
             if (postType == PostType.SHOW) {
-                // 기본 button
                 HarooButton(
                     modifier = Modifier.padding(Dimens.headerExtraBtnPadding),
                     onClick = onRemovePost,

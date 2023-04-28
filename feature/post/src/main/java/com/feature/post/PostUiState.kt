@@ -76,7 +76,7 @@ class PostScreenStateHolder(
     val content: String
         get() = _content.value
     val showTagTextFieldFlag: Boolean
-        get() = _showTagTextFieldFlag.value
+        get() = _showTagTextFieldFlag.value && isEditMode.value
 
     val isBottomDrawer: State<Boolean>
         get() = bottomDrawerState.isShow

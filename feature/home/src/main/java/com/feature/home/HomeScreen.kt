@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -29,6 +31,7 @@ import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooDashLine
 import com.core.designsystem.components.HarooDivider
 import com.core.designsystem.components.calendar.Calendar
+import com.core.designsystem.modifiers.noRippleClickable
 import com.core.designsystem.modifiers.pagerHingeTransition
 import com.core.designsystem.util.getString
 import com.core.model.feature.PostUiModel
@@ -37,6 +40,8 @@ import com.core.ui.date.DateWithImage
 import com.core.ui.date.RowMonthAndName
 import com.core.ui.manager.SnackbarManager
 import com.core.ui.post.SimplePostItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -153,14 +158,17 @@ fun MonthlyList(
  * 각 월별 Component
  */
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 fun MonthlyContainer(
     date: YearMonth,
     modifier: Modifier = Modifier,
     posts: List<PostUiModel>,
+    coroutine: CoroutineScope = rememberCoroutineScope(),
     onClickPost: (LocalDate) -> Unit,
     onClickMonth: (YearMonth) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
+    val pagerState = rememberPagerState()
     val groupedPosts = remember(posts) { posts.associateBy { it.date } }
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -171,9 +179,18 @@ fun MonthlyContainer(
                 modifier = Modifier.padding(vertical = componentVerticalSpacer),
                 date = date
             )
-            MonthlyCalendar(date = date, posts = groupedPosts)
+            MonthlyCalendar(
+                date = date,
+                posts = groupedPosts,
+                onClickPost = {
+                    coroutine.launch {
+                        pagerState.animateScrollToPage(page = it.dayOfMonth - 1)
+                    }
+                }
+            )
             HarooDashLine()
             DailyContainer(
+                pagerState = pagerState,
                 date = date, posts = groupedPosts,
                 onClickPost = onClickPost,
                 onRemovePost = onRemovePost
@@ -192,7 +209,8 @@ fun MonthlyCalendar(
     modifier: Modifier = Modifier,
     verticalSpace: Dp = 10.dp,
     horizontalSpace: Dp = 4.dp,
-    posts: Map<LocalDate, PostUiModel>
+    posts: Map<LocalDate, PostUiModel>,
+    onClickPost: (LocalDate) -> Unit
 ) {
     Calendar(
         modifier = modifier.padding(vertical = componentVerticalSpacer),
@@ -200,7 +218,9 @@ fun MonthlyCalendar(
         currentMonth = date,
         dayContent = {
             DateWithImage(
-                modifier = Modifier.padding(horizontal = horizontalSpace),
+                modifier = Modifier
+                    .padding(horizontal = horizontalSpace)
+                    .noRippleClickable { onClickPost(it.date) },
                 state = it,
                 image = posts[it.date]?.images?.firstOrNull()
             )
@@ -214,13 +234,13 @@ fun MonthlyCalendar(
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun DailyContainer(
+    pagerState: PagerState,
     date: YearMonth,
     modifier: Modifier = Modifier,
     posts: Map<LocalDate, PostUiModel>,
     onClickPost: (LocalDate) -> Unit,
     onRemovePost: (PostUiModel) -> Unit
 ) {
-    val pagerState = rememberPagerState()
     val dateCount = remember(date) { date.lengthOfMonth() }
     HorizontalPager(
         modifier = modifier.padding(vertical = componentVerticalSpacer),

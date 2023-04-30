@@ -89,7 +89,7 @@ class PostScreenStateHolder(
                     is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
                     is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
                     is PostUiEvent.Fail.GetPost -> {
-                        snackbarManager.showMessage(it.messageId)
+                        _isFailToLoadPost.value = true
                         onBackPressed()
                     }
 
@@ -108,6 +108,10 @@ class PostScreenStateHolder(
         get() = _content.value
     val showTagTextFieldFlag: Boolean
         get() = _showTagTextFieldFlag.value && isEditMode.value
+
+    private val _isFailToLoadPost = mutableStateOf(false)
+    val isFailToLoadPost: Boolean
+        get() = _isFailToLoadPost.value
 
     val isBottomDrawer: State<Boolean>
         get() = bottomDrawerState.isShow

@@ -40,6 +40,7 @@ import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
+import com.core.ui.notification.PostRequestErrorNotification
 import com.core.ui.tag.TagContainer
 import com.feature.post.ui.Dimens
 import java.time.LocalDate
@@ -53,7 +54,14 @@ fun PostRoute(
         postViewModel = postViewModel,
         onBackPressed = onBackPressed
     )
+
     PostScreen(postStateHolder = postStateHolder)
+    if (postStateHolder.isFailToLoadPost) {
+        PostRequestErrorNotification(
+            date = postStateHolder.date,
+            onFinishCount = postStateHolder::onBackPressed
+        )
+    }
 }
 
 @Composable

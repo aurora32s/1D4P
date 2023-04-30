@@ -88,11 +88,7 @@ class PostScreenStateHolder(
                     is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
                     is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
                     is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
-                    is PostUiEvent.Fail.GetPost -> {
-                        _isFailToLoadPost.value = true
-                        onBackPressed()
-                    }
-
+                    is PostUiEvent.Fail.GetPost -> _isFailToLoadPost.value = true
                     is PostUiEvent.Fail.RemovePost -> snackbarManager.showMessage(it.messageId)
                     is PostUiEvent.Success.RemovePost -> snackbarManager.showMessage(it.messageId)
                 }

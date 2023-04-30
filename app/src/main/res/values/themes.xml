@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.AllForMemory" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.RandomPhoto.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/ic_haroo_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_haroo_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/ic_haroo_launcher_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.AllForMemory</item>
+    </style>
 </resources>

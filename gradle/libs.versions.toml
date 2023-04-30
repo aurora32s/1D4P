@@ -22,6 +22,7 @@ paging = "3.1.1"
 pagingCompose = "1.0.0-alpha14"
 robolectric = "4.9.2"
 room = "2.4.3"
+splashscreen = "1.0.0-beta01"
 
 [libraries]
 # use in build-logic
@@ -77,6 +78,9 @@ coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "
 
 # accompanist
 accompanist-flowlayout = { group = "com.google.accompanist", name = "accompanist-flowlayout", version.ref = "accompanist" }
+
+# Splash Screen
+splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

@@ -6,6 +6,13 @@
     <string name="btn_deny">거부</string>
     <string name="btn_grant_desc">기본 권한을 승인해주셔야 서비스 이용이 가능합니다.</string>
 
+    <!-- notification -->
+    <!-- error -->
+    <string name="error_retry_msg">다시 시도해주세요.</string>
+    <string name="error_btn_desc">%d초 후, 이전 화면으로 이동합니다.</string>
+    <!-- post request error notification -->
+    <string name="error_post_load_desc">게시글 정보를 불러오지 못했어요...😭</string>
+
     <!-- external storage permission -->
     <string name="external_storage_title">갤러리 이미지</string>
     <string name="external_storage_desc">

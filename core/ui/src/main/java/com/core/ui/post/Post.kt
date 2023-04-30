@@ -159,7 +159,7 @@ fun ImageContainerByType(
             space = 8.dp,
             content = { HarooImage(imageType = it) })
         PostItemType.GRID -> HarooGridImages(
-            modifier = Modifier.layoutId("Images"),
+            modifier = modifier,
             images = images,
             content = {
                 HarooImage(

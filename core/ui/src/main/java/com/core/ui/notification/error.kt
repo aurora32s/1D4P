@@ -63,7 +63,7 @@ fun ErrorNotification(
             Text(text = getString(id = R.string.error_retry_msg))
             Spacer(modifier = Modifier.height(32.dp))
             HarooButton(onClick = onFinishCount) {
-                Text(text = "${extraCount}초")
+                Text(text = "${extraCount.value}초")
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = getString(id = R.string.error_btn_desc, count))

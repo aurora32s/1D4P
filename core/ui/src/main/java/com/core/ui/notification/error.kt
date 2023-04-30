@@ -26,12 +26,12 @@ import java.time.LocalDate
 @Composable
 fun PostRequestErrorNotification(
     modifier: Modifier = Modifier,
-    date: LocalDate,
+    title: String,
     onFinishCount: () -> Unit
 ) {
     ErrorNotification(
         modifier = modifier,
-        title = date.fullDisplayName(),
+        title = title,
         description = getString(id = R.string.error_post_load_desc),
         count = 10,
         onFinishCount = onFinishCount

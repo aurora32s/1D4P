@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
+import com.core.common.ext.fullDisplayName
 import com.core.designsystem.components.HarooBottomDrawer
 import com.core.designsystem.components.HarooButton
 import com.core.designsystem.components.HarooTextField
@@ -58,7 +59,7 @@ fun PostRoute(
     PostScreen(postStateHolder = postStateHolder)
     if (postStateHolder.isFailToLoadPost) {
         PostRequestErrorNotification(
-            date = postStateHolder.date,
+            title = postStateHolder.date.fullDisplayName(),
             onFinishCount = postStateHolder::onBackPressed
         )
     }

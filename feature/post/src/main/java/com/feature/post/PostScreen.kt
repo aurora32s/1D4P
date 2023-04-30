@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -41,7 +40,6 @@ import com.core.ui.date.YearMonthDayText
 import com.core.ui.gallery.DrawerGalleryContainer
 import com.core.ui.gallery.GalleryListContainer
 import com.core.ui.image.AsyncImageLazyRow
-import com.core.ui.manager.SnackbarManager
 import com.core.ui.tag.TagContainer
 import com.feature.post.ui.Dimens
 import java.time.LocalDate
@@ -49,34 +47,12 @@ import java.time.LocalDate
 @Composable
 fun PostRoute(
     onBackPressed: () -> Unit,
-    postViewModel: PostViewModel = hiltViewModel(),
-    snackbarManager: SnackbarManager = SnackbarManager
+    postViewModel: PostViewModel = hiltViewModel()
 ) {
     val postStateHolder = rememberPostScreenState(
         postViewModel = postViewModel,
         onBackPressed = onBackPressed
     )
-
-    LaunchedEffect(key1 = Unit) {
-        postViewModel.getPost()
-        postViewModel.postUiEvent.collect {
-            when (it) {
-                is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Fail.NeedImageMoreOne -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Fail.GetPost -> {
-                    snackbarManager.showMessage(it.messageId)
-                    onBackPressed()
-                }
-
-                is PostUiEvent.Fail.RemovePost -> snackbarManager.showMessage(it.messageId)
-                is PostUiEvent.Success.RemovePost -> snackbarManager.showMessage(it.messageId)
-            }
-        }
-    }
-
     PostScreen(postStateHolder = postStateHolder)
 }
 

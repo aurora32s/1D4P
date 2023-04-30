@@ -14,6 +14,9 @@ import com.core.designsystem.components.HarooBottomDrawerState
 import com.core.designsystem.components.rememberHarooBottomDrawerState
 import com.core.model.feature.ImageUiModel
 import com.core.model.feature.TagUiModel
+import com.core.ui.manager.SnackbarManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -22,7 +25,9 @@ fun rememberPostScreenState(
     bottomDrawerState: HarooBottomDrawerState = rememberHarooBottomDrawerState(),
     focusManager: FocusManager = LocalFocusManager.current,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    snackbarManager: SnackbarManager = SnackbarManager
 ): PostScreenStateHolder {
     val images = postViewModel.images.collectAsLazyPagingItems()
     val selectedImages = postViewModel.selectedImages.collectAsState()
@@ -33,7 +38,7 @@ fun rememberPostScreenState(
     val postId = postViewModel.postId.collectAsState()
     val isEditMode = postViewModel.isEditMode.collectAsState()
 
-    return remember(postViewModel, bottomDrawerState) {
+    return remember(postViewModel, bottomDrawerState, coroutineScope, snackbarManager) {
         PostScreenStateHolder(
             date = postViewModel.date.currentDate,
             postViewModel = postViewModel,
@@ -48,7 +53,9 @@ fun rememberPostScreenState(
             postId = postId,
             isEditMode = isEditMode,
             _showTagTextFieldFlag = mutableStateOf(false),
-            _onBackPressed = onBackPressed
+            _onBackPressed = onBackPressed,
+            coroutineScope = coroutineScope,
+            snackbarManager = snackbarManager
         )
     }
 }
@@ -67,8 +74,32 @@ class PostScreenStateHolder(
     val postId: State<Long?>,
     val isEditMode: State<Boolean>,
     private val _showTagTextFieldFlag: MutableState<Boolean>,
-    private val _onBackPressed: () -> Unit
+    private val _onBackPressed: () -> Unit,
+    coroutineScope: CoroutineScope,
+    snackbarManager: SnackbarManager
 ) {
+    init {
+        coroutineScope.launch {
+            postViewModel.getPost()
+            postViewModel.postUiEvent.collect {
+                when (it) {
+                    is PostUiEvent.Fail.DuplicateTagName -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Fail.NeedImageMoreOne -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Fail.NeedContent -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Fail.SavePost -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Success.SavePost -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Fail.GetPost -> {
+                        snackbarManager.showMessage(it.messageId)
+                        onBackPressed()
+                    }
+
+                    is PostUiEvent.Fail.RemovePost -> snackbarManager.showMessage(it.messageId)
+                    is PostUiEvent.Success.RemovePost -> snackbarManager.showMessage(it.messageId)
+                }
+            }
+        }
+    }
+
     val selectedImages: List<ImageUiModel>
         get() = _selectedImages.value
     val tags: List<TagUiModel>

@@ -11,6 +11,7 @@ compose-kotlin-compiler = '1.4.0'
 compose-navigation = '2.5.3'
 coroutine = '1.6.4'
 espresso = '3.5.1'
+firebase-bom = '32.0.0'
 hamcrest = "1.1"
 hilt = '2.45'
 junit = '1.1.5'
@@ -81,6 +82,10 @@ accompanist-flowlayout = { group = "com.google.accompanist", name = "accompanist
 
 # Splash Screen
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+
+# firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

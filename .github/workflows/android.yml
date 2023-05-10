@@ -52,7 +52,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app-release-unsigned
-        path: ${{ github.workspace }}/app/build/outputs/apk/release/
+        path: ${{ github.workspace }}/app/release/
         if-no-files-found: ignore
       if: "contains(github.ref, 'main')"
       
@@ -69,7 +69,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: app-release-unsigned
-        path: ${{ github.workspace }}/app/build/outputs/apk/release/
+        path: ${{ github.workspace }}/app/release/
         
     - name: upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1

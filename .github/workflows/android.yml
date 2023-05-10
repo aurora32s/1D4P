@@ -51,7 +51,7 @@ jobs:
     - name: Upload apk-files Directory
       uses: actions/upload-artifact@v3
       with:
-        name: app-release-unsigned
+        name: app-release
         path: ${{ github.workspace }}/app/release/
         if-no-files-found: ignore
       if: "contains(github.ref, 'main')"
@@ -68,7 +68,7 @@ jobs:
     - name: Download apk-files Artifactory
       uses: actions/download-artifact@v3
       with:
-        name: app-release-unsigned
+        name: app-release
         path: ${{ github.workspace }}/app/release/
         
     - name: upload artifact to Firebase App Distribution

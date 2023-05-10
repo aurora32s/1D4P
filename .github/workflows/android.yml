@@ -53,7 +53,7 @@ jobs:
       uses: r0adkll/sign-android-release@v1
       if: "contains(github.ref, 'main')"
       with:
-        releaseDirectory: /app/release
+        releaseDirectory: app/build/outputs/apk/release
         signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: app-release-signed
-        path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
+        path: app/build/outputs/apk/release
       if: "contains(github.ref, 'main')"
       
   deploy:
@@ -79,7 +79,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: app-release-signed
-#         path: ${{ github.workspace }}/app/build/outputs/apk/release/
+        path: app/build/outputs/apk/release
         
     - name: upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -87,4 +87,4 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
         groups: base
-        file: app-release-signed.apk
+        file: app/build/outputs/apk/release/app-release-signed.apk

@@ -78,7 +78,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: app-release-signed
-        path: ${{ github.workspace }}/app/release/
+        path: ${{ github.workspace }}/app/build/outputs/release
         
     - name: upload artifact to Firebase App Distribution
       uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -86,4 +86,4 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
         groups: base
-        file: app-release-signed.apk
+        file: app/build/outputs/release/app-release-signed.apk

@@ -1,7 +1,8 @@
 plugins {
     id 'haroo.android.application'
     id 'haroo.android.application.compose'
-    id("haroo.android.hilt")
+    id 'haroo.android.hilt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -44,4 +45,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso)
 
     implementation(libs.splash.screen)
+    implementation platform(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
 }

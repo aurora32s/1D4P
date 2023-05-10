@@ -87,4 +87,4 @@ jobs:
         appId: ${{secrets.FIREBASE_APP_ID}}
         serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
         groups: base
-        file: ${{ github.workspace }}/app/build/outputs/apk/release/app-release-signed.apk
+        file: app/build/outputs/apk/release/app-release-signed.apk
